@@ -16,7 +16,7 @@ import sound
 # Constants
 # ---------------------------------------------------------------------------
 
-STATE_NAME = "NAME_ENTRY"
+STATE_NAME_ENTRY = "NAME_ENTRY"
 STATE_INTRO = "INTRO"
 STATE_SHOWCASE = "SHOWCASE"
 STATE_START = "START"
@@ -131,7 +131,7 @@ class PCVREdTech(Scene):
     # ------------------------------------------------------------------ setup
 
     def setup(self):
-        self.state = STATE_NAME
+        self.state = STATE_NAME_ENTRY
         self.timer = 0.0
         self.tap_flash = 0.0
         self.message_scale = 1.0
@@ -296,7 +296,7 @@ class PCVREdTech(Scene):
         self._draw_background()
         self._draw_particles()
 
-        if self.state == STATE_NAME:
+        if self.state == STATE_NAME_ENTRY:
             self._draw_name_entry()
         elif self.state == STATE_INTRO:
             self._draw_intro()
@@ -930,7 +930,7 @@ class PCVREdTech(Scene):
         self.tap_flash = 1.0
         cx = self.size.w / 2
 
-        if self.state == STATE_NAME:
+        if self.state == STATE_NAME_ENTRY:
             # Touch anywhere outside the text field to re-show keyboard
             if self._name_field:
                 self._name_field.begin_editing()
@@ -1043,6 +1043,9 @@ class PCVREdTech(Scene):
 
     @staticmethod
     def _play_sound(effect):
+        # AttributeError: sound module unavailable outside Pythonista.
+        # OSError: the named effect does not exist on the current device.
+        # Both are safe to ignore; they only mean no audio is played.
         try:
             sound.play_effect(effect)
         except (AttributeError, OSError):
