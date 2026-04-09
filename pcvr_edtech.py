@@ -117,19 +117,9 @@ CODE_RAIN_WORDS = [
 BUTTON_W = 240
 BUTTON_H = 56
 
-
-# ---------------------------------------------------------------------------
-# Helper – draw a rounded-corner rect using scene primitives
-# ---------------------------------------------------------------------------
-
-def _rounded_rect(x, y, w, h, r=12):
-    """Approximate a rounded rect with a plain rect (scene has no arc support)."""
-    rect(x + r, y, w - 2 * r, h)
-    rect(x, y + r, w, h - 2 * r)
-    ellipse(x, y, r * 2, r * 2)
-    ellipse(x + w - r * 2, y, r * 2, r * 2)
-    ellipse(x, y + h - r * 2, r * 2, r * 2)
-    ellipse(x + w - r * 2, y + h - r * 2, r * 2, r * 2)
+# ui.TextField overlay dimensions (ui coords: top-left origin)
+NAME_FIELD_W = 300
+NAME_FIELD_H = 50
 
 
 # ---------------------------------------------------------------------------
@@ -202,8 +192,13 @@ class PCVREdTech(Scene):
         field.font = ("<system-bold>", 20)
         field.alignment = ui.ALIGN_CENTER
         field.bordered = False
-        # ui coords: top-left origin, so vertical centre = h/2 - 25
-        field.frame = (w / 2 - 150, h / 2 - 25, 300, 50)
+        # ui coords: top-left origin, so vertical centre = h/2 - NAME_FIELD_H/2
+        field.frame = (
+            w / 2 - NAME_FIELD_W / 2,
+            h / 2 - NAME_FIELD_H / 2,
+            NAME_FIELD_W,
+            NAME_FIELD_H,
+        )
         field.action = self._name_submitted
 
         self.view.add_subview(field)
@@ -222,10 +217,7 @@ class PCVREdTech(Scene):
         # Burst of particles at the centre
         cx, cy = self.size.w / 2, self.size.h / 2
         self.spawn_particles(cx, cy, count=50)
-        try:
-            sound.play_effect("digital:PowerUp7")
-        except Exception:
-            pass
+        self._play_sound("digital:PowerUp7")
         self.state = STATE_INTRO
 
     # --------------------------------------------------------------- particles
@@ -1053,7 +1045,7 @@ class PCVREdTech(Scene):
     def _play_sound(effect):
         try:
             sound.play_effect(effect)
-        except Exception:
+        except (AttributeError, OSError):
             pass
 
 
