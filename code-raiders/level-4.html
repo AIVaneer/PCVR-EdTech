@@ -1,1 +1,156 @@
-Level 4 placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Code Raiders Level 4</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #7f1d1d, #020617 55%, #000000);
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  color: #fb923c;
+  text-align: center;
+}
+
+.world {
+  text-align: center;
+  color: #facc15;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.code-box {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 1px solid #fb923c;
+  font-family: monospace;
+  white-space: pre;
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  margin-top: 10px;
+  background: #020617;
+  color: white;
+  border: 2px solid #f97316;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.run {
+  background: #fb923c;
+}
+
+.hint-btn {
+  background: #facc15;
+}
+
+.terminal {
+  margin-top: 20px;
+  padding: 15px;
+  background: #020617;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.success {
+  color: #4ade80;
+}
+
+.error {
+  color: #fb7185;
+}
+
+.unlock {
+  display: none;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #fb923c;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Level 4: Variable Core</h1>
+<div class="world">🔥 World 2: Fire Cave 🔥</div>
+
+<p>The fire gate needs a name signal. Fix the variable so the message can pass through.</p>
+
+<div class="code-box">name = PCVR
+print("Welcome " + name)</div>
+
+<textarea id="input"></textarea>
+
+<button class="run" onclick="runCode()">Run Code</button>
+<button class="hint-btn" onclick="hint()">Need a hint?</button>
+
+<div id="terminal" class="terminal">
+SYSTEM READY...
+</div>
+
+<div id="unlock" class="unlock">
+<h2 class="success">Fire Gate Opened</h2>
+<p>You restored the Variable Core.</p>
+<p>🔥 World 2 has begun.</p>
+
+<a href="./portal.html">
+  <button class="run">Return to Portal Hub</button>
+</a>
+</div>
+
+</div>
+
+<script>
+function normalize(str) {
+  return str.replace(/\s+/g, "").replace(/'/g, '"').toLowerCase();
+}
+
+function runCode() {
+  const input = normalize(document.getElementById("input").value);
+  const correct = normalize('name = "PCVR"\nprint("Welcome " + name)');
+  const terminal = document.getElementById("terminal");
+
+  if (input === correct) {
+    terminal.innerHTML = "✅ CORRECT";
+    terminal.className = "terminal success";
+    document.getElementById("unlock").style.display = "block";
+  } else {
+    terminal.innerHTML = "❌ TRY AGAIN";
+    terminal.className = "terminal error";
+  }
+}
+
+function hint() {
+  document.getElementById("terminal").innerHTML =
+    "Hint: Put PCVR inside quotes so Python knows it is text.";
+}
+</script>
+
+</body>
+</html>
