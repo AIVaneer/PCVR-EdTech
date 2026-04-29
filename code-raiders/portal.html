@@ -66,15 +66,6 @@ h1 {
   border-radius: 16px;
   padding: 18px;
   box-shadow: 0 0 22px rgba(56,189,248,.12);
-  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
-  cursor: pointer;
-}
-
-.card:hover,
-.card:active {
-  transform: translateY(-2px);
-  border-color: rgba(74,222,128,.7);
-  box-shadow: 0 0 28px rgba(74,222,128,.22);
 }
 
 .card h2 {
@@ -85,7 +76,7 @@ h1 {
 
 .card.green h2 { color: var(--green); }
 .card.gold h2 { color: var(--gold); }
-.card.locked h2 { color: var(--muted); }
+.card.locked { opacity: .65; border-color: rgba(148,163,184,.35); }
 
 .card p {
   margin: 0;
@@ -113,43 +104,11 @@ h1 {
   border: 1px dashed rgba(148,163,184,.35);
 }
 
-.card.locked {
-  border-color: rgba(148,163,184,.45);
-  box-shadow: none;
-  opacity: .85;
-}
-
 .footer {
   text-align: center;
   margin-top: 26px;
   color: var(--muted);
   font-size: .85rem;
-}
-
-/* Toast popup */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 28px;
-  transform: translateX(-50%) translateY(20px);
-  background: rgba(5,7,12,.96);
-  border: 1px solid rgba(56,189,248,.55);
-  color: var(--text);
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-size: .95rem;
-  box-shadow: 0 0 22px rgba(56,189,248,.25);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease, transform .25s ease;
-  z-index: 999;
-  max-width: 90%;
-  text-align: center;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 </style>
 </head>
@@ -170,16 +129,16 @@ h1 {
       <span class="tag live">LIVE</span>
     </a>
 
-    <a class="card locked" data-locked="World 1" href="#">
-      <h2>🔒 World 1 Locked</h2>
-      <p>Coming soon. More levels are being built.</p>
-      <span class="tag locked">LOCKED</span>
+    <a class="card green" href="./index.html">
+      <h2>🌍 Start World 1</h2>
+      <p>Begin the first mission cycle and unlock World 2 by completing Level 3.</p>
+      <span class="tag live">START</span>
     </a>
 
-    <a class="card locked" data-locked="World 2" href="#">
-      <h2>🔒 World 2 Locked</h2>
-      <p>Coming soon. Complete World 1 first.</p>
-      <span class="tag locked">LOCKED</span>
+    <a id="world2Card" class="card locked" href="./index.html">
+      <h2 id="world2Title">🔒 World 2 Locked</h2>
+      <p id="world2Text">Complete World 1 first.</p>
+      <span id="world2Tag" class="tag locked">LOCKED</span>
     </a>
 
     <a class="card" href="../">
@@ -218,31 +177,22 @@ h1 {
 
 </main>
 
-<div id="toast" class="toast"></div>
-
 <script>
-(function () {
-  var toast = document.getElementById('toast');
-  var toastTimer = null;
+const world1Complete = localStorage.getItem("pcvr_world1_complete") === "true";
 
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () {
-      toast.classList.remove('show');
-    }, 2400);
-  }
+const world2Card = document.getElementById("world2Card");
+const world2Title = document.getElementById("world2Title");
+const world2Text = document.getElementById("world2Text");
+const world2Tag = document.getElementById("world2Tag");
 
-  var lockedCards = document.querySelectorAll('.card.locked[data-locked]');
-  lockedCards.forEach(function (card) {
-    card.addEventListener('click', function (e) {
-      e.preventDefault();
-      var label = card.getAttribute('data-locked') || 'This world';
-      showToast('🔒 ' + label + ' — Coming soon. More levels are being built.');
-    });
-  });
-})();
+if (world1Complete) {
+  world2Card.href = "./level-4.html";
+  world2Card.className = "card green";
+  world2Title.textContent = "🔥 Enter World 2";
+  world2Text.textContent = "Continue your journey beyond World 1.";
+  world2Tag.textContent = "UNLOCKED";
+  world2Tag.className = "tag live";
+}
 </script>
 
 </body>
