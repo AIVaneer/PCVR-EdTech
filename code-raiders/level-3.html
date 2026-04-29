@@ -1,1 +1,135 @@
-Level 3 placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Code Raiders Level 3</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #020617, #000000);
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  color: #4ade80;
+  text-align: center;
+}
+
+.code-box {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 1px solid #4ade80;
+  font-family: monospace;
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  margin-top: 10px;
+  background: #020617;
+  color: white;
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.run { background: #4ade80; }
+.hint-btn { background: #38bdf8; }
+
+.terminal {
+  margin-top: 20px;
+  padding: 15px;
+  background: #020617;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.success { color: #4ade80; }
+.error { color: #fb7185; }
+
+.unlock {
+  display: none;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #4ade80;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Level 3: Loop Gate</h1>
+
+<p>The system is stuck in a loop. Fix it to stabilize the PCVR signal.</p>
+
+<div class="code-box">
+for i in range(3)
+    print("PCVR")
+</div>
+
+<textarea id="input"></textarea>
+
+<button class="run" onclick="runCode()">Run Code</button>
+<button class="hint-btn" onclick="hint()">Need a hint?</button>
+
+<div id="terminal" class="terminal">
+SYSTEM READY...
+</div>
+
+<div id="unlock" class="unlock">
+<h2 class="success">Loop Stabilized</h2>
+<p>You completed the first cycle.</p>
+<p>🔥 World 1 Complete 🔥</p>
+</div>
+
+</div>
+
+<script>
+function normalize(str) {
+  return str.replace(/\s+/g, "").replace(/'/g, '"').toLowerCase();
+}
+
+function runCode() {
+  const input = normalize(document.getElementById("input").value);
+  const correct = normalize('for i in range(3):\n    print("PCVR")');
+  const terminal = document.getElementById("terminal");
+
+  if (input === correct) {
+    terminal.innerHTML = "✅ CORRECT";
+    terminal.className = "terminal success";
+    document.getElementById("unlock").style.display = "block";
+  } else {
+    terminal.innerHTML = "❌ TRY AGAIN";
+    terminal.className = "terminal error";
+  }
+}
+
+function hint() {
+  document.getElementById("terminal").innerHTML =
+    "Hint: You forgot a colon (:) at the end of the for loop";
+}
+</script>
+
+</body>
+</html>
