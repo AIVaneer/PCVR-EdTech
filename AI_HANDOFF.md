@@ -160,7 +160,35 @@ When new worlds are built, add a new green card linking to the first level of th
 > Follow the level pattern in Section 5, the build rules in Section 8, and never modify files the user did not name.
 > Always confirm before writing. Always report commit hash + live URL after pushing.
 > Motto: **Always for good, never for bad.**
+---
 
+## 🔐 Portal Hub — Final Structure (Locked Progression System)
+
+### Current Portal Layout
+
+1. 🛡️ Code Raiders Worlds  
+   - Purpose: Entry / overview card  
+   - Links to: ./index.html  
+
+2. 🌍 World 1: Levels 1–3  
+   - Purpose: Main starting point  
+   - Links to: ./index.html  
+   - Tag: PLAY  
+
+3. 🔒 World 2 (Locked System)  
+   - Default state: LOCKED  
+   - Unlock condition: Complete Level 3  
+
+---
+
+## 🧠 Progression System (localStorage)
+
+### Unlock Trigger (Level 3)
+
+When Level 3 is completed successfully:
+
+```js
+localStorage.setItem("pcvr_world1_complete", "true");
 ---
 
 *Last updated: 2026-04-29*
