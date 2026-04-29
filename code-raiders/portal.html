@@ -182,7 +182,7 @@ h1 {
 
     <a id="world3Card" class="card locked" href="./index.html">
       <h2 id="world3Title">🔒 World 3 Locked</h2>
-      <p id="world3Text">Ice Spire opens after World 2 is complete. Levels 7–9 coming next.</p>
+      <p id="world3Text">Ice Spire is coming next. Levels 7–9 are being built.</p>
       <span id="world3Tag" class="tag locked">LOCKED</span>
     </a>
 
@@ -253,13 +253,13 @@ if (world1Complete) {
 }
 
 if (world2Complete) {
-  unlockedWorlds = 3;
-  nextLink = "./level-7.html";
-  nextText = "World 2 complete. Prepare for World 3: Ice Spire.";
+  unlockedWorlds = 2;
+  nextLink = "./portal.html";
+  nextText = "World 2 complete. World 3: Ice Spire is being built.";
 }
 
 if (world3Complete) {
-  unlockedWorlds = 4;
+  unlockedWorlds = 3;
   nextLink = "./level-10.html";
   nextText = "World 3 complete. Prepare for World 4: Sky Temple.";
 }
@@ -289,12 +289,12 @@ const world3Text = document.getElementById("world3Text");
 const world3Tag = document.getElementById("world3Tag");
 
 if (world2Complete) {
-  world3Card.href = "./level-7.html";
-  world3Card.className = "card ice";
-  world3Title.textContent = "❄️ World 3: Ice Spire";
-  world3Text.textContent = "A frozen coding tower awaits. Levels 7–9 coming next.";
-  world3Tag.textContent = "UNLOCKED";
-  world3Tag.className = "tag live";
+  world3Card.href = "./portal.html";
+  world3Card.className = "card locked";
+  world3Title.textContent = "🔒 World 3 Locked";
+  world3Text.textContent = "Ice Spire is coming next. Levels 7–9 are being built.";
+  world3Tag.textContent = "LOCKED";
+  world3Tag.className = "tag locked";
 }
 
 const world4Card = document.getElementById("world4Card");
@@ -303,12 +303,12 @@ const world4Text = document.getElementById("world4Text");
 const world4Tag = document.getElementById("world4Tag");
 
 if (world3Complete) {
-  world4Card.href = "./level-10.html";
-  world4Card.className = "card sky";
-  world4Title.textContent = "🏛️ World 4: Sky Temple";
-  world4Text.textContent = "The high temple of structured code. Levels 10–12 planned.";
-  world4Tag.textContent = "UNLOCKED";
-  world4Tag.className = "tag live";
+  world4Card.href = "./portal.html";
+  world4Card.className = "card locked";
+  world4Title.textContent = "🔒 World 4 Locked";
+  world4Text.textContent = "Sky Temple opens after World 3 is built. Levels 10–12 planned.";
+  world4Tag.textContent = "LOCKED";
+  world4Tag.className = "tag locked";
 }
 </script>
 
