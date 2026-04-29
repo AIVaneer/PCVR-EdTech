@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Code Raiders Level 6</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #7f1d1d, #020617 55%, #000000);
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  color: #fb923c;
+  text-align: center;
+}
+
+.world {
+  text-align: center;
+  color: #facc15;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.card, .code-box, .terminal, .unlock {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 1px solid #fb923c;
+}
+
+.code-box {
+  font-family: monospace;
+  white-space: pre;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  margin-top: 10px;
+  background: #020617;
+  color: white;
+  border: 2px solid #f97316;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: monospace;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.run {
+  background: #fb923c;
+}
+
+.hint-btn {
+  background: #facc15;
+}
+
+.success {
+  color: #4ade80;
+}
+
+.error {
+  color: #fb7185;
+}
+
+.unlock {
+  display: none;
+}
+
+.reward {
+  border-color: #facc15;
+}
+
+.small {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Level 6: Function Forge</h1>
+<div class="world">🔥 World 2: Fire Cave 🔥</div>
+
+<p>The forge needs a function spell. Fix the missing symbol so the fire core can activate.</p>
+
+<div class="card">
+  <strong>Current XP:</strong> <span id="xpDisplay">0</span>
+</div>
+
+<div class="code-box">def ignite()
+    print("PCVR Fire Core")
+
+ignite()</div>
+
+<textarea id="input" placeholder="Type the corrected code here"></textarea>
+
+<button class="run" onclick="runCode()">Run Code</button>
+<button class="hint-btn" onclick="hint()">Need a hint?</button>
+
+<div id="terminal" class="terminal">
+SYSTEM READY...
+</div>
+
+<div id="unlock" class="unlock">
+  <h2 class="success">Fire Core Activated</h2>
+  <p>You fixed the function and completed Level 6.</p>
+
+  <div class="card reward">
+    <h3>XP Reward</h3>
+    <p>+50 XP added to your Code Raiders progress.</p>
+    <p><strong>Total XP:</strong> <span id="rewardXp">0</span></p>
+  </div>
+
+  <div class="card reward">
+    <h3>🔥 World 2 Complete</h3>
+    <p>You cleared the Fire Cave cycle.</p>
+    <p class="small">World 3 unlock system coming next.</p>
+  </div>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;">
+    <a href="./level-7.html">
+      <button class="run">➡️ Next World</button>
+    </a>
+
+    <a href="./portal.html">
+      <button class="hint-btn">🏠 Portal Hub</button>
+    </a>
+  </div>
+</div>
+
+</div>
+
+<script>
+function normalize(str) {
+  return str.replace(/\s+/g, "").replace(/'/g, '"').toLowerCase();
+}
+
+function getXp() {
+  return parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+}
+
+function setXp(value) {
+  localStorage.setItem("pcvr_xp", String(value));
+  document.getElementById("xpDisplay").innerHTML = value;
+  document.getElementById("rewardXp").innerHTML = value;
+}
+
+function loadXp() {
+  setXp(getXp());
+}
+
+function runCode() {
+  const input = normalize(document.getElementById("input").value);
+  const correct = normalize('def ignite():\n    print("PCVR Fire Core")\n\nignite()');
+  const terminal = document.getElementById("terminal");
+
+  if (input === correct) {
+    terminal.innerHTML = "✅ CORRECT";
+    terminal.className = "terminal success";
+
+    localStorage.setItem("pcvr_world2_complete", "true");
+
+    if (localStorage.getItem("pcvr_level6_complete") !== "true") {
+      const newXp = getXp() + 50;
+      localStorage.setItem("pcvr_level6_complete", "true");
+      setXp(newXp);
+    }
+
+    document.getElementById("unlock").style.display = "block";
+  } else {
+    terminal.innerHTML = "❌ TRY AGAIN";
+    terminal.className = "terminal error";
+  }
+}
+
+function hint() {
+  document.getElementById("terminal").innerHTML =
+    "Hint: A function definition needs a colon (:) at the end of the def line.";
+}
+
+loadXp();
+</script>
+
+</body>
+</html>
