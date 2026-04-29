@@ -34,6 +34,7 @@ PCVR-EdTech/
 ├── index.html                 # Root landing page (PCVR EdTech home)
 ├── README.md
 ├── LICENSE
+├── AI_HANDOFF.md              # This file
 └── code-raiders/
     ├── index.html             # Code Raiders entry / level selector
     ├── level-1.html           # World 1 — Level 1
@@ -55,9 +56,9 @@ QR code  →  Landing (/)  →  code-raiders/index.html
         →  portal.html  →  level-4.html  →  portal.html
 ```
 
-The Portal Hub is the central navigation point AFTER World 1. From there the user can:
+The Portal Hub is the central navigation point. From there the user can:
 - Re-enter Code Raiders Worlds
-- Enter World 2 (Level 4)
+- See locked World 1 and World 2 cards (toast popup — coming soon)
 - Visit the PCVR EdTech landing
 - Visit AIVaneer's GitHub
 - Visit the PCVR EdTech repo
@@ -93,27 +94,32 @@ This makes the answer-checker forgiving of whitespace, single vs double quotes, 
 
 ## 6. Levels Already Built
 
-| Level | World | Mission        | Broken Code                          | Correct Answer                          | Concept Taught          |
-|-------|-------|----------------|--------------------------------------|------------------------------------------|-------------------------|
-| 1     | 1     | (intro)        | (see file)                           | (see file)                               | print syntax            |
-| 2     | 1     | (intro)        | (see file)                           | (see file)                               | basic syntax            |
+| Level | World | Mission        | Broken Code                          | Correct Answer                            | Concept Taught          |
+|-------|-------|----------------|--------------------------------------|--------------------------------------------|-------------------------|
+| 1     | 1     | (intro)        | (see file)                           | (see file)                                 | print syntax            |
+| 2     | 1     | (intro)        | (see file)                           | (see file)                                 | basic syntax            |
 | 3     | 1     | Loop Gate      | `for i in range(3)` (missing colon)  | `for i in range(3):` + `    print("PCVR")` | for-loops + colons      |
-| 4     | 2     | Variable Core  | `name = PCVR`                        | `name = "PCVR"`                          | strings need quotes     |
+| 4     | 2     | Variable Core  | `name = PCVR`                        | `name = "PCVR"`                            | strings need quotes     |
+
+> **Note:** All levels exist as files and work individually, but the Portal Hub currently shows World 1 and World 2 as 🔒 LOCKED while more levels are being built. The QR/landing flow into `code-raiders/index.html` still works directly.
 
 ---
 
 ## 7. Portal Hub (`code-raiders/portal.html`)
 
-A mobile-friendly card grid. Each card is either an `<a class="card">` (link) or a `<div class="card info">` (placeholder).
+A mobile-friendly card grid. Each card is either an `<a class="card">` (link), an `<a class="card locked" data-locked="World N">` (locked with toast popup), or a `<div class="card info">` (placeholder).
 
 Current cards (in order):
 1. 🛡️ **Code Raiders Worlds** → `./index.html` (LIVE, green)
-2. 🔥 **Enter World 2** → `./level-4.html` (LIVE, green)
-3. 🌐 **PCVR EdTech Landing** → `../` (LIVE)
-4. 👤 **AIVaneer GitHub** → `https://github.com/AIVaneer` (LIVE)
-5. 📦 **PCVR EdTech Repo** → `https://github.com/AIVaneer/PCVR-EdTech` (LIVE)
-6. 🪙 **$PCVR Loop System** — placeholder (SOON, gold)
-7. 🔐 **Atlas Infinity Core** — placeholder (LOCKED, muted)
+2. 🔒 **World 1 Locked** → toast popup "Coming soon" (LOCKED — temporary while expanding)
+3. 🔒 **World 2 Locked** → toast popup "Coming soon" (LOCKED — temporary while expanding)
+4. 🌐 **PCVR EdTech Landing** → `../` (LIVE)
+5. 👤 **AIVaneer GitHub** → `https://github.com/AIVaneer` (LIVE)
+6. 📦 **PCVR EdTech Repo** → `https://github.com/AIVaneer/PCVR-EdTech` (LIVE)
+7. 🪙 **$PCVR Loop System** — placeholder (SOON, gold)
+8. 🔐 **Atlas Infinity Core** — placeholder (LOCKED, muted)
+
+Locked cards use a toast popup (no navigation) via `data-locked="World N"` + a small JS toast at the bottom of `portal.html`. To unlock a world later, replace the locked `<a>` with a real link card and remove the `data-locked` attribute.
 
 When new worlds are built, add a new green card linking to the first level of that world.
 
@@ -149,8 +155,8 @@ When new worlds are built, add a new green card linking to the first level of th
 
 > You are continuing the PCVR EdTech build for AIVaneer.
 > The system is a gamified Python-learning game called **Code Raiders**, hosted on GitHub Pages.
-> World 1 (Levels 1–3, green/cyan) and Level 4 (World 2, orange/red Fire Cave) are complete.
-> A central **Portal Hub** routes users between worlds and external links.
+> Levels 1–4 exist as files, but the Portal Hub currently shows both worlds as 🔒 LOCKED with a "coming soon" toast while AIVaneer expands the level set.
+> A central **Portal Hub** routes users between locked worlds, the landing page, and external links.
 > Follow the level pattern in Section 5, the build rules in Section 8, and never modify files the user did not name.
 > Always confirm before writing. Always report commit hash + live URL after pushing.
 > Motto: **Always for good, never for bad.**
