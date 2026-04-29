@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Code Raiders Level 3</title>
+<title>Level 3: Loop Gate</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #020617, #000000);
+  background: radial-gradient(circle at top, #0b1020, #05070c);
   color: white;
   padding: 20px;
 }
@@ -20,16 +20,16 @@ body {
 }
 
 h1 {
-  color: #4ade80;
   text-align: center;
+  color: #4ade80;
 }
 
 .code-box {
   background: #020617;
   padding: 15px;
   border-radius: 10px;
-  margin: 20px 0;
   border: 1px solid #4ade80;
+  margin: 20px 0;
   font-family: monospace;
   white-space: pre;
 }
@@ -43,6 +43,7 @@ textarea {
   border: 2px solid #38bdf8;
   border-radius: 10px;
   padding: 10px;
+  font-family: monospace;
 }
 
 button {
@@ -51,6 +52,7 @@ button {
   border-radius: 10px;
   border: none;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .run {
@@ -67,6 +69,7 @@ button {
   background: #020617;
   border-radius: 10px;
   border: 1px solid #333;
+  font-family: monospace;
 }
 
 .success {
@@ -91,22 +94,18 @@ button {
 <div class="container">
 
 <h1>Level 3: Loop Gate</h1>
-
 <p>The system is stuck in a loop. Fix it to stabilize the PCVR signal.</p>
 
 <div class="code-box">for i in range(3)
     print("PCVR")</div>
 
-<textarea id="input"></textarea>
+<textarea id="input" placeholder="Type the corrected code here"></textarea>
 
 <button class="run" onclick="runCode()">Run Code</button>
-<button class="hint-btn" onclick="hint()">Need a hint?</button>
+<button class="hint-btn" onclick="showHint()">Need a hint?</button>
 
-<div id="terminal" class="terminal">
-SYSTEM READY...
-</div>
+<div id="terminal" class="terminal">SYSTEM READY...</div>
 
-<!-- ✅ UPDATED UNLOCK SECTION -->
 <div id="unlock" class="unlock">
   <h2 class="success">Loop Stabilized</h2>
   <p>You completed the first cycle.</p>
@@ -121,28 +120,33 @@ SYSTEM READY...
 </div>
 
 <script>
-function normalize(str) {
-  return str.replace(/\s+/g, "").replace(/'/g, '"').toLowerCase();
+function normalize(s) {
+  return s.replace(/\s+/g, "").toLowerCase();
 }
 
 function runCode() {
-  const input = normalize(document.getElementById("input").value);
-  const correct = normalize('for i in range(3):\n    print("PCVR")');
-  const terminal = document.getElementById("terminal");
+  var input = normalize(document.getElementById("input").value);
+  var correct = normalize('for i in range(3): print("PCVR")');
+  var terminal = document.getElementById("terminal");
 
   if (input === correct) {
+
+    // 🔥 THIS IS THE KEY LINE (UNLOCK FLAG)
+    localStorage.setItem("pcvr_world1_complete", "true");
+
     terminal.innerHTML = "✅ CORRECT";
     terminal.className = "terminal success";
     document.getElementById("unlock").style.display = "block";
+
   } else {
     terminal.innerHTML = "❌ TRY AGAIN";
     terminal.className = "terminal error";
   }
 }
 
-function hint() {
+function showHint() {
   document.getElementById("terminal").innerHTML =
-    "Hint: Add a colon (:) at the end of the for loop";
+    "Hint: Add a colon (:) at the end of the for loop.";
 }
 </script>
 
