@@ -13,6 +13,8 @@
   --gold: #facc15;
   --text: #e5e7eb;
   --muted: #94a3b8;
+  --ice: #67e8f9;
+  --sky: #a78bfa;
 }
 
 * { box-sizing: border-box; }
@@ -29,10 +31,7 @@ body {
   padding: 24px 14px;
 }
 
-.wrap {
-  max-width: 720px;
-  margin: 0 auto;
-}
+.wrap { max-width: 720px; margin: 0 auto; }
 
 .hero {
   text-align: center;
@@ -76,6 +75,8 @@ h1 {
 
 .card.green h2 { color: var(--green); }
 .card.gold h2 { color: var(--gold); }
+.card.ice h2 { color: var(--ice); }
+.card.sky h2 { color: var(--sky); }
 .card.locked { opacity: .65; border-color: rgba(148,163,184,.35); }
 
 .card p {
@@ -98,6 +99,29 @@ h1 {
 .tag.live { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.55); }
 .tag.soon { background: rgba(250,204,21,.12); color: var(--gold); border: 1px solid rgba(250,204,21,.55); }
 .tag.locked { background: rgba(148,163,184,.12); color: var(--muted); border: 1px solid rgba(148,163,184,.45); }
+
+.progress-shell {
+  background: rgba(5,7,12,.9);
+  border: 1px solid rgba(74,222,128,.45);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 14px;
+  background: rgba(148,163,184,.16);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 12px;
+  border: 1px solid rgba(148,163,184,.25);
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--cyan), var(--gold));
+  border-radius: 999px;
+  transition: width .25s ease;
+}
 
 .info {
   background: rgba(5,7,12,.7);
@@ -123,6 +147,21 @@ h1 {
 
   <section class="grid">
 
+    <div class="card progress-shell">
+      <h2>⚡ Raider Progress</h2>
+      <p><strong>Total XP:</strong> <span id="xpDisplay">0</span></p>
+      <p><strong>Journey:</strong> <span id="progressText">Loading progress...</span></p>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <a id="continueCard" class="card green" href="./index.html">
+      <h2>➡️ Continue Mission</h2>
+      <p id="continueText">Start your Code Raiders journey.</p>
+      <span class="tag live">CONTINUE</span>
+    </a>
+
     <a class="card green" href="./index.html">
       <h2>🛡️ Code Raiders Worlds</h2>
       <p>Enter the level system. Solve broken code. Unlock new worlds.</p>
@@ -139,6 +178,18 @@ h1 {
       <h2 id="world2Title">🔒 World 2 Locked</h2>
       <p id="world2Text">Complete World 1 first. Levels 4–6 unlock after Level 3.</p>
       <span id="world2Tag" class="tag locked">LOCKED</span>
+    </a>
+
+    <a id="world3Card" class="card locked" href="./index.html">
+      <h2 id="world3Title">🔒 World 3 Locked</h2>
+      <p id="world3Text">Ice Spire opens after World 2 is complete. Levels 7–9 coming next.</p>
+      <span id="world3Tag" class="tag locked">LOCKED</span>
+    </a>
+
+    <a id="world4Card" class="card locked" href="./index.html">
+      <h2 id="world4Title">🔒 World 4 Locked</h2>
+      <p id="world4Text">Sky Temple opens after World 3 is complete. Levels 10–12 planned.</p>
+      <span id="world4Tag" class="tag locked">LOCKED</span>
     </a>
 
     <a class="card" href="../">
@@ -179,6 +230,44 @@ h1 {
 
 <script>
 const world1Complete = localStorage.getItem("pcvr_world1_complete") === "true";
+const world2Complete = localStorage.getItem("pcvr_world2_complete") === "true";
+const world3Complete = localStorage.getItem("pcvr_world3_complete") === "true";
+const xp = parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+
+const xpDisplay = document.getElementById("xpDisplay");
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
+const continueCard = document.getElementById("continueCard");
+const continueText = document.getElementById("continueText");
+
+xpDisplay.textContent = xp;
+
+let unlockedWorlds = 1;
+let nextLink = "./index.html";
+let nextText = "Start World 1: Levels 1–3.";
+
+if (world1Complete) {
+  unlockedWorlds = 2;
+  nextLink = "./level-4.html";
+  nextText = "Continue into World 2: Fire Cave.";
+}
+
+if (world2Complete) {
+  unlockedWorlds = 3;
+  nextLink = "./level-7.html";
+  nextText = "World 2 complete. Prepare for World 3: Ice Spire.";
+}
+
+if (world3Complete) {
+  unlockedWorlds = 4;
+  nextLink = "./level-10.html";
+  nextText = "World 3 complete. Prepare for World 4: Sky Temple.";
+}
+
+continueCard.href = nextLink;
+continueText.textContent = nextText;
+progressText.textContent = unlockedWorlds + " of 4 worlds unlocked";
+progressFill.style.width = (unlockedWorlds / 4 * 100) + "%";
 
 const world2Card = document.getElementById("world2Card");
 const world2Title = document.getElementById("world2Title");
@@ -192,6 +281,34 @@ if (world1Complete) {
   world2Text.textContent = "Enter the Fire Cave cycle. Complete Levels 4, 5, and 6.";
   world2Tag.textContent = "UNLOCKED";
   world2Tag.className = "tag live";
+}
+
+const world3Card = document.getElementById("world3Card");
+const world3Title = document.getElementById("world3Title");
+const world3Text = document.getElementById("world3Text");
+const world3Tag = document.getElementById("world3Tag");
+
+if (world2Complete) {
+  world3Card.href = "./level-7.html";
+  world3Card.className = "card ice";
+  world3Title.textContent = "❄️ World 3: Ice Spire";
+  world3Text.textContent = "A frozen coding tower awaits. Levels 7–9 coming next.";
+  world3Tag.textContent = "UNLOCKED";
+  world3Tag.className = "tag live";
+}
+
+const world4Card = document.getElementById("world4Card");
+const world4Title = document.getElementById("world4Title");
+const world4Text = document.getElementById("world4Text");
+const world4Tag = document.getElementById("world4Tag");
+
+if (world3Complete) {
+  world4Card.href = "./level-10.html";
+  world4Card.className = "card sky";
+  world4Title.textContent = "🏛️ World 4: Sky Temple";
+  world4Text.textContent = "The high temple of structured code. Levels 10–12 planned.";
+  world4Tag.textContent = "UNLOCKED";
+  world4Tag.className = "tag live";
 }
 </script>
 
