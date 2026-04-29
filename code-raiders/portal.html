@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PCVR Portal Hub</title>
+
+<style>
+:root {
+  --bg: #05070c;
+  --green: #4ade80;
+  --cyan: #38bdf8;
+  --gold: #facc15;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,.22), transparent 35%),
+    radial-gradient(circle at top right, rgba(74,222,128,.18), transparent 35%),
+    linear-gradient(180deg, #0b1020, var(--bg));
+  color: var(--text);
+  padding: 24px 14px;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 3rem);
+  color: var(--green);
+  letter-spacing: .04em;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  background: linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.96));
+  border: 1px solid rgba(56,189,248,.45);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 0 22px rgba(56,189,248,.12);
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.card:hover,
+.card:active {
+  transform: translateY(-2px);
+  border-color: rgba(74,222,128,.7);
+  box-shadow: 0 0 28px rgba(74,222,128,.22);
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  color: var(--cyan);
+}
+
+.card.green h2 { color: var(--green); }
+.card.gold h2 { color: var(--gold); }
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .95rem;
+  line-height: 1.45;
+}
+
+.tag {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.tag.live { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.55); }
+.tag.soon { background: rgba(250,204,21,.12); color: var(--gold); border: 1px solid rgba(250,204,21,.55); }
+.tag.locked { background: rgba(148,163,184,.12); color: var(--muted); border: 1px solid rgba(148,163,184,.45); }
+
+.info {
+  background: rgba(5,7,12,.7);
+  border: 1px dashed rgba(148,163,184,.35);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 26px;
+  color: var(--muted);
+  font-size: .85rem;
+}
+</style>
+</head>
+
+<body>
+<main class="wrap">
+
+  <section class="hero">
+    <h1>PCVR PORTAL HUB</h1>
+    <p class="subtitle">Choose your next mission</p>
+  </section>
+
+  <section class="grid">
+
+    <a class="card green" href="./index.html">
+      <h2>🛡️ Code Raiders Worlds</h2>
+      <p>Enter the level system. Solve broken code. Unlock new worlds.</p>
+      <span class="tag live">LIVE</span>
+    </a>
+
+    <a class="card" href="../">
+      <h2>🌐 PCVR EdTech Landing</h2>
+      <p>The main PCVR EdTech home page.</p>
+      <span class="tag live">LIVE</span>
+    </a>
+
+    <a class="card" href="https://github.com/AIVaneer" target="_blank" rel="noopener">
+      <h2>👤 AIVaneer GitHub</h2>
+      <p>Builder profile and public projects.</p>
+      <span class="tag live">LIVE</span>
+    </a>
+
+    <a class="card" href="https://github.com/AIVaneer/PCVR-EdTech" target="_blank" rel="noopener">
+      <h2>📦 PCVR EdTech Repo</h2>
+      <p>Source code for the PCVR EdTech system.</p>
+      <span class="tag live">LIVE</span>
+    </a>
+
+    <div class="card gold info">
+      <h2>🪙 $PCVR Loop System</h2>
+      <p>Move to Learn is active.<br>Buy to Learn starts soon.</p>
+      <span class="tag soon">SOON</span>
+    </div>
+
+    <div class="card info">
+      <h2>🔐 Atlas Infinity Core</h2>
+      <p>Private Tier 3 system coming later.</p>
+      <span class="tag locked">LOCKED</span>
+    </div>
+
+  </section>
+
+  <p class="footer">PCVR Portal • Always for good, never for bad</p>
+
+</main>
+</body>
+</html>
