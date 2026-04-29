@@ -106,11 +106,16 @@ button {
 SYSTEM READY...
 </div>
 
+<!-- ✅ UPDATED UNLOCK SECTION -->
 <div id="unlock" class="unlock">
-<h2 class="success">Loop Stabilized</h2>
-<p>You completed the first cycle.</p>
-<p>🔥 World 1 Complete 🔥</p>
-<p>More missions coming soon.</p>
+  <h2 class="success">Loop Stabilized</h2>
+  <p>You completed the first cycle.</p>
+  <p>🔥 World 1 Complete 🔥</p>
+  <p>You are ready for the next world.</p>
+
+  <a href="./level-4.html">
+    <button class="run">Enter World 2</button>
+  </a>
 </div>
 
 </div>
@@ -137,7 +142,7 @@ function runCode() {
 
 function hint() {
   document.getElementById("terminal").innerHTML =
-    "Hint: You forgot a colon (:) at the end of the for loop";
+    "Hint: Add a colon (:) at the end of the for loop";
 }
 </script>
 
