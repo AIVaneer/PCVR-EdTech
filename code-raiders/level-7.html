@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Code Raiders Level 7</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #0e7490, #020617 55%, #000000);
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  color: #67e8f9;
+  text-align: center;
+}
+
+.world {
+  text-align: center;
+  color: #bae6fd;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.card, .code-box, .terminal, .unlock {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 1px solid #67e8f9;
+}
+
+.code-box {
+  font-family: monospace;
+  white-space: pre;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  margin-top: 10px;
+  background: #020617;
+  color: white;
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: monospace;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.run {
+  background: #67e8f9;
+}
+
+.hint-btn {
+  background: #bae6fd;
+}
+
+.success {
+  color: #4ade80;
+}
+
+.error {
+  color: #fb7185;
+}
+
+.unlock {
+  display: none;
+}
+
+.reward {
+  border-color: #facc15;
+}
+
+.small {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Level 7: Ice Signal</h1>
+<div class="world">❄️ World 3: Ice Spire ❄️</div>
+
+<p>The Ice Spire listens for the correct signal. Fix the string comparison so the gate can open.</p>
+
+<div class="card">
+  <strong>Current XP:</strong> <span id="xpDisplay">0</span>
+</div>
+
+<div class="code-box">signal = "PCVR"
+if signal = "PCVR":
+    print("Ice Gate Open")</div>
+
+<textarea id="input" placeholder="Type the corrected code here"></textarea>
+
+<button class="run" onclick="runCode()">Run Code</button>
+<button class="hint-btn" onclick="hint()">Need a hint?</button>
+
+<div id="terminal" class="terminal">
+SYSTEM READY...
+</div>
+
+<div id="unlock" class="unlock">
+  <h2 class="success">Ice Gate Opened</h2>
+  <p>You fixed the comparison and entered the Ice Spire.</p>
+
+  <div class="card reward">
+    <h3>XP Reward</h3>
+    <p>+50 XP added to your Code Raiders progress.</p>
+    <p><strong>Total XP:</strong> <span id="rewardXp">0</span></p>
+  </div>
+
+  <div class="card reward">
+    <h3>❄️ World 3 Started</h3>
+    <p>The Ice Spire has awakened.</p>
+    <p class="small">Complete Levels 7, 8, and 9 to unlock World 4.</p>
+  </div>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;">
+    <a href="./level-8.html">
+      <button class="run">➡️ Next Level</button>
+    </a>
+
+    <a href="./portal.html">
+      <button class="hint-btn">🏠 Portal Hub</button>
+    </a>
+  </div>
+</div>
+
+</div>
+
+<script>
+let audioReady = false;
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioReady) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    audioReady = true;
+  }
+}
+
+function playTone(freq, duration, type) {
+  if (!audioReady || !audioCtx) return;
+
+  const oscillator = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  oscillator.type = type || "sine";
+  oscillator.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+  oscillator.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + duration);
+}
+
+function soundClick() {
+  initAudio();
+  playTone(440, 0.08, "sine");
+}
+
+function soundCorrect() {
+  initAudio();
+  playTone(660, 0.1, "sine");
+  setTimeout(function() { playTone(880, 0.12, "sine"); }, 100);
+}
+
+function soundWrong() {
+  initAudio();
+  playTone(180, 0.16, "sawtooth");
+}
+
+function soundReward() {
+  initAudio();
+  setTimeout(function() { playTone(990, 0.12, "triangle"); }, 220);
+}
+
+function normalize(str) {
+  return str.replace(/\s+/g, "").replace(/'/g, '"').toLowerCase();
+}
+
+function getXp() {
+  return parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+}
+
+function setXp(value) {
+  localStorage.setItem("pcvr_xp", String(value));
+  document.getElementById("xpDisplay").innerHTML = value;
+  document.getElementById("rewardXp").innerHTML = value;
+}
+
+function loadXp() {
+  setXp(getXp());
+}
+
+function runCode() {
+  soundClick();
+
+  const input = normalize(document.getElementById("input").value);
+  const correct = normalize('signal = "PCVR"\nif signal == "PCVR":\n    print("Ice Gate Open")');
+  const terminal = document.getElementById("terminal");
+
+  if (input === correct) {
+    terminal.innerHTML = "✅ CORRECT";
+    terminal.className = "terminal success";
+
+    localStorage.setItem("pcvr_world3_started", "true");
+
+    if (localStorage.getItem("pcvr_level7_complete") !== "true") {
+      const newXp = getXp() + 50;
+      localStorage.setItem("pcvr_level7_complete", "true");
+      setXp(newXp);
+      soundReward();
+    }
+
+    soundCorrect();
+    document.getElementById("unlock").style.display = "block";
+  } else {
+    terminal.innerHTML = "❌ TRY AGAIN";
+    terminal.className = "terminal error";
+    soundWrong();
+  }
+}
+
+function hint() {
+  soundClick();
+  document.getElementById("terminal").innerHTML =
+    "Hint: Use double equals == when comparing values.";
+}
+
+loadXp();
+</script>
+
+</body>
+</html>
