@@ -15,6 +15,7 @@
   --muted: #94a3b8;
   --ice: #67e8f9;
   --sky: #a78bfa;
+  --red: #fb7185;
 }
 
 * { box-sizing: border-box; }
@@ -123,6 +124,58 @@ h1 {
   transition: width .25s ease;
 }
 
+.radio-panel {
+  border: 1px solid rgba(103,232,249,.65);
+  background:
+    radial-gradient(circle at top left, rgba(103,232,249,.18), transparent 38%),
+    linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.98));
+}
+
+.radio-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.radio-btn {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.radio-play {
+  background: var(--green);
+  color: #052e16;
+}
+
+.radio-pause {
+  background: var(--red);
+  color: #450a0a;
+}
+
+.volume-wrap {
+  margin-top: 14px;
+}
+
+.volume-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.volume-row span {
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--green);
+}
+
 .info {
   background: rgba(5,7,12,.7);
   border: 1px dashed rgba(148,163,184,.35);
@@ -168,6 +221,27 @@ h1 {
   </section>
 
   <section class="grid">
+
+    <div class="card radio-panel">
+      <h2>🎧 PCVR Radio</h2>
+      <p><strong>Station:</strong> SomaFM Deep Space One</p>
+      <p id="radioStatus">Radio is ready. Tap play to start.</p>
+
+      <div class="radio-row">
+        <button class="radio-btn radio-play" onclick="playRadio()">▶ Play Radio</button>
+        <button class="radio-btn radio-pause" onclick="pauseRadio()">⏸ Pause Radio</button>
+      </div>
+
+      <div class="volume-wrap">
+        <div class="volume-row">
+          <span>🔈</span>
+          <input id="volumeSlider" type="range" min="0" max="100" value="70" oninput="setRadioVolume(this.value)">
+          <span id="volumeText">70%</span>
+        </div>
+      </div>
+
+      <audio id="pcvrRadio" preload="none" src="https://ice5.somafm.com/deepspaceone-128-mp3"></audio>
+    </div>
 
     <div class="card progress-shell">
       <h2>⚡ Raider Progress</h2>
@@ -348,6 +422,36 @@ if (world3Complete) {
   world4Text.textContent = "Sky Temple opens after World 3 is built. Levels 10–12 planned.";
   world4Tag.textContent = "LOCKED";
   world4Tag.className = "tag locked";
+}
+
+const radio = document.getElementById("pcvrRadio");
+const radioStatus = document.getElementById("radioStatus");
+const volumeText = document.getElementById("volumeText");
+const savedVolume = localStorage.getItem("pcvr_radio_volume") || "70";
+
+document.getElementById("volumeSlider").value = savedVolume;
+setRadioVolume(savedVolume);
+
+function playRadio() {
+  radio.play()
+    .then(function() {
+      radioStatus.textContent = "Radio playing: SomaFM Deep Space One";
+    })
+    .catch(function() {
+      radioStatus.textContent = "Tap play again or open in Safari if audio is blocked.";
+    });
+}
+
+function pauseRadio() {
+  radio.pause();
+  radioStatus.textContent = "Radio paused.";
+}
+
+function setRadioVolume(value) {
+  const level = parseInt(value, 10);
+  radio.volume = level / 100;
+  volumeText.textContent = level + "%";
+  localStorage.setItem("pcvr_radio_volume", String(level));
 }
 </script>
 
