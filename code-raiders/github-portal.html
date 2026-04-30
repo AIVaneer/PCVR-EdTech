@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AIVaneer GitHub Portal</title>
+
+<style>
+:root {
+  --bg: #05070c;
+  --panel: #0b1628;
+  --panel2: #10223a;
+  --green: #4ade80;
+  --cyan: #38bdf8;
+  --gold: #facc15;
+  --red: #fb7185;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --purple: #a78bfa;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,.24), transparent 28%),
+    radial-gradient(circle at top right, rgba(74,222,128,.16), transparent 30%),
+    repeating-linear-gradient(
+      180deg,
+      #07111f 0px,
+      #07111f 92px,
+      #0b1a2f 92px,
+      #0b1a2f 156px
+    );
+  color: var(--text);
+  padding: 24px 14px;
+  overflow-x: hidden;
+}
+
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .7;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.9) 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(56,189,248,.8) 1px, transparent 1.5px);
+  background-size: 95px 95px, 145px 145px;
+  background-position: 20px 30px, 70px 90px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+h1 {
+  margin: 0;
+  color: var(--cyan);
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: .95;
+}
+
+h2 {
+  margin: 4px 0 0;
+  font-size: clamp(1.15rem, 4vw, 1.65rem);
+}
+
+.subtitle {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.rtx {
+  border: 2px solid var(--green);
+  color: white;
+  padding: 12px 18px;
+  text-align: center;
+  font-weight: 900;
+  background: rgba(5,7,12,.55);
+  min-width: 120px;
+}
+
+.rtx span {
+  display: block;
+  color: var(--green);
+  font-size: 1.4rem;
+}
+
+.top-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.action {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text);
+  border: 2px solid var(--cyan);
+  padding: 13px;
+  font-weight: 900;
+  background: rgba(15,23,42,.72);
+}
+
+.action.gold { border-color: var(--gold); }
+
+.repo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.repo-card {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  border: 2px solid var(--green);
+  background: linear-gradient(135deg, rgba(16,34,58,.94), rgba(5,7,12,.94));
+  padding: 18px 18px 18px 26px;
+  min-height: 132px;
+  position: relative;
+  box-shadow: 0 0 22px rgba(56,189,248,.10);
+}
+
+.repo-card::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 18px;
+  bottom: 18px;
+  width: 8px;
+  background: var(--green);
+}
+
+.repo-card.private {
+  border-color: var(--red);
+}
+
+.repo-card.private::before {
+  background: var(--red);
+}
+
+.repo-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-left: 14px;
+}
+
+.repo-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.badge {
+  color: var(--green);
+  font-weight: 900;
+  font-size: .78rem;
+}
+
+.private .badge {
+  color: var(--red);
+}
+
+.repo-card p {
+  margin: 14px 0 14px 14px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-left: 14px;
+  font-size: .8rem;
+}
+
+.lang {
+  color: var(--gold);
+  font-weight: 900;
+}
+
+.url {
+  color: var(--cyan);
+}
+
+.footer-card {
+  margin-top: 32px;
+  border: 2px solid var(--purple);
+  padding: 18px;
+  background: rgba(16,34,58,.72);
+}
+
+.footer-card h3 {
+  margin: 0 0 8px;
+}
+
+.footer-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.back {
+  display: inline-block;
+  margin-top: 18px;
+  text-decoration: none;
+  background: var(--green);
+  color: #052e16;
+  font-weight: 900;
+  padding: 12px 16px;
+  border-radius: 12px;
+}
+
+@media (min-width: 760px) {
+  body { padding: 42px; }
+
+  .repo-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="stars"></div>
+
+<main class="wrap">
+
+  <section class="header">
+    <div>
+      <h1>AIVaneer GitHub Portal</h1>
+      <h2>PCVR Studios code links</h2>
+      <p class="subtitle">Tap any card to open the repository.</p>
+    </div>
+
+    <div class="rtx">
+      RTX MODE
+      <span>ON</span>
+    </div>
+  </section>
+
+  <section class="top-actions">
+    <a class="action" href="https://github.com/AIVaneer" target="_blank" rel="noopener">
+      Open GitHub Profile
+    </a>
+
+    <a class="action gold" href="https://github.com/AIVaneer?tab=repositories" target="_blank" rel="noopener">
+      View All Repositories
+    </a>
+  </section>
+
+  <section class="repo-grid">
+
+    <a class="repo-card" href="https://github.com/AIVaneer/PCVR-EdTech" target="_blank" rel="noopener">
+      <div class="repo-title-row">
+        <h3>PCVR EdTech</h3>
+        <span class="badge">PUBLIC</span>
+      </div>
+      <p>Interactive PCVR educational experience with visuals and coding challenges.</p>
+      <div class="meta">
+        <span class="lang">Mixed</span>
+        <span class="url">github.com/AIVaneer/PCVR-EdTech</span>
+      </div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/AIVaneer/Eve-Repository" target="_blank" rel="noopener">
+      <div class="repo-title-row">
+        <h3>Eve Repository</h3>
+        <span class="badge">PUBLIC</span>
+      </div>
+      <p>Learning how to build one byte at a time.</p>
+      <div class="meta">
+        <span class="lang">Python</span>
+        <span class="url">github.com/AIVaneer/Eve-Repository</span>
+      </div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/AIVaneer/AIVaneer-PCVR-Studios" target="_blank" rel="noopener">
+      <div class="repo-title-row">
+        <h3>AIVaneer PCVR Studios</h3>
+        <span class="badge">PUBLIC</span>
+      </div>
+      <p>Community focused PCVR Studios HQ for games, DeFi tools, and crypto economy systems.</p>
+      <div class="meta">
+        <span class="lang">Python</span>
+        <span class="url">github.com/AIVaneer/AIVaneer-PCVR-Studios</span>
+      </div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/AIVaneer/SkyBurner-Ultimate-pythonista-game-" target="_blank" rel="noopener">
+      <div class="repo-title-row">
+        <h3>SkyBurner Ultimate</h3>
+        <span class="badge">PUBLIC</span>
+      </div>
+      <p>Intense arcade shooter built for Pythonista 3 and powered by the Atlas Nexus Engine.</p>
+      <div class="meta">
+        <span class="lang">Python</span>
+        <span class="url">github.com/AIVaneer/SkyBurner-Ultimate</span>
+      </div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/AIVaneer/PCVR-game-shell-" target="_blank" rel="noopener">
+      <div class="repo-title-row">
+        <h3>PCVR Game Shell</h3>
+        <span class="badge">PUBLIC</span>
+      </div>
+      <p>Game shell for PCVR, a 2D VR game for Oculus Quest 3.</p>
+      <div class="meta">
+        <span class="lang">Mixed</span>
+        <span class="url">github.com/AIVaneer/PCVR-game-shell</span>
+      </div>
+    </a>
+
+    <a class="repo-card private" href="https://github.com/AIVaneer/PCVR-Loader" target="_blank" rel="noopener">
+      <div class="repo-title-row">
+        <h3>PCVR Loader</h3>
+        <span class="badge">PRIVATE</span>
+      </div>
+      <p>Pythonista QR code based GitHub file downloader and runner for iOS. Access required.</p>
+      <div class="meta">
+        <span class="lang">Python</span>
+        <span class="url">github.com/AIVaneer/PCVR-Loader</span>
+      </div>
+    </a>
+
+  </section>
+
+  <section class="footer-card">
+    <h3>Build to Learn. Share the code. Grow the system.</h3>
+    <p>This is the live HTML version of the AIVaneer GitHub Portal. Save it, share it, and let people jump directly into the repositories.</p>
+  </section>
+
+  <a class="back" href="./portal.html">🏠 Back to PCVR Portal</a>
+
+</main>
+</body>
+</html>
