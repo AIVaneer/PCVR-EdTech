@@ -128,6 +128,28 @@ h1 {
   border: 1px dashed rgba(148,163,184,.35);
 }
 
+.tier-panel {
+  background: rgba(5,7,12,.86);
+  border: 1px solid rgba(56,189,248,.55);
+}
+
+.tier-box {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(15,23,42,.72);
+  border: 1px solid rgba(148,163,184,.25);
+}
+
+.tier-box h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.tier-one h3 { color: var(--green); }
+.tier-two h3 { color: var(--gold); }
+.tier-three h3 { color: var(--cyan); }
+
 .footer {
   text-align: center;
   margin-top: 26px;
@@ -216,10 +238,27 @@ h1 {
       <span class="tag soon">SOON</span>
     </div>
 
-    <div class="card info">
+    <div class="card tier-panel">
       <h2>🔐 Atlas Infinity Core</h2>
-      <p>Private Tier 3 system coming later.</p>
-      <span class="tag locked">LOCKED</span>
+      <p>Private loader system organized into access tiers.</p>
+
+      <div class="tier-box tier-one">
+        <h3>Tier 1 — Lite Access</h3>
+        <p>QR reader, Lite Memory Capsule, starter loader, public onboarding tools.</p>
+        <span class="tag live">VISIBLE</span>
+      </div>
+
+      <div class="tier-box tier-two">
+        <h3>Tier 2 — Builder Access</h3>
+        <p>Node hub, workflows, advanced tools, builder systems.</p>
+        <span class="tag soon">PLANNED</span>
+      </div>
+
+      <div class="tier-box tier-three">
+        <h3>Tier 3 — Atlas Infinity Core</h3>
+        <p>Full loader, private capsule sync, protected Atlas systems.</p>
+        <span class="tag locked">LOCKED</span>
+      </div>
     </div>
 
   </section>
