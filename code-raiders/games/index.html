@@ -1,1 +1,119 @@
-code-raiders/games/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PCVR Arcade</title>
+
+<style>
+:root {
+  --bg: #05070c;
+  --green: #4ade80;
+  --cyan: #38bdf8;
+  --gold: #facc15;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,.22), transparent 35%),
+    radial-gradient(circle at top right, rgba(74,222,128,.18), transparent 35%),
+    linear-gradient(180deg, #0b1020, var(--bg));
+  color: var(--text);
+  padding: 20px;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  color: var(--green);
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.96));
+  border: 1px solid rgba(56,189,248,.45);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  color: var(--cyan);
+}
+
+.card p {
+  color: var(--muted);
+  margin: 0;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--green);
+  color: black;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>🎮 PCVR Arcade</h1>
+<p class="subtitle">Mini games + interactive experiments</p>
+
+<div class="card">
+  <h2>🧠 Memory Match (Coming Soon)</h2>
+  <p>Train your memory with code symbols.</p>
+  <button disabled>Coming Soon</button>
+</div>
+
+<div class="card">
+  <h2>🚀 Code Runner (Coming Soon)</h2>
+  <p>Dodge bugs. Collect tokens. Stay alive.</p>
+  <button disabled>Coming Soon</button>
+</div>
+
+<div class="card">
+  <h2>🐦 Flappy Logic (Coming Soon)</h2>
+  <p>Control logic to survive obstacles.</p>
+  <button disabled>Coming Soon</button>
+</div>
+
+<div style="margin-top:20px;">
+  <a href="../portal.html">
+    <button>🏠 Back to Portal</button>
+  </a>
+</div>
+
+<p class="footer">PCVR Arcade • Always for good, never for bad</p>
+
+</div>
+
+</body>
+</html>
