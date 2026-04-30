@@ -33,19 +33,17 @@ body {
 }
 
 .wrap { max-width: 720px; margin: 0 auto; }
-
 .hero { text-align: center; margin-bottom: 22px; }
 
 h1 {
   margin: 0;
   font-size: clamp(2rem, 7vw, 3rem);
   color: var(--green);
-  letter-spacing: .04em;
 }
 
-.subtitle { color: var(--muted); margin: 8px 0 0; }
+.subtitle { color: var(--muted); margin-top: 8px; }
 
-.grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.grid { display: grid; gap: 14px; }
 
 .card {
   display: block;
@@ -55,140 +53,51 @@ h1 {
   border: 1px solid rgba(56,189,248,.45);
   border-radius: 16px;
   padding: 18px;
-  box-shadow: 0 0 22px rgba(56,189,248,.12);
 }
 
-.card h2 {
-  margin: 0 0 6px;
-  font-size: 1.15rem;
-  color: var(--cyan);
-}
-
+.card h2 { margin: 0 0 6px; color: var(--cyan); }
 .card.green h2 { color: var(--green); }
 .card.gold h2 { color: var(--gold); }
-.card.ice h2 { color: var(--ice); }
 .card.sky h2 { color: var(--sky); }
-.card.locked { opacity: .65; border-color: rgba(148,163,184,.35); }
-
-.card p {
-  margin: 0;
-  color: var(--muted);
-  font-size: .95rem;
-  line-height: 1.45;
-}
 
 .tag {
-  display: inline-block;
   margin-top: 8px;
   padding: 4px 10px;
   border-radius: 999px;
   font-size: .75rem;
-  font-weight: 700;
-  letter-spacing: .04em;
+  font-weight: bold;
 }
 
-.tag.live { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.55); }
-.tag.soon { background: rgba(250,204,21,.12); color: var(--gold); border: 1px solid rgba(250,204,21,.55); }
-.tag.locked { background: rgba(148,163,184,.12); color: var(--muted); border: 1px solid rgba(148,163,184,.45); }
-
-.progress-shell {
-  background: rgba(5,7,12,.9);
-  border: 1px solid rgba(74,222,128,.45);
-}
+.tag.live { background: rgba(74,222,128,.15); color: var(--green); }
 
 .progress-bar {
-  width: 100%;
   height: 14px;
-  background: rgba(148,163,184,.16);
+  background: rgba(148,163,184,.2);
   border-radius: 999px;
-  overflow: hidden;
-  margin-top: 12px;
-  border: 1px solid rgba(148,163,184,.25);
+  margin-top: 10px;
 }
 
 .progress-fill {
-  width: 0%;
   height: 100%;
   background: linear-gradient(90deg, var(--green), var(--cyan), var(--gold));
   border-radius: 999px;
-  transition: width .25s ease;
 }
 
-.radio-panel {
-  border: 1px solid rgba(103,232,249,.65);
-  background:
-    radial-gradient(circle at top left, rgba(103,232,249,.18), transparent 38%),
-    linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.98));
-}
-
-.radio-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 14px;
-}
-
-.radio-btn, .share-btn {
-  padding: 12px 16px;
-  border-radius: 12px;
+.radio-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
   border: none;
-  font-weight: 800;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.radio-play, .share-btn { background: var(--green); color: #052e16; }
-.radio-pause { background: var(--red); color: #450a0a; }
-
-.volume-wrap { margin-top: 14px; }
-
-.volume-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.volume-row span {
-  color: var(--muted);
-  font-size: .9rem;
-}
-
-input[type="range"] {
-  width: 100%;
-  accent-color: var(--green);
-}
-
-.info {
-  background: rgba(5,7,12,.7);
-  border: 1px dashed rgba(148,163,184,.35);
-}
-
-.tier-panel {
-  background: rgba(5,7,12,.86);
-  border: 1px solid rgba(56,189,248,.55);
-}
-
-.tier-box {
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(15,23,42,.72);
-  border: 1px solid rgba(148,163,184,.25);
-}
-
-.tier-box h3 {
-  margin: 0 0 6px;
-  font-size: 1rem;
-}
-
-.tier-one h3 { color: var(--green); }
-.tier-two h3 { color: var(--gold); }
-.tier-three h3 { color: var(--cyan); }
+.radio-play { background: var(--green); }
+.radio-pause { background: var(--red); }
 
 .footer {
   text-align: center;
-  margin-top: 26px;
+  margin-top: 20px;
   color: var(--muted);
-  font-size: .85rem;
 }
 </style>
 </head>
@@ -196,273 +105,117 @@ input[type="range"] {
 <body>
 <main class="wrap">
 
-  <section class="hero">
-    <h1>PCVR PORTAL HUB</h1>
-    <p class="subtitle">Choose your next mission</p>
-  </section>
+<section class="hero">
+<h1>PCVR PORTAL HUB</h1>
+<p class="subtitle">Choose your next mission</p>
+</section>
 
-  <section class="grid">
+<section class="grid">
 
-    <div class="card radio-panel">
-      <h2>🎧 PCVR Radio</h2>
-      <p><strong>Station:</strong> SomaFM Deep Space One</p>
-      <p id="radioStatus">Radio is ready. Tap play to start.</p>
+<!-- RADIO -->
+<div class="card">
+<h2>🎧 PCVR Radio</h2>
+<p id="radioStatus">Tap play to start</p>
 
-      <div class="radio-row">
-        <button class="radio-btn radio-play" onclick="playRadio()">▶ Play Radio</button>
-        <button class="radio-btn radio-pause" onclick="pauseRadio()">⏸ Pause Radio</button>
-      </div>
+<button class="radio-btn radio-play" onclick="playRadio()">▶ Play</button>
+<button class="radio-btn radio-pause" onclick="pauseRadio()">⏸ Pause</button>
 
-      <div class="volume-wrap">
-        <div class="volume-row">
-          <span>🔈</span>
-          <input id="volumeSlider" type="range" min="0" max="100" value="70" oninput="setRadioVolume(this.value)">
-          <span id="volumeText">70%</span>
-        </div>
-      </div>
+<br><br>
 
-      <audio id="pcvrRadio" preload="none" src="https://ice5.somafm.com/deepspaceone-128-mp3"></audio>
-    </div>
+<select onchange="changeStation(this.value)">
+<option value="https://ice5.somafm.com/deepspaceone-128-mp3">Deep Space One</option>
+<option value="https://ice5.somafm.com/groovesalad-128-mp3">Groove Salad</option>
+<option value="https://ice5.somafm.com/dronezone-128-mp3">Drone Zone</option>
+</select>
 
-    <div class="card progress-shell">
-      <h2>⚡ Raider Progress</h2>
-      <p><strong>Total XP:</strong> <span id="xpDisplay">0</span></p>
-      <p><strong>Journey:</strong> <span id="progressText">Loading progress...</span></p>
-      <div class="progress-bar">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
-    </div>
+<br><br>
 
-    <a id="continueCard" class="card green" href="./index.html">
-      <h2>➡️ Continue Mission</h2>
-      <p id="continueText">Start your Code Raiders journey.</p>
-      <span class="tag live">CONTINUE</span>
-    </a>
+<input type="range" min="0" max="100" value="70" oninput="setVolume(this.value)">
+<span id="volumeText">70%</span>
 
-    <a class="card green" href="./index.html">
-      <h2>🛡️ Code Raiders Worlds</h2>
-      <p>Enter the level system. Solve broken code. Unlock new worlds.</p>
-      <span class="tag live">LIVE</span>
-    </a>
+<audio id="radio" src="https://ice5.somafm.com/deepspaceone-128-mp3"></audio>
+</div>
 
-    <a class="card green" href="./index.html">
-      <h2>🌍 World 1: Levels 1–3</h2>
-      <p>Complete the first cycle. Finish Level 3 to unlock World 2.</p>
-      <span class="tag live">PLAY</span>
-    </a>
+<!-- PROGRESS -->
+<div class="card green">
+<h2>⚡ Raider Progress</h2>
+<p>Total XP: <span id="xp">0</span></p>
+<div class="progress-bar">
+<div id="bar" class="progress-fill" style="width:20%"></div>
+</div>
+</div>
 
-    <a id="world2Card" class="card locked" href="./index.html">
-      <h2 id="world2Title">🔒 World 2 Locked</h2>
-      <p id="world2Text">Complete World 1 first. Levels 4–6 unlock after Level 3.</p>
-      <span id="world2Tag" class="tag locked">LOCKED</span>
-    </a>
+<!-- ARCADE -->
+<a class="card gold" href="./games/">
+<h2>🎮 PCVR Arcade</h2>
+<p>Mini games and experiments</p>
+<span class="tag live">LIVE</span>
+</a>
 
-    <a id="world3Card" class="card locked" href="./index.html">
-      <h2 id="world3Title">🔒 World 3 Locked</h2>
-      <p id="world3Text">Ice Spire is coming next. Levels 7–9 are being built.</p>
-      <span id="world3Tag" class="tag locked">LOCKED</span>
-    </a>
+<!-- NEW GITHUB PORTAL -->
+<a class="card sky" href="./github-portal.html">
+<h2>🧠 GitHub Portal</h2>
+<p>Explore PCVR code and repositories</p>
+<span class="tag live">OPEN</span>
+</a>
 
-    <a id="world4Card" class="card locked" href="./index.html">
-      <h2 id="world4Title">🔒 World 4 Locked</h2>
-      <p id="world4Text">Sky Temple opens after World 3 is complete. Levels 10–12 planned.</p>
-      <span id="world4Tag" class="tag locked">LOCKED</span>
-    </a>
+<!-- X -->
+<a class="card" href="https://x.com/pcvr2024?s=21" target="_blank">
+<h2>𝕏 PCVR on X</h2>
+<p>Follow updates</p>
+<span class="tag live">LIVE</span>
+</a>
 
-    <a class="card gold" href="./games/">
-      <h2>🎮 PCVR Arcade</h2>
-      <p>Mini games, experiments, and future playable HTML worlds.</p>
-      <span class="tag live">LIVE</span>
-    </a>
+<!-- SHARE -->
+<div class="card">
+<h2>🔗 Share Portal</h2>
+<button onclick="copyLink()">Copy Link</button>
+<p id="shareText"></p>
+</div>
 
-    <a class="card" href="https://x.com/pcvr2024?s=21" target="_blank" rel="noopener">
-      <h2>𝕏 PCVR on X</h2>
-      <p>Follow PCVR updates, posts, builds, and community drops.</p>
-      <span class="tag live">LIVE</span>
-    </a>
+<!-- GITHUB -->
+<a class="card" href="https://github.com/AIVaneer" target="_blank">
+<h2>👤 GitHub Profile</h2>
+</a>
 
-    <div class="card">
-      <h2>🔗 Share PCVR Portal</h2>
-      <p id="shareStatus">Copy the live portal link and send it to new users.</p>
-      <button class="share-btn" onclick="copyPortalLink()">Copy Portal Link</button>
-    </div>
+<a class="card" href="https://github.com/AIVaneer/PCVR-EdTech" target="_blank">
+<h2>📦 Repo</h2>
+</a>
 
-    <a class="card" href="https://github.com/AIVaneer" target="_blank" rel="noopener">
-      <h2>👤 AIVaneer GitHub</h2>
-      <p>Builder profile and public projects.</p>
-      <span class="tag live">LIVE</span>
-    </a>
+</section>
 
-    <a class="card" href="https://github.com/AIVaneer/PCVR-EdTech" target="_blank" rel="noopener">
-      <h2>📦 PCVR EdTech Repo</h2>
-      <p>Source code for the PCVR EdTech system.</p>
-      <span class="tag live">LIVE</span>
-    </a>
-
-    <div class="card gold info">
-      <h2>🪙 $PCVR Loop System</h2>
-      <p>Move to Learn is active.<br>Buy to Learn starts soon.</p>
-      <span class="tag soon">SOON</span>
-    </div>
-
-    <div class="card tier-panel">
-      <h2>🔐 Atlas Infinity Core</h2>
-      <p>Private loader system organized into access tiers.</p>
-
-      <div class="tier-box tier-one">
-        <h3>Tier 1 — Lite Access</h3>
-        <p>QR reader, Lite Memory Capsule, starter loader, public onboarding tools.</p>
-        <span class="tag live">VISIBLE</span>
-      </div>
-
-      <div class="tier-box tier-two">
-        <h3>Tier 2 — Builder Access</h3>
-        <p>Node hub, workflows, advanced tools, builder systems.</p>
-        <span class="tag soon">PLANNED</span>
-      </div>
-
-      <div class="tier-box tier-three">
-        <h3>Tier 3 — Atlas Infinity Core</h3>
-        <p>Full loader, private capsule sync, protected Atlas systems.</p>
-        <span class="tag locked">LOCKED</span>
-      </div>
-    </div>
-
-  </section>
-
-  <p class="footer">PCVR Portal • Always for good, never for bad</p>
+<p class="footer">Always for good</p>
 
 </main>
 
 <script>
-const portalLink = "https://aivaneer.github.io/PCVR-EdTech/code-raiders/portal.html";
+const radio = document.getElementById("radio");
+const status = document.getElementById("radioStatus");
 
-const world1Complete = localStorage.getItem("pcvr_world1_complete") === "true";
-const world2Complete = localStorage.getItem("pcvr_world2_complete") === "true";
-const world3Complete = localStorage.getItem("pcvr_world3_complete") === "true";
-const xp = parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
-
-const xpDisplay = document.getElementById("xpDisplay");
-const progressText = document.getElementById("progressText");
-const progressFill = document.getElementById("progressFill");
-const continueCard = document.getElementById("continueCard");
-const continueText = document.getElementById("continueText");
-
-xpDisplay.textContent = xp;
-
-let unlockedWorlds = 1;
-let nextLink = "./index.html";
-let nextText = "Start World 1: Levels 1–3.";
-
-if (world1Complete) {
-  unlockedWorlds = 2;
-  nextLink = "./level-4.html";
-  nextText = "Continue into World 2: Fire Cave.";
+function playRadio(){
+radio.play();
+status.innerText = "Playing";
 }
 
-if (world2Complete) {
-  unlockedWorlds = 2;
-  nextLink = "./portal.html";
-  nextText = "World 2 complete. World 3: Ice Spire is being built.";
+function pauseRadio(){
+radio.pause();
+status.innerText = "Paused";
 }
 
-if (world3Complete) {
-  unlockedWorlds = 3;
-  nextLink = "./level-10.html";
-  nextText = "World 3 complete. Prepare for World 4: Sky Temple.";
+function setVolume(v){
+radio.volume = v/100;
+document.getElementById("volumeText").innerText = v+"%";
 }
 
-continueCard.href = nextLink;
-continueText.textContent = nextText;
-progressText.textContent = unlockedWorlds + " of 4 worlds unlocked";
-progressFill.style.width = (unlockedWorlds / 4 * 100) + "%";
-
-const world2Card = document.getElementById("world2Card");
-const world2Title = document.getElementById("world2Title");
-const world2Text = document.getElementById("world2Text");
-const world2Tag = document.getElementById("world2Tag");
-
-if (world1Complete) {
-  world2Card.href = "./level-4.html";
-  world2Card.className = "card green";
-  world2Title.textContent = "🔥 World 2: Levels 4–6";
-  world2Text.textContent = "Enter the Fire Cave cycle. Complete Levels 4, 5, and 6.";
-  world2Tag.textContent = "UNLOCKED";
-  world2Tag.className = "tag live";
+function changeStation(url){
+radio.src = url;
+radio.play();
+status.innerText = "Switched station";
 }
 
-const world3Card = document.getElementById("world3Card");
-const world3Title = document.getElementById("world3Title");
-const world3Text = document.getElementById("world3Text");
-const world3Tag = document.getElementById("world3Tag");
-
-if (world2Complete) {
-  world3Card.href = "./portal.html";
-  world3Card.className = "card locked";
-  world3Title.textContent = "🔒 World 3 Locked";
-  world3Text.textContent = "Ice Spire is coming next. Levels 7–9 are being built.";
-  world3Tag.textContent = "LOCKED";
-  world3Tag.className = "tag locked";
-}
-
-const world4Card = document.getElementById("world4Card");
-const world4Title = document.getElementById("world4Title");
-const world4Text = document.getElementById("world4Text");
-const world4Tag = document.getElementById("world4Tag");
-
-if (world3Complete) {
-  world4Card.href = "./portal.html";
-  world4Card.className = "card locked";
-  world4Title.textContent = "🔒 World 4 Locked";
-  world4Text.textContent = "Sky Temple opens after World 3 is built. Levels 10–12 planned.";
-  world4Tag.textContent = "LOCKED";
-  world4Tag.className = "tag locked";
-}
-
-const radio = document.getElementById("pcvrRadio");
-const radioStatus = document.getElementById("radioStatus");
-const volumeText = document.getElementById("volumeText");
-const savedVolume = localStorage.getItem("pcvr_radio_volume") || "70";
-
-document.getElementById("volumeSlider").value = savedVolume;
-setRadioVolume(savedVolume);
-
-function playRadio() {
-  radio.play()
-    .then(function() {
-      radioStatus.textContent = "Radio playing: SomaFM Deep Space One";
-    })
-    .catch(function() {
-      radioStatus.textContent = "Tap play again or open in Safari if audio is blocked.";
-    });
-}
-
-function pauseRadio() {
-  radio.pause();
-  radioStatus.textContent = "Radio paused.";
-}
-
-function setRadioVolume(value) {
-  const level = parseInt(value, 10);
-  radio.volume = level / 100;
-  volumeText.textContent = level + "%";
-  localStorage.setItem("pcvr_radio_volume", String(level));
-}
-
-function copyPortalLink() {
-  const shareStatus = document.getElementById("shareStatus");
-
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(portalLink)
-      .then(function() {
-        shareStatus.textContent = "Portal link copied.";
-      })
-      .catch(function() {
-        shareStatus.textContent = portalLink;
-      });
-  } else {
-    shareStatus.textContent = portalLink;
-  }
+function copyLink(){
+navigator.clipboard.writeText(window.location.href);
+document.getElementById("shareText").innerText = "Copied!";
 }
 </script>
 
