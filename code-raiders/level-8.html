@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Code Raiders Level 8</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #0ea5e9, #020617 55%, #000);
+  color: white;
+  padding: 20px;
+}
+.container { max-width: 800px; margin: auto; }
+
+h1 { color: #7dd3fc; text-align: center; }
+
+.world {
+  text-align: center;
+  color: #bae6fd;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.card, .code-box, .terminal, .unlock {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 1px solid #7dd3fc;
+}
+
+.code-box {
+  font-family: monospace;
+  white-space: pre;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  background: #020617;
+  color: white;
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: monospace;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.run { background: #7dd3fc; }
+.hint-btn { background: #bae6fd; }
+
+.success { color: #4ade80; }
+.error { color: #fb7185; }
+
+.unlock { display: none; }
+.reward { border-color: #facc15; }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Level 8: Frozen Logic</h1>
+<div class="world">❄️ Ice Spire ❄️</div>
+
+<p>The Ice Spire rejects incorrect data types. Fix the comparison.</p>
+
+<div class="card">
+  <strong>XP:</strong> <span id="xpDisplay">0</span>
+</div>
+
+<div class="code-box">
+temperature = 0
+if temperature < "5":
+    print("Too Cold")
+</div>
+
+<textarea id="input"></textarea>
+
+<button class="run" onclick="runCode()">Run Code</button>
+<button class="hint-btn" onclick="hint()">Hint</button>
+
+<button class="run" onclick="startRadio()">🎧 Start Ice Radio</button>
+<button class="hint-btn" onclick="stopRadio()">⏸ Stop Radio</button>
+
+<audio id="radio" src="https://ice5.somafm.com/deepspaceone-128-mp3"></audio>
+
+<div id="terminal" class="terminal">SYSTEM READY...</div>
+
+<div id="unlock" class="unlock">
+  <h2 class="success">Ice Path Open</h2>
+
+  <div class="card reward">
+    <h3>+50 XP</h3>
+    <p>Total XP: <span id="rewardXp">0</span></p>
+  </div>
+
+  <a href="./level-9.html">
+    <button class="run">➡️ Next Level</button>
+  </a>
+
+  <a href="./portal.html">
+    <button class="hint-btn">🏠 Portal</button>
+  </a>
+</div>
+
+</div>
+
+<script src="./sound.js"></script>
+
+<script>
+function normalize(str){
+  return str.replace(/\s+/g,"").replace(/'/g,'"').toLowerCase();
+}
+
+function getXp(){
+  return parseInt(localStorage.getItem("pcvr_xp")||"0",10);
+}
+
+function setXp(v){
+  localStorage.setItem("pcvr_xp",v);
+  document.getElementById("xpDisplay").innerHTML=v;
+  document.getElementById("rewardXp").innerHTML=v;
+}
+
+function runCode(){
+  PCVRSound.unlock();
+  PCVRSound.click();
+
+  const input = normalize(document.getElementById("input").value);
+  const correct = normalize('temperature = 0\nif temperature < 5:\n    print("Too Cold")');
+
+  const terminal = document.getElementById("terminal");
+
+  if(input===correct){
+    terminal.innerHTML="✅ CORRECT";
+    terminal.className="terminal success";
+
+    if(localStorage.getItem("pcvr_level8_complete")!=="true"){
+      const newXp = getXp()+50;
+      localStorage.setItem("pcvr_level8_complete","true");
+      localStorage.setItem("pcvr_world3_started","true");
+      setXp(newXp);
+
+      PCVRSound.reward();
+    }
+
+    PCVRSound.correct();
+
+    document.getElementById("unlock").style.display="block";
+  } else {
+    terminal.innerHTML="❌ TRY AGAIN";
+    terminal.className="terminal error";
+    PCVRSound.wrong();
+  }
+}
+
+function hint(){
+  PCVRSound.unlock();
+  PCVRSound.click();
+  document.getElementById("terminal").innerHTML="Hint: Remove the quotes around 5.";
+}
+
+function startRadio(){
+  const r=document.getElementById("radio");
+  r.play();
+}
+
+function stopRadio(){
+  const r=document.getElementById("radio");
+  r.pause();
+}
+
+setXp(getXp());
+</script>
+
+</body>
+</html>
