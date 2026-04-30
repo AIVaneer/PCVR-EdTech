@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Code Raiders Level 9</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #155e75, #020617 55%, #000000);
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  color: #67e8f9;
+  text-align: center;
+}
+
+.world {
+  text-align: center;
+  color: #bae6fd;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.card, .code-box, .terminal, .unlock {
+  background: #020617;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 1px solid #67e8f9;
+}
+
+.code-box {
+  font-family: monospace;
+  white-space: pre;
+}
+
+textarea {
+  width: 100%;
+  height: 170px;
+  margin-top: 10px;
+  background: #020617;
+  color: white;
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: monospace;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.run {
+  background: #67e8f9;
+}
+
+.hint-btn {
+  background: #bae6fd;
+}
+
+.success {
+  color: #4ade80;
+}
+
+.error {
+  color: #fb7185;
+}
+
+.unlock {
+  display: none;
+}
+
+.reward {
+  border-color: #facc15;
+}
+
+.small {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Level 9: Frozen Loop</h1>
+<div class="world">❄️ World 3: Ice Spire ❄️</div>
+
+<p>The Ice Spire repeats the signal three times. Fix the loop so the system can finish World 3.</p>
+
+<div class="card">
+  <strong>Current XP:</strong> <span id="xpDisplay">0</span>
+</div>
+
+<div class="code-box">for i in range(3)
+    print("Ice Signal")</div>
+
+<textarea id="input" placeholder="Type the corrected code here"></textarea>
+
+<button class="run" onclick="runCode()">Run Code</button>
+<button class="hint-btn" onclick="hint()">Need a hint?</button>
+
+<div id="terminal" class="terminal">
+SYSTEM READY...
+</div>
+
+<div id="unlock" class="unlock">
+  <h2 class="success">Ice Spire Complete</h2>
+  <p>You fixed the loop and completed World 3.</p>
+
+  <div class="card reward">
+    <h3>XP Reward</h3>
+    <p>+50 XP added to your Code Raiders progress.</p>
+    <p><strong>Total XP:</strong> <span id="rewardXp">0</span></p>
+  </div>
+
+  <div class="card reward">
+    <h3>❄️ World 3 Complete</h3>
+    <p>The Ice Spire has been cleared.</p>
+    <p class="small">World 4: Sky Temple opens in a future build.</p>
+  </div>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;">
+    <a href="./portal.html">
+      <button class="run">🏛️ Return to Portal</button>
+    </a>
+
+    <a href="./github-portal.html">
+      <button class="hint-btn">🧠 Start Building</button>
+    </a>
+  </div>
+</div>
+
+</div>
+
+<script>
+function normalize(str) {
+  return str.replace(/\s+/g, "").replace(/'/g, '"').toLowerCase();
+}
+
+function getXp() {
+  return parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+}
+
+function setXp(value) {
+  localStorage.setItem("pcvr_xp", String(value));
+  document.getElementById("xpDisplay").innerHTML = value;
+  document.getElementById("rewardXp").innerHTML = value;
+}
+
+function loadXp() {
+  setXp(getXp());
+}
+
+function soundCorrect() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = 880;
+    osc.type = "sine";
+    gain.gain.value = 0.08;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.15);
+  } catch (e) {}
+}
+
+function soundWrong() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = 180;
+    osc.type = "sawtooth";
+    gain.gain.value = 0.06;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.18);
+  } catch (e) {}
+}
+
+function runCode() {
+  const input = normalize(document.getElementById("input").value);
+  const correct = normalize('for i in range(3):\n    print("Ice Signal")');
+  const terminal = document.getElementById("terminal");
+
+  if (input === correct) {
+    terminal.innerHTML = "✅ CORRECT";
+    terminal.className = "terminal success";
+
+    localStorage.setItem("pcvr_world3_complete", "true");
+
+    if (localStorage.getItem("pcvr_level9_complete") !== "true") {
+      const newXp = getXp() + 50;
+      localStorage.setItem("pcvr_level9_complete", "true");
+      setXp(newXp);
+    }
+
+    soundCorrect();
+    document.getElementById("unlock").style.display = "block";
+  } else {
+    terminal.innerHTML = "❌ TRY AGAIN";
+    terminal.className = "terminal error";
+    soundWrong();
+  }
+}
+
+function hint() {
+  document.getElementById("terminal").innerHTML =
+    "Hint: A for loop needs a colon after range(3).";
+}
+
+loadXp();
+</script>
+
+</body>
+</html>
