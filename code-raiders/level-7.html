@@ -65,29 +65,15 @@ button {
   font-weight: bold;
 }
 
-.run {
-  background: #67e8f9;
-}
+.run { background: #67e8f9; }
+.hint-btn { background: #bae6fd; }
 
-.hint-btn {
-  background: #bae6fd;
-}
+.success { color: #4ade80; }
+.error { color: #fb7185; }
 
-.success {
-  color: #4ade80;
-}
+.unlock { display: none; }
 
-.error {
-  color: #fb7185;
-}
-
-.unlock {
-  display: none;
-}
-
-.reward {
-  border-color: #facc15;
-}
+.reward { border-color: #facc15; }
 
 .small {
   color: #94a3b8;
@@ -150,57 +136,10 @@ SYSTEM READY...
 
 </div>
 
+<!-- 🔊 SOUND SYSTEM -->
+<script src="./sound.js"></script>
+
 <script>
-let audioReady = false;
-let audioCtx = null;
-
-function initAudio() {
-  if (!audioReady) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    audioReady = true;
-  }
-}
-
-function playTone(freq, duration, type) {
-  if (!audioReady || !audioCtx) return;
-
-  const oscillator = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-
-  oscillator.type = type || "sine";
-  oscillator.frequency.value = freq;
-
-  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
-  oscillator.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  oscillator.start();
-  oscillator.stop(audioCtx.currentTime + duration);
-}
-
-function soundClick() {
-  initAudio();
-  playTone(440, 0.08, "sine");
-}
-
-function soundCorrect() {
-  initAudio();
-  playTone(660, 0.1, "sine");
-  setTimeout(function() { playTone(880, 0.12, "sine"); }, 100);
-}
-
-function soundWrong() {
-  initAudio();
-  playTone(180, 0.16, "sawtooth");
-}
-
-function soundReward() {
-  initAudio();
-  setTimeout(function() { playTone(990, 0.12, "triangle"); }, 220);
-}
-
 function normalize(str) {
   return str.replace(/\s+/g, "").replace(/'/g, '"').toLowerCase();
 }
@@ -220,7 +159,8 @@ function loadXp() {
 }
 
 function runCode() {
-  soundClick();
+  PCVRSound.unlock();
+  PCVRSound.click();
 
   const input = normalize(document.getElementById("input").value);
   const correct = normalize('signal = "PCVR"\nif signal == "PCVR":\n    print("Ice Gate Open")');
@@ -236,20 +176,25 @@ function runCode() {
       const newXp = getXp() + 50;
       localStorage.setItem("pcvr_level7_complete", "true");
       setXp(newXp);
-      soundReward();
+
+      PCVRSound.reward();
     }
 
-    soundCorrect();
+    PCVRSound.correct();
+
     document.getElementById("unlock").style.display = "block";
   } else {
     terminal.innerHTML = "❌ TRY AGAIN";
     terminal.className = "terminal error";
-    soundWrong();
+
+    PCVRSound.wrong();
   }
 }
 
 function hint() {
-  soundClick();
+  PCVRSound.unlock();
+  PCVRSound.click();
+
   document.getElementById("terminal").innerHTML =
     "Hint: Use double equals == when comparing values.";
 }
