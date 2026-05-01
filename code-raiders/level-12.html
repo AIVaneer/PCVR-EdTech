@@ -10,18 +10,18 @@
 
 body {
   min-height:100vh;
-  overflow:hidden;
   font-family: Arial, sans-serif;
   background: linear-gradient(#052e16, #020617);
   color:white;
   user-select:none;
   touch-action:none;
+  overflow:auto;
 }
 
 .wrap {
   max-width:760px;
   margin:0 auto;
-  padding:18px;
+  padding:18px 18px 80px;
   text-align:center;
 }
 
@@ -87,20 +87,39 @@ button {
   font-size:1.1rem;
 }
 
-.unlock {
-  display:none;
-  text-align:left;
-}
-
-.reward {
-  border-color:#facc15;
-}
-
 .success { color:#4ade80; }
 
-.small {
-  color:#94a3b8;
-  font-size:.95rem;
+#victoryOverlay {
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.88);
+  z-index:999;
+  padding:20px;
+}
+
+.victory-box {
+  width:100%;
+  max-width:520px;
+  background:#020617;
+  border:3px solid #4ade80;
+  border-radius:22px;
+  padding:24px;
+  text-align:center;
+  box-shadow:0 0 35px rgba(74,222,128,.65);
+}
+
+.victory-box h2 {
+  color:#4ade80;
+  font-size:2rem;
+  margin-bottom:12px;
+}
+
+.victory-box p {
+  line-height:1.6;
+  margin-bottom:16px;
 }
 </style>
 </head>
@@ -127,35 +146,29 @@ button {
 
 <div id="terminal" class="terminal">Tap Jump or press Space to begin.</div>
 
-<div id="unlock" class="card unlock">
-  <h2 class="success">Jungle Trial Complete</h2>
-  <p>You cleared the Atari jungle jump trial and unlocked the next path.</p>
-
-  <div class="card reward">
-    <h3>XP Reward</h3>
-    <p>+90 XP added to your Code Raiders progress.</p>
-    <p><strong>Total XP:</strong> <span id="rewardXp">0</span></p>
-  </div>
-
-  <div class="card reward">
-    <h3>🌴 World 4 Progress</h3>
-    <p>Level 12 complete. The next mission is ready for Level 13.</p>
-    <p class="small">The jungle gate is open.</p>
-  </div>
-
-  <div class="controls">
-    <button class="next" onclick="window.location.href='./level-13.html'">➡️ Next Mission</button>
-    <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
-    <button class="music" onclick="restartGame()">🔁 Play Again</button>
-  </div>
 </div>
 
+<div id="victoryOverlay">
+  <div class="victory-box">
+    <h2>✅ Jungle Trial Complete</h2>
+    <p>
+      Score: <span id="finalScore">2000</span> / 2000<br>
+      +90 XP Reward<br>
+      Total XP: <span id="finalXp">0</span>
+    </p>
+    <div class="controls">
+      <button class="next" onclick="window.location.href='./level-13.html'">➡️ Next Mission</button>
+      <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
+      <button class="music" onclick="restartGame()">🔁 Play Again</button>
+    </div>
+  </div>
 </div>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const terminal = document.getElementById("terminal");
+const victoryOverlay = document.getElementById("victoryOverlay");
 
 const WIN_SCORE = 2000;
 
@@ -189,7 +202,6 @@ function getXp() {
 function setXp(value) {
   localStorage.setItem("pcvr_xp", String(value));
   document.getElementById("xpDisplay").textContent = value;
-  document.getElementById("rewardXp").textContent = value;
 }
 
 function loadXp() {
@@ -311,7 +323,7 @@ function jump() {
 }
 
 function restartGame() {
-  document.getElementById("unlock").style.display = "none";
+  victoryOverlay.style.display = "none";
 
   running = false;
   gameOver = false;
@@ -346,23 +358,13 @@ function completeLevel() {
     setXp(newXp);
   }
 
-  const totalXp = getXp();
+  document.getElementById("finalScore").textContent = score;
+  document.getElementById("finalXp").textContent = getXp();
 
+  terminal.textContent = "✅ Jungle Trial Complete";
   terminal.className = "terminal success";
-  terminal.innerHTML = `
-    ✅ Jungle Trial Complete
-    <br><br>
-    Score: ${score} / ${WIN_SCORE}
-    <br>
-    +90 XP Reward
-    <br>
-    Total XP: ${totalXp}
-    <br><br>
-    <button class="next" onclick="window.location.href='./level-13.html'">➡️ Next Mission</button>
-    <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
-  `;
 
-  document.getElementById("unlock").style.display = "block";
+  victoryOverlay.style.display = "flex";
 }
 
 function failLevel() {
