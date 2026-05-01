@@ -9,68 +9,182 @@
 * {
   box-sizing:border-box;
   user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 
 body {
   margin:0;
-  font-family:Arial;
-  background:linear-gradient(#0f172a,#020617);
+  min-height:100vh;
+  font-family:Arial, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(167,139,250,.25), transparent 35%),
+    linear-gradient(#0f172a,#020617);
   color:white;
   text-align:center;
+  overflow-x:hidden;
 }
 
 .wrap {
-  max-width:700px;
+  max-width:720px;
   margin:auto;
-  padding:20px;
+  padding:22px 16px 80px;
 }
 
-h1 { color:#a78bfa; }
+h1 {
+  color:#a78bfa;
+  font-size:clamp(2rem, 9vw, 3.4rem);
+  margin:20px 0 8px;
+}
+
+.subtitle {
+  font-size:1.15rem;
+  color:#ddd6fe;
+  margin-bottom:14px;
+}
+
+.stats {
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin:14px 0;
+}
+
+.stat {
+  background:#020617;
+  border:2px solid #a78bfa;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+}
+
+.arena {
+  background:#020617;
+  border:3px solid #a78bfa;
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 0 35px rgba(167,139,250,.45);
+}
 
 .prompt {
-  font-size:2rem;
-  margin:20px 0;
+  font-size:clamp(2.4rem, 12vw, 5rem);
+  font-weight:900;
+  margin:12px 0;
+  color:#facc15;
+  text-shadow:0 0 20px rgba(250,204,21,.8);
+}
+
+.prompt.flash {
+  animation:flash .18s ease;
+}
+
+@keyframes flash {
+  0% { transform:scale(1); }
+  50% { transform:scale(1.18); }
+  100% { transform:scale(1); }
+}
+
+.bar-label {
+  text-align:left;
+  font-weight:900;
+  margin-top:12px;
+  color:#ddd6fe;
 }
 
 .bar {
-  height:32px;
+  height:34px;
   background:#111;
-  border:2px solid #a78bfa;
-  margin:12px 0;
+  border:3px solid #a78bfa;
+  margin:8px 0 14px;
+  overflow:hidden;
 }
 
 .fill {
   height:100%;
   width:0%;
-  background:#22c55e;
+  background:linear-gradient(90deg,#22c55e,#facc15);
+  transition:width .08s linear;
 }
 
 .enemy {
-  background:#ef4444;
+  background:linear-gradient(90deg,#ef4444,#fb7185);
 }
 
 .controls {
   display:flex;
   justify-content:center;
-  gap:20px;
-  margin-top:20px;
+  gap:14px;
+  margin-top:18px;
 }
 
 button {
-  flex:1;
-  max-width:200px;
-  padding:18px;
-  font-size:1.2rem;
   border:none;
-  border-radius:14px;
-  font-weight:bold;
+  border-radius:18px;
+  font-weight:900;
+  cursor:pointer;
 }
 
-.left { background:#22c55e; color:black; }
-.right { background:#60a5fa; color:black; }
+.play-btn {
+  padding:15px 20px;
+  background:#facc15;
+  color:#422006;
+  font-size:1.1rem;
+  margin:8px;
+}
 
-.portal { background:#facc15; }
+.side-btn {
+  flex:1;
+  max-width:240px;
+  padding:24px 12px;
+  font-size:1.45rem;
+}
+
+.left {
+  background:#22c55e;
+  color:#052e16;
+  box-shadow:0 0 22px rgba(34,197,94,.5);
+}
+
+.right {
+  background:#60a5fa;
+  color:#082f49;
+  box-shadow:0 0 22px rgba(96,165,250,.5);
+}
+
+.active-left {
+  outline:5px solid #facc15;
+  transform:scale(1.04);
+}
+
+.active-right {
+  outline:5px solid #facc15;
+  transform:scale(1.04);
+}
+
+.portal {
+  background:#bae6fd;
+  color:#075985;
+  padding:15px 22px;
+  font-size:1rem;
+  margin-top:14px;
+}
+
+.next {
+  background:#a78bfa;
+  color:#1e1b4b;
+  padding:15px 22px;
+  font-size:1rem;
+}
+
+.retry {
+  background:#facc15;
+  color:#422006;
+  padding:15px 22px;
+  font-size:1rem;
+}
 
 .overlay {
   position:fixed;
@@ -79,120 +193,309 @@ button {
   align-items:center;
   justify-content:center;
   background:rgba(0,0,0,.9);
+  z-index:999;
+  padding:18px;
 }
 
 .box {
+  width:100%;
+  max-width:540px;
   background:#020617;
-  padding:30px;
-  border-radius:20px;
-  border:3px solid #a78bfa;
+  padding:28px;
+  border-radius:24px;
+  border:4px solid #a78bfa;
+  box-shadow:0 0 40px rgba(167,139,250,.65);
+}
+
+.box h2 {
+  font-size:2.2rem;
+  color:#facc15;
+}
+
+.screen-shake {
+  animation:shake .18s linear;
+}
+
+@keyframes shake {
+  0% { transform:translateX(0); }
+  25% { transform:translateX(-8px); }
+  50% { transform:translateX(8px); }
+  75% { transform:translateX(-5px); }
+  100% { transform:translateX(0); }
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrap">
+<div class="wrap" id="page">
+  <h1>Level 13: Power Gate</h1>
+  <p class="subtitle">Follow the glowing command and overpower the gate guardian.</p>
 
-<h1>Level 13: Power Gate</h1>
-<p>Follow the pattern faster than the enemy!</p>
+  <button class="play-btn" onclick="startBattle()">🎵 Start Battle</button>
 
-<div class="prompt" id="prompt">LEFT</div>
+  <div class="stats">
+    <div class="stat">⏱ Time: <span id="time">12</span></div>
+    <div class="stat">🔥 Combo: <span id="combo">0</span></div>
+    <div class="stat">⭐ Best: <span id="best">0</span></div>
+  </div>
 
-<div class="bar"><div id="playerBar" class="fill"></div></div>
-<div class="bar"><div id="enemyBar" class="fill enemy"></div></div>
+  <div class="arena">
+    <div class="prompt" id="prompt">READY</div>
 
-<div class="controls">
-  <button class="left" onclick="press('left')">⬅️ LEFT</button>
-  <button class="right" onclick="press('right')">➡️ RIGHT</button>
-</div>
+    <div class="bar-label">PLAYER POWER</div>
+    <div class="bar"><div id="playerBar" class="fill"></div></div>
 
-<button class="portal" onclick="location.href='./portal.html'">🏠 Portal</button>
+    <div class="bar-label">GATE POWER</div>
+    <div class="bar"><div id="enemyBar" class="fill enemy"></div></div>
 
+    <div class="controls">
+      <button class="side-btn left" id="leftBtn">⬅ LEFT</button>
+      <button class="side-btn right" id="rightBtn">RIGHT ➡</button>
+    </div>
+
+    <button class="portal" onclick="location.href='./portal.html'">🏠 Portal</button>
+  </div>
 </div>
 
 <div id="overlay" class="overlay">
   <div class="box">
     <h2 id="result"></h2>
     <p id="scoreText"></p>
-    <button onclick="location.href='./level-14.html'">➡️ Next Mission</button>
-    <button onclick="location.href='./portal.html'">🏠 Portal</button>
-    <button onclick="restart()">🔁 Retry</button>
+    <div class="controls">
+      <button class="next" onclick="location.href='./level-14.html'">➡️ Next Mission</button>
+      <button class="portal" onclick="location.href='./portal.html'">🏠 Portal</button>
+      <button class="retry" onclick="restart()">🔁 Retry</button>
+    </div>
   </div>
 </div>
 
 <script>
+document.addEventListener("gesturestart", e => e.preventDefault());
+document.addEventListener("dblclick", e => e.preventDefault());
+
 let player = 0;
 let enemy = 0;
-let running = true;
-
+let time = 12;
+let combo = 0;
+let running = false;
 let current = "left";
+let rewarded = false;
 
-function nextPrompt(){
-  current = Math.random() > 0.5 ? "left" : "right";
-  document.getElementById("prompt").innerText = current.toUpperCase();
+let audioCtx = null;
+let musicTimer = null;
+let enemyTimer = null;
+let clockTimer = null;
+
+const page = document.getElementById("page");
+const promptEl = document.getElementById("prompt");
+const playerBar = document.getElementById("playerBar");
+const enemyBar = document.getElementById("enemyBar");
+const timeEl = document.getElementById("time");
+const comboEl = document.getElementById("combo");
+const bestEl = document.getElementById("best");
+const leftBtn = document.getElementById("leftBtn");
+const rightBtn = document.getElementById("rightBtn");
+
+bestEl.textContent = localStorage.getItem("pcvr_level13_best_combo") || "0";
+
+function unlockAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === "suspended") audioCtx.resume();
 }
 
-function press(dir){
-  if(!running) return;
+function tone(freq, dur, type, vol) {
+  if (!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type || "square";
+  o.frequency.value = freq;
+  g.gain.value = vol || .08;
+  o.connect(g);
+  g.connect(audioCtx.destination);
+  o.start();
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + dur);
+  o.stop(audioCtx.currentTime + dur);
+}
 
-  if(dir === current){
-    player += 6;
+function hitSound() {
+  tone(220, .04, "square", .14);
+  setTimeout(() => tone(440, .04, "square", .12), 35);
+}
+
+function missSound() {
+  tone(90, .18, "sawtooth", .16);
+}
+
+function winSound() {
+  [440,554,659,880,1046].forEach((n,i) => {
+    setTimeout(() => tone(n,.12,"triangle",.16), i * 110);
+  });
+}
+
+function loseSound() {
+  [220,180,140,100].forEach((n,i) => {
+    setTimeout(() => tone(n,.16,"sawtooth",.14), i * 130);
+  });
+}
+
+function startMusic() {
+  if (musicTimer) return;
+  const bass = [110,110,146,110,164,146,110,98];
+  let i = 0;
+  musicTimer = setInterval(() => {
+    if (!running) return;
+    tone(bass[i % bass.length], .09, "square", .055);
+    if (i % 2 === 0) tone(bass[i % bass.length] * 2, .04, "triangle", .035);
+    i++;
+  }, 135);
+}
+
+function stopMusic() {
+  clearInterval(musicTimer);
+  musicTimer = null;
+}
+
+function startBattle() {
+  unlockAudio();
+  if (running) return;
+
+  player = 0;
+  enemy = 0;
+  time = 12;
+  combo = 0;
+  rewarded = false;
+  running = true;
+
+  updateBars();
+  nextPrompt();
+  startMusic();
+
+  enemyTimer = setInterval(enemyAI, 135);
+  clockTimer = setInterval(tickClock, 1000);
+}
+
+function nextPrompt() {
+  current = Math.random() > .5 ? "left" : "right";
+  promptEl.textContent = current.toUpperCase();
+  promptEl.classList.remove("flash");
+  void promptEl.offsetWidth;
+  promptEl.classList.add("flash");
+
+  leftBtn.classList.toggle("active-left", current === "left");
+  rightBtn.classList.toggle("active-right", current === "right");
+}
+
+function press(dir) {
+  unlockAudio();
+
+  if (!running) startBattle();
+  if (!running) return;
+
+  if (dir === current) {
+    combo++;
+    player += 5 + Math.min(combo, 10) * .45;
+    hitSound();
   } else {
-    player -= 4;
-    if(player < 0) player = 0;
+    combo = 0;
+    player -= 8;
+    enemy += 3;
+    missSound();
+    page.classList.remove("screen-shake");
+    void page.offsetWidth;
+    page.classList.add("screen-shake");
+  }
+
+  if (player < 0) player = 0;
+  comboEl.textContent = combo;
+
+  const best = parseInt(localStorage.getItem("pcvr_level13_best_combo") || "0", 10);
+  if (combo > best) {
+    localStorage.setItem("pcvr_level13_best_combo", combo);
+    bestEl.textContent = combo;
   }
 
   updateBars();
   nextPrompt();
+
+  if (player >= 100 || enemy >= 100) endGame();
 }
 
-function updateBars(){
-  if(player > 100) player = 100;
-  if(enemy > 100) enemy = 100;
-
-  document.getElementById("playerBar").style.width = player + "%";
-  document.getElementById("enemyBar").style.width = enemy + "%";
+function updateBars() {
+  player = Math.min(player, 100);
+  enemy = Math.min(enemy, 100);
+  playerBar.style.width = player + "%";
+  enemyBar.style.width = enemy + "%";
 }
 
-function enemyAI(){
-  if(!running) return;
-
-  enemy += Math.random() * 2;
+function enemyAI() {
+  if (!running) return;
+  enemy += 1.15 + Math.random() * 1.2;
   updateBars();
-
-  if(player >= 100 || enemy >= 100){
-    endGame();
-  }
+  if (enemy >= 100) endGame();
 }
 
-setInterval(enemyAI,120);
+function tickClock() {
+  if (!running) return;
+  time--;
+  timeEl.textContent = time;
+  if (time <= 0) endGame();
+}
 
-function endGame(){
+function endGame() {
+  if (!running) return;
+
   running = false;
+  clearInterval(enemyTimer);
+  clearInterval(clockTimer);
+  stopMusic();
 
-  let win = player > enemy;
+  const win = player > enemy;
 
-  if(win){
-    document.getElementById("result").innerText = "🏆 Gate Destroyed!";
-    
-    let xp = parseInt(localStorage.getItem("pcvr_xp")||"0");
-    xp += 120;
-    localStorage.setItem("pcvr_xp",xp);
+  if (win) {
+    winSound();
 
-    document.getElementById("scoreText").innerText = "+120 XP | Total XP: " + xp;
+    let xp = parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+    if (localStorage.getItem("pcvr_level13_rewarded") !== "true") {
+      xp += 120;
+      localStorage.setItem("pcvr_xp", xp);
+      localStorage.setItem("pcvr_level13_rewarded", "true");
+    }
+
+    localStorage.setItem("pcvr_level13_complete", "true");
+    localStorage.setItem("pcvr_world4_progress", "true");
+
+    document.getElementById("result").textContent = "🏆 Gate Destroyed!";
+    document.getElementById("scoreText").innerHTML =
+      "Power: " + Math.round(player) + "%<br>Best Combo: " + bestEl.textContent + "<br>+120 XP | Total XP: " + xp;
   } else {
-    document.getElementById("result").innerText = "💥 Failed!";
-    document.getElementById("scoreText").innerText = "Wrong timing!";
+    loseSound();
+    document.getElementById("result").textContent = "💥 Gate Held!";
+    document.getElementById("scoreText").innerHTML =
+      "Power: " + Math.round(player) + "%<br>Try again and follow the glowing side.";
   }
 
   document.getElementById("overlay").style.display = "flex";
 }
 
-function restart(){
+function restart() {
   location.reload();
 }
 
+function bind(btn, dir) {
+  btn.addEventListener("touchstart", e => {
+    e.preventDefault();
+    press(dir);
+  }, { passive:false });
+
+  btn.addEventListener("click", e => {
+    e.preventDefault();
+    press(dir);
+  });
+}
+
+bind(leftBtn, "left");
+bind(rightBtn, "right");
 nextPrompt();
 </script>
 
