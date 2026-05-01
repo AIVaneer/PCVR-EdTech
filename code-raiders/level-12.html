@@ -337,9 +337,6 @@ function completeLevel() {
   stopMusic();
   winSound();
 
-  terminal.textContent = "✅ Jungle Trial Complete";
-  terminal.className = "terminal success";
-
   localStorage.setItem("pcvr_level12_complete", "true");
   localStorage.setItem("pcvr_world4_progress", "true");
 
@@ -348,6 +345,22 @@ function completeLevel() {
     localStorage.setItem("pcvr_level12_rewarded", "true");
     setXp(newXp);
   }
+
+  const totalXp = getXp();
+
+  terminal.className = "terminal success";
+  terminal.innerHTML = `
+    ✅ Jungle Trial Complete
+    <br><br>
+    Score: ${score} / ${WIN_SCORE}
+    <br>
+    +90 XP Reward
+    <br>
+    Total XP: ${totalXp}
+    <br><br>
+    <button class="next" onclick="window.location.href='./level-13.html'">➡️ Next Mission</button>
+    <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
+  `;
 
   document.getElementById("unlock").style.display = "block";
 }
