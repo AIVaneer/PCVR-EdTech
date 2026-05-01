@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Code Raiders Level 12</title>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height:100vh;
+  overflow:hidden;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(#052e16, #020617);
+  color:white;
+  user-select:none;
+  touch-action:none;
+}
+
+.wrap {
+  max-width:760px;
+  margin:0 auto;
+  padding:18px;
+  text-align:center;
+}
+
+h1 {
+  color:#4ade80;
+  font-size:clamp(2rem, 8vw, 3rem);
+  margin-bottom:8px;
+}
+
+.world {
+  color:#bbf7d0;
+  font-weight:bold;
+  margin-bottom:14px;
+}
+
+.card {
+  background:#020617;
+  border:2px solid #4ade80;
+  border-radius:16px;
+  padding:14px;
+  margin:14px 0;
+}
+
+#game {
+  width:100%;
+  max-width:720px;
+  height:340px;
+  background:#071b10;
+  border:4px solid #4ade80;
+  box-shadow:0 0 25px rgba(74,222,128,.5);
+  display:block;
+  margin:0 auto;
+}
+
+.controls {
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+button {
+  padding:14px 20px;
+  border:0;
+  border-radius:14px;
+  font-weight:900;
+  font-size:1rem;
+  cursor:pointer;
+}
+
+.jump { background:#4ade80; color:#052e16; }
+.music { background:#facc15; color:#422006; }
+.portal { background:#bae6fd; color:#075985; }
+
+.terminal {
+  background:#020617;
+  border:2px solid #4ade80;
+  border-radius:14px;
+  padding:14px;
+  margin-top:14px;
+  font-size:1.1rem;
+}
+
+.unlock {
+  display:none;
+  text-align:left;
+}
+
+.reward {
+  border-color:#facc15;
+}
+
+.success { color:#4ade80; }
+
+.small {
+  color:#94a3b8;
+  font-size:.95rem;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h1>Level 12: Jungle Jump</h1>
+<div class="world">🌴 World 4: Sky Temple Jungle 🌴</div>
+
+<p>Run through the jungle ruins. Jump over the obstacles and survive the trial.</p>
+
+<div class="card">
+  <strong>Current XP:</strong> <span id="xpDisplay">0</span>
+</div>
+
+<canvas id="game" width="720" height="340"></canvas>
+
+<div class="controls">
+  <button class="jump" onclick="jump()">🌴 Jump</button>
+  <button class="music" onclick="toggleMusic()">🎵 Music</button>
+  <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal</button>
+</div>
+
+<div id="terminal" class="terminal">Tap Jump or press Space to begin.</div>
+
+<div id="unlock" class="card unlock">
+  <h2 class="success">Jungle Trial Complete</h2>
+  <p>You cleared the Atari jungle jump trial and unlocked the next path.</p>
+
+  <div class="card reward">
+    <h3>XP Reward</h3>
+    <p>+90 XP added to your Code Raiders progress.</p>
+    <p><strong>Total XP:</strong> <span id="rewardXp">0</span></p>
+  </div>
+
+  <div class="card reward">
+    <h3>🌴 World 4 Progress</h3>
+    <p>Level 12 complete. The next mission is ready for Level 13.</p>
+    <p class="small">The jungle gate is open.</p>
+  </div>
+
+  <div class="controls">
+    <button class="jump" onclick="window.location.href='./level-13.html'">➡️ Next Mission</button>
+    <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
+    <button class="music" onclick="restartGame()">🔁 Play Again</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const terminal = document.getElementById("terminal");
+
+let audioCtx = null;
+let musicOn = true;
+let musicTimer = null;
+
+let running = false;
+let gameOver = false;
+let score = 0;
+let speed = 5;
+let frame = 0;
+
+let player = {
+  x: 90,
+  y: 250,
+  w: 34,
+  h: 42,
+  vy: 0,
+  jumping: false
+};
+
+let obstacles = [];
+let leaves = [];
+
+function getXp() {
+  return parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+}
+
+function setXp(value) {
+  localStorage.setItem("pcvr_xp", String(value));
+  document.getElementById("xpDisplay").textContent = value;
+  document.getElementById("rewardXp").textContent = value;
+}
+
+function loadXp() {
+  setXp(getXp());
+}
+
+function unlockAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+
+function tone(freq, dur, type, vol) {
+  if (!audioCtx || !musicOn) return;
+
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+
+  o.type = type || "square";
+  o.frequency.value = freq;
+  g.gain.value = vol || 0.08;
+
+  o.connect(g);
+  g.connect(audioCtx.destination);
+  o.start();
+
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.stop(audioCtx.currentTime + dur);
+}
+
+function jumpSound() {
+  tone(520, 0.06, "square", 0.12);
+  setTimeout(function(){ tone(780, 0.06, "square", 0.10); }, 50);
+}
+
+function hitSound() {
+  tone(120, 0.18, "sawtooth", 0.16);
+}
+
+function winSound() {
+  const notes = [523, 659, 784, 1046, 784, 1046];
+  notes.forEach(function(n, i) {
+    setTimeout(function(){ tone(n, 0.12, "triangle", 0.14); }, i * 120);
+  });
+}
+
+function startMusic() {
+  if (musicTimer || !musicOn) return;
+
+  const melody = [262, 330, 392, 330, 440, 392, 330, 262];
+  let i = 0;
+
+  musicTimer = setInterval(function() {
+    if (running && musicOn) {
+      tone(melody[i % melody.length], 0.08, "square", 0.045);
+      i++;
+    }
+  }, 150);
+}
+
+function stopMusic() {
+  if (musicTimer) clearInterval(musicTimer);
+  musicTimer = null;
+}
+
+function toggleMusic() {
+  unlockAudio();
+  musicOn = !musicOn;
+
+  if (musicOn) {
+    terminal.textContent = "Music on.";
+    startMusic();
+  } else {
+    terminal.textContent = "Music muted.";
+    stopMusic();
+  }
+}
+
+function spawnObstacle() {
+  const h = 30 + Math.random() * 34;
+  obstacles.push({
+    x: canvas.width + 20,
+    y: 292 - h,
+    w: 24 + Math.random() * 22,
+    h: h
+  });
+}
+
+function spawnLeaf() {
+  leaves.push({
+    x: Math.random() * canvas.width,
+    y: -10,
+    s: 2 + Math.random() * 4,
+    vy: 1 + Math.random() * 2
+  });
+}
+
+function jump() {
+  unlockAudio();
+
+  if (!running && !gameOver) {
+    running = true;
+    terminal.textContent = "Run, jump, survive.";
+    startMusic();
+  }
+
+  if (gameOver) return;
+
+  if (!player.jumping) {
+    player.vy = -14;
+    player.jumping = true;
+    jumpSound();
+  }
+}
+
+function restartGame() {
+  document.getElementById("unlock").style.display = "none";
+  terminal.style.display = "block";
+
+  running = false;
+  gameOver = false;
+  score = 0;
+  speed = 5;
+  frame = 0;
+
+  player.y = 250;
+  player.vy = 0;
+  player.jumping = false;
+
+  obstacles = [];
+  leaves = [];
+
+  terminal.textContent = "Tap Jump or press Space to begin.";
+  draw();
+}
+
+function completeLevel() {
+  running = false;
+  gameOver = true;
+  stopMusic();
+  winSound();
+
+  terminal.textContent = "✅ Jungle Trial Complete";
+  terminal.className = "terminal success";
+
+  localStorage.setItem("pcvr_level12_complete", "true");
+  localStorage.setItem("pcvr_world4_progress", "true");
+
+  if (localStorage.getItem("pcvr_level12_rewarded") !== "true") {
+    const newXp = getXp() + 90;
+    localStorage.setItem("pcvr_level12_rewarded", "true");
+    setXp(newXp);
+  }
+
+  document.getElementById("unlock").style.display = "block";
+}
+
+function failLevel() {
+  running = false;
+  gameOver = true;
+  stopMusic();
+  hitSound();
+  terminal.textContent = "💥 Hit! Tap Play Again to retry.";
+}
+
+function update() {
+  if (!running || gameOver) return;
+
+  frame++;
+  score++;
+
+  if (score % 300 === 0) speed += 0.5;
+
+  player.vy += 0.65;
+  player.y += player.vy;
+
+  if (player.y >= 250) {
+    player.y = 250;
+    player.vy = 0;
+    player.jumping = false;
+  }
+
+  if (frame % 75 === 0) spawnObstacle();
+  if (frame % 6 === 0) spawnLeaf();
+
+  obstacles.forEach(function(o) {
+    o.x -= speed;
+  });
+
+  leaves.forEach(function(l) {
+    l.y += l.vy;
+  });
+
+  obstacles = obstacles.filter(function(o) {
+    return o.x + o.w > -20;
+  });
+
+  leaves = leaves.filter(function(l) {
+    return l.y < canvas.height + 20;
+  });
+
+  obstacles.forEach(function(o) {
+    if (
+      player.x < o.x + o.w &&
+      player.x + player.w > o.x &&
+      player.y < o.y + o.h &&
+      player.y + player.h > o.y
+    ) {
+      failLevel();
+    }
+  });
+
+  terminal.textContent = "Score: " + score + " / 1500";
+
+  if (score >= 1500) {
+    completeLevel();
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  sky.addColorStop(0, "#082f49");
+  sky.addColorStop(1, "#052e16");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#14532d";
+  ctx.fillRect(0, 292, canvas.width, 48);
+
+  ctx.fillStyle = "#22c55e";
+  for (let i = 0; i < canvas.width; i += 36) {
+    ctx.fillRect(i, 286, 22, 8);
+  }
+
+  leaves.forEach(function(l) {
+    ctx.fillStyle = "#86efac";
+    ctx.fillRect(l.x, l.y, l.s, l.s);
+  });
+
+  ctx.fillStyle = "#facc15";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+  ctx.fillStyle = "#fb923c";
+  ctx.fillRect(player.x + 8, player.y - 10, player.w - 16, 14);
+  ctx.fillStyle = "#000";
+  ctx.fillRect(player.x + 22, player.y + 10, 5, 5);
+
+  obstacles.forEach(function(o) {
+    ctx.fillStyle = "#a16207";
+    ctx.fillRect(o.x, o.y, o.w, o.h);
+    ctx.fillStyle = "#22c55e";
+    ctx.fillRect(o.x - 4, o.y, o.w + 8, 8);
+  });
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "20px Courier New";
+  ctx.fillText("JUNGLE SCORE " + score, 20, 32);
+
+  requestAnimationFrame(function() {
+    update();
+    draw();
+  });
+}
+
+document.addEventListener("keydown", function(e) {
+  if (e.code === "Space") {
+    e.preventDefault();
+    jump();
+  }
+});
+
+canvas.addEventListener("touchstart", function(e) {
+  e.preventDefault();
+  jump();
+}, { passive:false });
+
+loadXp();
+draw();
+</script>
+</body>
+</html>
