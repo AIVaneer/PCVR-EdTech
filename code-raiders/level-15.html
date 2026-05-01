@@ -6,397 +6,98 @@
 <title>Level 15: Superhuman Boss Gate</title>
 
 <style>
-* {
-  box-sizing:border-box;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-touch-callout:none;
-  -webkit-tap-highlight-color:transparent;
-}
-
-body {
-  margin:0;
-  min-height:100vh;
-  background:linear-gradient(#0f172a,#020617);
-  color:white;
-  font-family:Arial,sans-serif;
-  overflow-x:hidden;
-}
-
-.wrap {
-  max-width:820px;
-  margin:0 auto;
-  padding:18px 16px 90px;
-  text-align:center;
-}
-
-h1 {
-  margin:10px 0 4px;
-  color:#facc15;
-  font-size:clamp(2rem,8vw,3.4rem);
-  text-shadow:0 0 22px rgba(250,204,21,.65);
-}
-
-.sub {
-  color:#c4b5fd;
-  font-size:1.15rem;
-  margin-bottom:14px;
-}
-
-.panel {
-  background:rgba(2,6,23,.9);
-  border:3px solid #a78bfa;
-  border-radius:22px;
-  padding:16px;
-  margin:14px 0;
-  box-shadow:0 0 28px rgba(167,139,250,.35);
-}
-
-.profile {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.profileBox {
-  background:#020617;
-  border:2px solid #38bdf8;
-  border-radius:18px;
-  padding:14px;
-}
-
-.profileBox h3 {
-  margin:0 0 8px;
-  color:#38bdf8;
-}
-
-.profileBox p {
-  margin:4px 0;
-  color:#e5e7eb;
-}
-
-.characterSelect {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-
-.char {
-  border:3px solid #334155;
-  border-radius:18px;
-  padding:12px;
-  background:#020617;
-  cursor:pointer;
-}
-
-.char.active {
-  border-color:#facc15;
-  box-shadow:0 0 22px rgba(250,204,21,.55);
-}
-
-.char .emoji {
-  font-size:3rem;
-}
-
-.char strong {
-  display:block;
-  margin-top:6px;
-}
-
-.stage {
-  position:relative;
-  width:100%;
-  height:360px;
-  background:
-    radial-gradient(circle at 50% 18%,rgba(250,204,21,.22),transparent 22%),
-    radial-gradient(circle at 20% 35%,rgba(56,189,248,.22),transparent 22%),
-    linear-gradient(#111827,#020617);
-  border:4px solid #facc15;
-  border-radius:22px;
-  overflow:hidden;
-  box-shadow:0 0 34px rgba(250,204,21,.38);
-}
-
-.star {
-  position:absolute;
-  width:3px;
-  height:3px;
-  background:white;
-  border-radius:50%;
-  opacity:.7;
-  animation:twinkle 1.5s infinite alternate;
-}
-
-@keyframes twinkle {
-  from { opacity:.2; transform:scale(.8); }
-  to { opacity:1; transform:scale(1.5); }
-}
-
-.ground {
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:62px;
-  background:repeating-linear-gradient(90deg,#1e293b 0 34px,#0f172a 34px 68px);
-  border-top:4px solid #38bdf8;
-}
-
-.hero {
-  position:absolute;
-  left:70px;
-  bottom:62px;
-  font-size:72px;
-  filter:drop-shadow(0 0 18px #38bdf8);
-  transition:transform .16s;
-}
-
-.hero.attack {
-  transform:translateX(22px) scale(1.08);
-}
-
-.boss {
-  position:absolute;
-  right:70px;
-  bottom:62px;
-  font-size:82px;
-  filter:drop-shadow(0 0 22px #fb7185);
-  transition:transform .2s;
-}
-
-.boss.hit {
-  transform:translateX(16px) rotate(6deg);
-}
-
-.blast {
-  position:absolute;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  background:#facc15;
-  box-shadow:0 0 28px #facc15;
-  opacity:0;
-}
-
-.blast.active {
-  animation:blastMove .35s linear forwards;
-}
-
-@keyframes blastMove {
-  from { opacity:1; transform:translateX(0) scale(1); }
-  to { opacity:0; transform:translateX(360px) scale(2.4); }
-}
-
-.hud {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
-}
-
-.barBox {
-  text-align:left;
-}
-
-.barLabel {
-  font-weight:900;
-  margin-bottom:6px;
-}
-
-.bar {
-  height:22px;
-  background:#111827;
-  border:2px solid #64748b;
-  border-radius:999px;
-  overflow:hidden;
-}
-
-.fill {
-  height:100%;
-  width:100%;
-  background:linear-gradient(90deg,#22c55e,#38bdf8);
-}
-
-.bossFill {
-  background:linear-gradient(90deg,#fb7185,#facc15);
-}
-
-.storyLog {
-  text-align:left;
-  line-height:1.5;
-  color:#dbeafe;
-}
-
-.controls {
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:14px;
-}
-
-button {
-  border:0;
-  border-radius:16px;
-  padding:15px 18px;
-  font-weight:900;
-  font-size:1rem;
-  cursor:pointer;
-}
-
-.primary { background:#facc15; color:#422006; }
-.attackBtn { background:#4ade80; color:#052e16; }
-.shieldBtn { background:#38bdf8; color:#082f49; }
-.specialBtn { background:#a78bfa; color:#1e1b4b; }
-.homeBtn { background:#bae6fd; color:#075985; }
-
-.terminal {
-  margin-top:14px;
-  background:#020617;
-  border:2px solid #38bdf8;
-  border-radius:16px;
-  padding:14px;
-  color:#e0f2fe;
-  min-height:54px;
-}
-
-.overlay {
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,.88);
-  z-index:999;
-  padding:18px;
-}
-
-.modal {
-  width:100%;
-  max-width:560px;
-  background:#020617;
-  border:4px solid #facc15;
-  border-radius:24px;
-  padding:24px;
-  text-align:center;
-  box-shadow:0 0 40px rgba(250,204,21,.65);
-}
-
-.modal h2 {
-  font-size:2.2rem;
-  color:#facc15;
-}
-
-.saveRow {
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-input {
-  padding:13px;
-  border-radius:12px;
-  border:2px solid #38bdf8;
-  background:#020617;
-  color:white;
-  font-size:1rem;
-}
-
-.small {
-  color:#94a3b8;
-  font-size:.95rem;
-}
+* { box-sizing:border-box; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+body { margin:0; min-height:100vh; background:linear-gradient(#0f172a,#020617); color:white; font-family:Arial,sans-serif; overflow-x:hidden; }
+.wrap { max-width:820px; margin:0 auto; padding:18px 16px 90px; text-align:center; }
+h1 { margin:10px 0 4px; color:#facc15; font-size:clamp(2rem,8vw,3.4rem); text-shadow:0 0 22px rgba(250,204,21,.65); }
+.sub { color:#c4b5fd; font-size:1.15rem; margin-bottom:14px; }
+.panel { background:rgba(2,6,23,.9); border:3px solid #a78bfa; border-radius:22px; padding:16px; margin:14px 0; box-shadow:0 0 28px rgba(167,139,250,.35); }
+.stage { position:relative; width:100%; height:360px; background: radial-gradient(circle at 50% 18%,rgba(250,204,21,.22),transparent 22%), radial-gradient(circle at 20% 35%,rgba(56,189,248,.22),transparent 22%), linear-gradient(#111827,#020617); border:4px solid #facc15; border-radius:22px; overflow:hidden; box-shadow:0 0 34px rgba(250,204,21,.38); margin:14px 0; }
+.star { position:absolute; width:3px; height:3px; background:white; border-radius:50%; opacity:.7; animation:twinkle 1.8s infinite alternate; }
+@keyframes twinkle { from { opacity:.2; transform:scale(.8); } to { opacity:1; transform:scale(1.5); } }
+.ground { position:absolute; left:0; right:0; bottom:0; height:62px; background:repeating-linear-gradient(90deg,#1e293b 0 34px,#0f172a 34px 68px); border-top:4px solid #38bdf8; }
+.hero { position:absolute; left:70px; bottom:62px; font-size:72px; filter:drop-shadow(0 0 18px #38bdf8); transition:transform .2s; }
+.hero.attack { transform:translateX(28px) scale(1.12); }
+.boss { position:absolute; right:70px; bottom:62px; font-size:82px; filter:drop-shadow(0 0 22px #fb7185); transition:transform .25s; }
+.boss.hit { transform:translateX(18px) rotate(8deg); }
+.blast { position:absolute; width:28px; height:28px; border-radius:50%; background:#facc15; box-shadow:0 0 32px #facc15; opacity:0; }
+.blast.active { animation:blastMove .45s linear forwards; }
+@keyframes blastMove { from { opacity:1; transform:translateX(0) scale(1); } to { opacity:0; transform:translateX(360px) scale(2.6); } }
+.hud { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.barBox { text-align:left; } .barLabel { font-weight:900; margin-bottom:6px; }
+.bar { height:22px; background:#111827; border:2px solid #64748b; border-radius:999px; overflow:hidden; }
+.fill { height:100%; background:linear-gradient(90deg,#22c55e,#38bdf8); } .bossFill { background:linear-gradient(90deg,#fb7185,#facc15); }
+.storyLog { text-align:left; line-height:1.5; color:#dbeafe; margin:12px 0; }
+.controls { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+button { border:0; border-radius:16px; padding:15px 20px; font-weight:900; font-size:1.05rem; cursor:pointer; }
+.primary { background:#facc15; color:#422006; } .attackBtn { background:#4ade80; color:#052e16; }
+.shieldBtn { background:#38bdf8; color:#082f49; } .specialBtn { background:#a78bfa; color:#1e1b4b; }
+.potionBtn { background:#f472b6; color:#831843; } .homeBtn { background:#bae6fd; color:#075985; }
+.terminal { margin-top:14px; background:#020617; border:2px solid #38bdf8; border-radius:16px; padding:14px; color:#e0f2fe; min-height:58px; }
+.overlay { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.9); z-index:999; padding:18px; }
+.modal { width:100%; max-width:560px; background:#020617; border:4px solid #facc15; border-radius:24px; padding:28px; text-align:center; box-shadow:0 0 40px rgba(250,204,21,.65); }
 </style>
 </head>
-
 <body>
 <div class="wrap">
+  <h1>Level 15: Superhuman Boss Gate</h1>
+  <div class="sub">Turn-Based Boss Battle</div>
 
-<h1>Level 15: Superhuman Boss Gate</h1>
-<div class="sub">Boss stage, character system, story progress, save profile</div>
-
-<div class="panel profile">
-  <div class="profileBox">
-    <h3>Player Profile</h3>
-    <p><strong>Name:</strong> <span id="profileName">Raider</span></p>
-    <p><strong>Total XP:</strong> <span id="xpDisplay">0</span></p>
-    <p><strong>Story:</strong> <span id="storyDisplay">Awakening Arc</span></p>
-  </div>
-
-  <div class="profileBox">
-    <h3>Mission</h3>
-    <p>Defeat the Gate Guardian.</p>
-    <p class="small">Attack, shield, and use special when charged.</p>
-  </div>
-</div>
-
-<div class="panel">
-  <h2>Choose Your Hero</h2>
-  <div class="characterSelect">
-    <div class="char active" onclick="selectHero('kaiden', '🧙‍♂️', 'Kaiden')">
-      <div class="emoji">🧙‍♂️</div>
-      <strong>Kaiden</strong>
+  <div class="panel profile">
+    <div class="profileBox">
+      <h3>Player Profile</h3>
+      <p><strong>Name:</strong> <span id="profileName">Raider</span></p>
+      <p><strong>Total XP:</strong> <span id="xpDisplay">0</span></p>
     </div>
-    <div class="char" onclick="selectHero('aiva', '🦸‍♀️', 'Aiva')">
-      <div class="emoji">🦸‍♀️</div>
-      <strong>Aiva</strong>
-    </div>
-    <div class="char" onclick="selectHero('wolf', '🐺', 'Dire Wolf')">
-      <div class="emoji">🐺</div>
-      <strong>Dire Wolf</strong>
+    <div class="profileBox">
+      <h3>Mission</h3>
+      <p>Defeat the Gate Guardian in turn-based combat.</p>
+      <p class="small">Potions: <span id="potionCount">3</span> remaining</p>
     </div>
   </div>
-</div>
 
-<div class="stage" id="stage">
-  <div id="stars"></div>
-  <div class="hero" id="hero">🧙‍♂️</div>
-  <div class="boss" id="boss">👹</div>
-  <div class="blast" id="blast"></div>
-  <div class="ground"></div>
-</div>
-
-<div class="hud">
-  <div class="barBox">
-    <div class="barLabel">Hero HP</div>
-    <div class="bar"><div id="heroHpBar" class="fill"></div></div>
+  <div class="stage" id="stage">
+    <div id="stars"></div>
+    <div class="hero" id="hero">🧙‍♂️</div>
+    <div class="boss" id="boss">👹</div>
+    <div class="blast" id="blast"></div>
+    <div class="ground"></div>
   </div>
 
-  <div class="barBox">
-    <div class="barLabel">Boss HP</div>
-    <div class="bar"><div id="bossHpBar" class="fill bossFill"></div></div>
+  <div class="hud">
+    <div class="barBox">
+      <div class="barLabel">Hero HP <span id="heroHpText">100</span></div>
+      <div class="bar"><div id="heroHpBar" class="fill"></div></div>
+    </div>
+    <div class="barBox">
+      <div class="barLabel">Boss HP <span id="bossHpText">100</span></div>
+      <div class="bar"><div id="bossHpBar" class="fill bossFill"></div></div>
+    </div>
   </div>
-</div>
 
-<div class="panel storyLog">
-  <strong>Story Log</strong>
-  <div id="storyLog">
-    Level 14 awakened your power. Level 15 tests it against the Gate Guardian.
+  <div class="panel storyLog">
+    <strong>Battle Log</strong>
+    <div id="storyLog">Choose your hero and begin the battle.</div>
   </div>
-</div>
 
-<div class="controls">
-  <button class="primary" onclick="startBattle()">▶️ Start Boss Stage</button>
-  <button class="attackBtn" onclick="attack()">⚔️ Attack</button>
-  <button class="shieldBtn" onclick="shield()">🛡️ Shield</button>
-  <button class="specialBtn" onclick="special()">✨ Special</button>
-  <button class="homeBtn" onclick="location.href='./portal.html'">🏠 Portal</button>
-</div>
-
-<div class="terminal" id="terminal">Choose your hero, then start the boss stage.</div>
-
-<div class="panel">
-  <h2>Save Profile</h2>
-  <p class="small">This saves locally on this device.</p>
-  <div class="saveRow">
-    <input id="nameInput" placeholder="Enter player name">
-    <button class="primary" onclick="saveProfile()">Save</button>
-    <button class="homeBtn" onclick="loadProfile()">Load</button>
+  <div class="controls">
+    <button class="primary" onclick="startBattle()">▶️ Start Battle</button>
+    <button class="attackBtn" onclick="playerAction('attack')">⚔️ Attack</button>
+    <button class="shieldBtn" onclick="playerAction('shield')">🛡️ Shield</button>
+    <button class="specialBtn" onclick="playerAction('special')">✨ Special</button>
+    <button class="potionBtn" onclick="playerAction('potion')">🧪 Potion <span id="potionBtnCount">(3)</span></button>
+    <button class="homeBtn" onclick="location.href='./portal.html'">🏠 Portal</button>
   </div>
-</div>
 
+  <div class="terminal" id="terminal">Select an action when your turn begins.</div>
+
+  <div class="panel">
+    <h2>Save Profile</h2>
+    <div class="saveRow">
+      <input id="nameInput" placeholder="Player name">
+      <button class="primary" onclick="saveProfile()">Save</button>
+    </div>
+  </div>
 </div>
 
 <div class="overlay" id="overlay">
@@ -406,34 +107,36 @@ input {
     <div class="controls">
       <button class="specialBtn" onclick="location.href='./level-16.html'">➡️ Next Mission</button>
       <button class="homeBtn" onclick="location.href='./portal.html'">🏠 Portal Hub</button>
-      <button class="primary" onclick="restart()">🔁 Play Again</button>
+      <button class="primary" onclick="restartBattle()">🔁 Play Again</button>
     </div>
   </div>
 </div>
 
 <script>
-const hero = document.getElementById("hero");
-const boss = document.getElementById("boss");
-const blast = document.getElementById("blast");
+const heroEl = document.getElementById("hero");
+const bossEl = document.getElementById("boss");
+const blastEl = document.getElementById("blast");
 const terminal = document.getElementById("terminal");
 const storyLog = document.getElementById("storyLog");
 const heroHpBar = document.getElementById("heroHpBar");
 const bossHpBar = document.getElementById("bossHpBar");
+const heroHpText = document.getElementById("heroHpText");
+const bossHpText = document.getElementById("bossHpText");
+const potionCountEl = document.getElementById("potionCount");
+const potionBtnCount = document.getElementById("potionBtnCount");
 const overlay = document.getElementById("overlay");
 
 let audioCtx = null;
 let battleRunning = false;
+let isPlayerTurn = true;
 let heroHp = 100;
 let bossHp = 100;
+let potions = 3;
 let charge = 0;
 let blocking = false;
-let bossTimer = null;
-let musicTimer = null;
-let selectedHero = "kaiden";
 let selectedEmoji = "🧙‍♂️";
-let selectedName = "Kaiden";
 
-for (let i = 0; i < 80; i++) {
+for (let i = 0; i < 90; i++) {
   const s = document.createElement("div");
   s.className = "star";
   s.style.left = Math.random() * 100 + "%";
@@ -442,96 +145,35 @@ for (let i = 0; i < 80; i++) {
   document.getElementById("stars").appendChild(s);
 }
 
-function getXp() {
-  return parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
-}
-
-function setXp(v) {
-  localStorage.setItem("pcvr_xp", String(v));
-  document.getElementById("xpDisplay").textContent = v;
-}
-
 function unlockAudio() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === "suspended") audioCtx.resume();
 }
 
-function tone(freq, dur, type, vol) {
+function tone(freq, dur, type="square", vol=0.1) {
   if (!audioCtx) return;
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
-  o.type = type || "square";
-  o.frequency.value = freq;
-  g.gain.value = vol || .08;
-  o.connect(g);
-  g.connect(audioCtx.destination);
+  o.type = type; o.frequency.value = freq;
+  g.gain.value = vol;
+  o.connect(g).connect(audioCtx.destination);
   o.start();
-  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + dur);
-  o.stop(audioCtx.currentTime + dur);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.stop(audioCtx.currentTime + dur + 0.05);
 }
 
-function hitSound() {
-  tone(420,.08,"square",.12);
-  setTimeout(() => tone(660,.08,"triangle",.08),60);
-}
-
-function bossSound() {
-  tone(110,.18,"sawtooth",.16);
-}
-
-function shieldSound() {
-  tone(280,.08,"sine",.1);
-  setTimeout(() => tone(420,.08,"sine",.08),70);
-}
-
-function specialSound() {
-  [392,523,659,784,1046].forEach((n,i) => {
-    setTimeout(() => tone(n,.12,"triangle",.14),i*80);
-  });
-}
-
-function victorySound() {
-  [523,659,784,1046,1318].forEach((n,i) => {
-    setTimeout(() => tone(n,.16,"sine",.15),i*120);
-  });
-}
-
-function startMusic() {
-  if (musicTimer) return;
-  const melody = [196,262,330,392,330,262,220,196];
-  let i = 0;
-  musicTimer = setInterval(() => {
-    if (battleRunning) {
-      tone(melody[i % melody.length], .11, "triangle", .045);
-      if (i % 2 === 0) tone(melody[i % melody.length] * 2, .06, "sine", .03);
-      i++;
-    }
-  }, 180);
-}
-
-function stopMusic() {
-  clearInterval(musicTimer);
-  musicTimer = null;
-}
-
-function selectHero(id, emoji, name) {
-  selectedHero = id;
-  selectedEmoji = emoji;
-  selectedName = name;
-  hero.textContent = emoji;
-
-  document.querySelectorAll(".char").forEach(c => c.classList.remove("active"));
-  event.currentTarget.classList.add("active");
-
-  terminal.textContent = name + " selected.";
-  localStorage.setItem("pcvr_selected_hero", id);
-  localStorage.setItem("pcvr_selected_hero_name", name);
-  localStorage.setItem("pcvr_selected_hero_emoji", emoji);
-}
+function hitSound() { tone(480,0.09,"square",0.18); setTimeout(()=>tone(720,0.08),60); }
+function shieldSound() { tone(320,0.12,"sine",0.12); }
+function specialSound() { [520,680,840,1100].forEach((f,i)=>setTimeout(()=>tone(f,0.14,"triangle",0.16),i*70)); }
+function potionSound() { tone(680,0.1,"sine",0.2); setTimeout(()=>tone(920,0.15),80); }
 
 function updateBars() {
   heroHpBar.style.width = Math.max(0, heroHp) + "%";
   bossHpBar.style.width = Math.max(0, bossHp) + "%";
+  heroHpText.textContent = Math.max(0, Math.floor(heroHp));
+  bossHpText.textContent = Math.max(0, Math.floor(bossHp));
+  potionCountEl.textContent = potions;
+  potionBtnCount.textContent = `(${potions})`;
 }
 
 function startBattle() {
@@ -539,171 +181,141 @@ function startBattle() {
   unlockAudio();
 
   battleRunning = true;
-  heroHp = 100;
-  bossHp = 100;
-  charge = 0;
-  blocking = false;
-  overlay.style.display = "none";
-  updateBars();
-
-  terminal.textContent = "Boss battle started. Build charge and survive.";
-  storyLog.textContent = selectedName + " steps forward. The Gate Guardian roars.";
-
-  startMusic();
-
-  bossTimer = setInterval(() => {
-    if (!battleRunning) return;
-
-    let dmg = blocking ? 4 : 13;
-    heroHp -= dmg;
-    blocking = false;
-
-    boss.classList.add("hit");
-    setTimeout(() => boss.classList.remove("hit"), 180);
-
-    bossSound();
-    terminal.textContent = "Boss strikes. Damage taken: " + dmg;
-
-    updateBars();
-
-    if (heroHp <= 0) loseBattle();
-  }, 1450);
-}
-
-function attack() {
-  if (!battleRunning) return;
-  bossHp -= 8;
-  charge += 12;
-
-  hero.classList.add("attack");
-  setTimeout(() => hero.classList.remove("attack"), 160);
-
-  blast.style.left = "135px";
-  blast.style.bottom = "160px";
-  blast.classList.remove("active");
-  void blast.offsetWidth;
-  blast.classList.add("active");
-
-  hitSound();
-  terminal.textContent = "Attack landed. Special charge: " + Math.min(100, charge) + "%";
+  isPlayerTurn = true;
+  heroHp = 100; bossHp = 100; potions = 3; charge = 0; blocking = false;
 
   updateBars();
-  checkWin();
+  terminal.textContent = "Your turn! Choose an action.";
+  storyLog.textContent = "The Gate Guardian awaits your first move...";
+  heroEl.textContent = selectedEmoji;
 }
 
-function shield() {
-  if (!battleRunning) return;
-  blocking = true;
-  charge += 6;
-  shieldSound();
-  terminal.textContent = "Shield ready. Next boss hit reduced.";
-}
+function playerAction(action) {
+  if (!battleRunning || !isPlayerTurn) return;
+  isPlayerTurn = false;
 
-function special() {
-  if (!battleRunning) return;
+  if (action === 'attack') {
+    bossHp -= 14 + Math.floor(Math.random()*7);
+    charge += 18;
+    heroEl.classList.add("attack");
+    setTimeout(()=>heroEl.classList.remove("attack"),220);
 
-  if (charge < 50) {
-    terminal.textContent = "Special needs 50% charge.";
+    blastEl.style.left = "125px";
+    blastEl.style.bottom = "155px";
+    blastEl.classList.remove("active");
+    void blastEl.offsetWidth;
+    blastEl.classList.add("active");
+
+    hitSound();
+    terminal.textContent = "You strike the guardian!";
+  } 
+  else if (action === 'shield') {
+    blocking = true;
+    charge += 9;
+    shieldSound();
+    terminal.textContent = "You raise your shield.";
+  } 
+  else if (action === 'special') {
+    if (charge < 55) {
+      terminal.textContent = "Special needs 55% charge!";
+      isPlayerTurn = true;
+      return;
+    }
+    charge -= 55;
+    bossHp -= 32;
+    specialSound();
+    document.getElementById("stage").style.boxShadow = "0 0 70px #facc15";
+    setTimeout(()=>document.getElementById("stage").style.boxShadow = "0 0 34px rgba(250,204,21,.38)", 380);
+    terminal.textContent = "SUPERHUMAN SPECIAL!";
+  } 
+  else if (action === 'potion') {
+    if (potions <= 0) {
+      terminal.textContent = "No potions left!";
+      isPlayerTurn = true;
+      return;
+    }
+    potions--;
+    heroHp = Math.min(100, heroHp + 38);
+    potionSound();
+    terminal.textContent = "Potion used. Health restored!";
+  }
+
+  updateBars();
+
+  // Check win immediately after player action
+  if (bossHp <= 0) {
+    winBattle();
     return;
   }
 
-  charge -= 50;
-  bossHp -= 24;
-  specialSound();
-
-  document.getElementById("stage").style.boxShadow = "0 0 60px rgba(250,204,21,.95)";
-  setTimeout(() => {
-    document.getElementById("stage").style.boxShadow = "0 0 34px rgba(250,204,21,.38)";
-  }, 260);
-
-  terminal.textContent = "SUPERHUMAN SPECIAL HIT!";
-  storyLog.textContent = selectedName + " releases the awakened power from Level 14.";
-
-  updateBars();
-  checkWin();
+  setTimeout(enemyTurn, 950);
 }
 
-function checkWin() {
-  if (bossHp <= 0) winBattle();
+function enemyTurn() {
+  if (!battleRunning) return;
+
+  const dmg = blocking ? Math.floor(Math.random()*7) : 12 + Math.floor(Math.random()*11);
+  heroHp -= dmg;
+  blocking = false;
+
+  bossEl.classList.add("hit");
+  setTimeout(()=>bossEl.classList.remove("hit"), 280);
+
+  tone(140,0.22,"sawtooth",0.18);
+  terminal.textContent = `Guardian hits for ${dmg} damage!`;
+
+  updateBars();
+
+  if (heroHp <= 0) {
+    loseBattle();
+  } else {
+    isPlayerTurn = true;
+    terminal.textContent = "Your turn! Choose action.";
+  }
 }
 
 function winBattle() {
   battleRunning = false;
-  clearInterval(bossTimer);
-  stopMusic();
-  victorySound();
-
-  localStorage.setItem("pcvr_level15_complete", "true");
-  localStorage.setItem("pcvr_story_arc", "Boss Gate Cleared");
+  storyLog.textContent = "Victory! The Gate Guardian is defeated.";
+  document.getElementById("resultTitle").textContent = "🏆 VICTORY";
+  document.getElementById("resultText").innerHTML = `You defeated the guardian!<br>+180 XP`;
+  overlay.style.display = "flex";
 
   if (localStorage.getItem("pcvr_level15_rewarded") !== "true") {
-    setXp(getXp() + 150);
+    let xp = parseInt(localStorage.getItem("pcvr_xp") || "0") + 180;
+    localStorage.setItem("pcvr_xp", xp);
     localStorage.setItem("pcvr_level15_rewarded", "true");
   }
-
-  document.getElementById("storyDisplay").textContent = "Boss Gate Cleared";
-  document.getElementById("resultTitle").textContent = "🏆 Boss Gate Cleared";
-  document.getElementById("resultText").innerHTML =
-    selectedName + " defeated the Gate Guardian.<br>+150 XP Reward<br>Total XP: " + getXp();
-
-  overlay.style.display = "flex";
+  localStorage.setItem("pcvr_level15_complete", "true");
 }
 
 function loseBattle() {
   battleRunning = false;
-  clearInterval(bossTimer);
-  stopMusic();
-
-  document.getElementById("resultTitle").textContent = "💥 Boss Stage Failed";
-  document.getElementById("resultText").innerHTML =
-    "The Gate Guardian overpowered you.<br>Try again with better shield timing.";
-
+  document.getElementById("resultTitle").textContent = "💥 DEFEAT";
+  document.getElementById("resultText").innerHTML = "The guardian overpowered you.<br>Try again!";
   overlay.style.display = "flex";
 }
 
-function restart() {
+function restartBattle() {
   overlay.style.display = "none";
   battleRunning = false;
-  clearInterval(bossTimer);
-  stopMusic();
-  heroHp = 100;
-  bossHp = 100;
-  charge = 0;
-  blocking = false;
+  heroHp = 100; bossHp = 100; potions = 3; charge = 0;
   updateBars();
-  terminal.textContent = "Ready. Start the boss stage again.";
+  terminal.textContent = "Ready for another attempt.";
+  storyLog.textContent = "The Gate Guardian awaits...";
 }
 
 function saveProfile() {
   const name = document.getElementById("nameInput").value.trim() || "Raider";
   localStorage.setItem("pcvr_profile_name", name);
-  localStorage.setItem("pcvr_profile_xp", String(getXp()));
-  localStorage.setItem("pcvr_profile_story", localStorage.getItem("pcvr_story_arc") || "Awakening Arc");
   document.getElementById("profileName").textContent = name;
   terminal.textContent = "Profile saved.";
 }
 
-function loadProfile() {
-  const name = localStorage.getItem("pcvr_profile_name") || "Raider";
-  const story = localStorage.getItem("pcvr_profile_story") || "Awakening Arc";
-  document.getElementById("profileName").textContent = name;
-  document.getElementById("storyDisplay").textContent = story;
-  terminal.textContent = "Profile loaded.";
-}
-
-function boot() {
-  setXp(getXp());
-
-  const emoji = localStorage.getItem("pcvr_selected_hero_emoji");
-  const name = localStorage.getItem("pcvr_selected_hero_name");
-  if (emoji) hero.textContent = emoji;
-  if (name) selectedName = name;
-
-  loadProfile();
-  updateBars();
-}
-
-boot();
+// Boot
+document.getElementById("xpDisplay").textContent = localStorage.getItem("pcvr_xp") || "0";
+document.getElementById("profileName").textContent = localStorage.getItem("pcvr_profile_name") || "Raider";
+updateBars();
 </script>
 </body>
 </html>
