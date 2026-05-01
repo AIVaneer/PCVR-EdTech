@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sky Burner</title>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: radial-gradient(circle at center, #0a001f 0%, #000000 100%);
+  color: #00ffcc;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+header {
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  background: rgba(0,0,0,0.7);
+  border-bottom: 3px solid #00ffcc;
+}
+
+h1 {
+  font-size: 2.4rem;
+  letter-spacing: 6px;
+  text-shadow: 0 0 15px #00ffcc;
+}
+
+canvas {
+  image-rendering: pixelated;
+  border: 4px solid #00ffcc;
+  box-shadow: 0 0 40px rgba(0,255,204,0.6);
+  max-width: 100%;
+  height: auto;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 100;
+  text-align: center;
+}
+
+button {
+  background: transparent;
+  color: #00ffcc;
+  border: 3px solid #00ffcc;
+  padding: 16px 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin: 10px;
+}
+
+button:hover {
+  background: #00ffcc;
+  color: #000;
+}
+
+.hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 1.1rem;
+  text-shadow: 0 0 10px #000;
+  pointer-events: none;
+  z-index: 20;
+  line-height: 1.4;
+}
+
+.mute {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.6);
+  color: #00ffcc;
+  border: 2px solid #00ffcc;
+  padding: 8px 16px;
+  cursor: pointer;
+  z-index: 30;
+}
+
+.level-up {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5rem;
+  color: #ffff00;
+  text-shadow: 0 0 20px #ffff00;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<header><h1>🚀 SKY BURNER</h1></header>
+
+<canvas id="game" width="480" height="720"></canvas>
+
+<div id="overlay">
+  <div id="endContent">
+    <h2 style="font-size:2rem;">READY TO BURN THE SKY?</h2>
+    <p style="margin:18px 0; line-height:1.5;">
+      Move with arrow keys, tilt, or swipe.<br>
+      Tap or press space to shoot.<br>
+      Beat Level 3 to complete the mission.
+    </p>
+    <button onclick="startGame()">LAUNCH MISSION</button>
+    <button onclick="window.location.href='./portal.html'">PORTAL HUB</button>
+  </div>
+</div>
+
+<div class="hud">
+  SCORE <span id="score">0</span><br>
+  PCVR <span id="points">0.000000000000</span><br>
+  LVL <span id="level">1</span>
+</div>
+
+<button class="mute" id="muteBtn" onclick="toggleMute()">🔊</button>
+<div class="level-up" id="levelUp">LEVEL UP!</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const overlay = document.getElementById("overlay");
+const scoreEl = document.getElementById("score");
+const pointsEl = document.getElementById("points");
+const levelEl = document.getElementById("level");
+const muteBtn = document.getElementById("muteBtn");
+const levelUpEl = document.getElementById("levelUp");
+
+let score = 0;
+let pcvrPoints = 0;
+let energy = 100;
+let frenzy = false;
+let level = 1;
+let gameRunning = false;
+let muted = false;
+let tiltX = 0;
+let keys = {};
+let touchStartX = 0;
+let lastShot = 0;
+let difficulty = 1;
+let musicInt = null;
+let audioCtx = null;
+
+const player = { x: 220, y: 620, w: 40, h: 28, speed: 6.5 };
+const bullets = [];
+const enemies = [];
+const stars = [];
+const powerups = [];
+const particles = [];
+
+function unlockAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+
+function playTone(freq, duration, type, vol) {
+  if (muted || !audioCtx) return;
+
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+
+  o.type = type || "square";
+  o.frequency.value = freq;
+  g.gain.value = vol || 0.25;
+
+  o.connect(g);
+  g.connect(audioCtx.destination);
+
+  o.start();
+  g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + duration / 1000);
+  o.stop(audioCtx.currentTime + duration / 1000 + 0.1);
+}
+
+function shootSound() {
+  playTone(950, 25, "sawtooth", 0.35);
+  playTone(1450, 18, "sawtooth", 0.2);
+}
+
+function explosionSound() {
+  playTone(80, 260, "sine", 0.35);
+}
+
+function powerupSound() {
+  for (let i = 0; i < 6; i++) {
+    setTimeout(function() {
+      playTone(550 + i * 130, 70, "sine", 0.3);
+    }, i * 35);
+  }
+}
+
+function hitSound() {
+  playTone(420, 70, "triangle", 0.35);
+}
+
+function levelUpSound() {
+  for (let i = 0; i < 8; i++) {
+    setTimeout(function() {
+      playTone(800 + i * 80, 90, "sine", 0.35);
+    }, i * 60);
+  }
+}
+
+function winSound() {
+  for (let i = 0; i < 12; i++) {
+    setTimeout(function() {
+      playTone(1200 + i * 70, 120, "sine", 0.35);
+    }, i * 80);
+  }
+}
+
+const melody = [262,330,392,523,392,330,262,294,349,440,523,440,349,294,330,392,523,659,523,392,330,262,349,440,523,659,523,440,349,0];
+
+function startMusic() {
+  if (muted || musicInt) return;
+
+  let i = 0;
+  musicInt = setInterval(function() {
+    if (gameRunning) {
+      const note = melody[i % melody.length];
+      if (note > 0) playTone(note, 135, "square", 0.08);
+      i++;
+    }
+  }, 145);
+}
+
+function stopMusic() {
+  if (musicInt) clearInterval(musicInt);
+  musicInt = null;
+}
+
+function createExplosion(x, y, intensity) {
+  explosionSound();
+
+  for (let i = 0; i < intensity; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const v = 1.8 + Math.random() * 4.5;
+
+    particles.push({
+      x: x,
+      y: y,
+      vx: Math.cos(a) * v,
+      vy: Math.sin(a) * v - 1,
+      life: 35 + Math.random() * 30,
+      color: Math.random() > 0.5 ? "#ff8800" : "#ffff00",
+      size: 3 + Math.random() * 4
+    });
+  }
+}
+
+function spawnStar() {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: -10,
+    r: Math.random() * 2.2 + 0.6,
+    speed: 1 + Math.random() * 3.5
+  });
+}
+
+function spawnEnemy() {
+  const sz = 28 + Math.random() * 32;
+  let hp = 1 + Math.floor(Math.random() * 2 * difficulty);
+  let speed = 1.6 + Math.random() * 2.4 * difficulty;
+
+  if (level >= 3 && Math.random() < 0.3) hp += 2;
+  if (level >= 2 && Math.random() < 0.4) speed *= 1.65;
+
+  enemies.push({
+    x: Math.random() * (canvas.width - sz),
+    y: -sz,
+    w: sz,
+    h: sz,
+    speed: speed,
+    hp: hp
+  });
+}
+
+function spawnPowerup() {
+  powerups.push({
+    x: Math.random() * (canvas.width - 32),
+    y: -32,
+    w: 32,
+    h: 32,
+    type: Math.random() < 0.5 ? "heal" : "frenzy"
+  });
+}
+
+function shoot() {
+  const now = Date.now();
+
+  if (now - lastShot < (frenzy ? 65 : 155)) return;
+
+  lastShot = now;
+  shootSound();
+
+  bullets.push({ x: player.x + 18, y: player.y - 6, vy: -11 });
+
+  if (frenzy) {
+    bullets.push({ x: player.x + 7, y: player.y, vy: -9, vx: -3.8 });
+    bullets.push({ x: player.x + 29, y: player.y, vy: -9, vx: 3.8 });
+  }
+}
+
+function startGame() {
+  unlockAudio();
+
+  overlay.style.display = "none";
+
+  score = 0;
+  pcvrPoints = 0;
+  energy = 100;
+  frenzy = false;
+  level = 1;
+  difficulty = 1;
+
+  scoreEl.textContent = "0";
+  pointsEl.textContent = "0.000000000000";
+  levelEl.textContent = "1";
+
+  bullets.length = 0;
+  enemies.length = 0;
+  powerups.length = 0;
+  particles.length = 0;
+
+  player.x = 220;
+  gameRunning = true;
+
+  startMusic();
+  loop();
+}
+
+function showLevelUp() {
+  levelUpSound();
+
+  levelUpEl.textContent = "LEVEL " + level + "!";
+  levelUpEl.style.opacity = "1";
+
+  setTimeout(function() {
+    levelUpEl.style.opacity = "0";
+  }, 1800);
+}
+
+function showEndScreen(isWin) {
+  gameRunning = false;
+  stopMusic();
+
+  if (isWin) {
+    winSound();
+
+    localStorage.setItem("pcvr_level10_complete", "true");
+    localStorage.setItem("pcvr_world4_started", "true");
+
+    if (localStorage.getItem("pcvr_level10_rewarded") !== "true") {
+      const currentXp = parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+      localStorage.setItem("pcvr_xp", String(currentXp + 100));
+      localStorage.setItem("pcvr_level10_rewarded", "true");
+    }
+
+    const best = parseInt(localStorage.getItem("sky_burner_high_score") || "0", 10);
+    if (score > best) {
+      localStorage.setItem("sky_burner_high_score", String(score));
+    }
+  }
+
+  const savedXp = parseInt(localStorage.getItem("pcvr_xp") || "0", 10);
+  const content = document.getElementById("endContent");
+
+  if (isWin) {
+    content.innerHTML = `
+      <h2 style="color:#ffff00; font-size:2.4rem;">🎉 MISSION COMPLETE 🎉</h2>
+      <p style="margin:20px 0; font-size:1.2rem; line-height:1.5;">
+        FINAL SCORE: ${score.toLocaleString()}<br>
+        PCVR POINTS: ${pcvrPoints.toFixed(12)}<br>
+        REACHED LEVEL ${level}<br>
+        +100 XP REWARD<br>
+        TOTAL XP: ${savedXp}
+      </p>
+      <button onclick="window.location.href='./portal.html'">NEXT MISSION</button>
+      <button onclick="window.location.href='./portal.html'">PORTAL HUB</button>
+      <button onclick="startGame()">PLAY AGAIN</button>
+    `;
+  } else {
+    content.innerHTML = `
+      <h2 style="color:#ff4444; font-size:2.3rem;">💥 MISSION FAILED 💥</h2>
+      <p style="margin:20px 0; font-size:1.2rem; line-height:1.5;">
+        FINAL SCORE: ${score.toLocaleString()}<br>
+        PCVR POINTS: ${pcvrPoints.toFixed(12)}<br>
+        REACHED LEVEL ${level}
+      </p>
+      <button onclick="startGame()">RETRY MISSION</button>
+      <button onclick="window.location.href='./portal.html'">PORTAL HUB</button>
+    `;
+  }
+
+  overlay.style.display = "flex";
+}
+
+function update() {
+  if (!gameRunning) return;
+
+  if (keys["ArrowLeft"] || keys["a"]) player.x -= player.speed;
+  if (keys["ArrowRight"] || keys["d"]) player.x += player.speed;
+  if (Math.abs(tiltX) > 4) player.x += tiltX * 0.22;
+
+  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+
+  if (keys[" "] || keys["Spacebar"]) shoot();
+
+  bullets.forEach(function(b) {
+    b.y += b.vy;
+    b.x += b.vx || 0;
+  });
+
+  enemies.forEach(function(e) {
+    e.y += e.speed;
+  });
+
+  stars.forEach(function(s) {
+    s.y += s.speed;
+  });
+
+  powerups.forEach(function(p) {
+    p.y += 3.2;
+  });
+
+  particles.forEach(function(p) {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
+    p.vy += 0.18;
+  });
+
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    if (bullets[i].y < -30) bullets.splice(i, 1);
+  }
+
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    if (enemies[i].y > canvas.height + 60) enemies.splice(i, 1);
+  }
+
+  for (let i = powerups.length - 1; i >= 0; i--) {
+    if (powerups[i].y > canvas.height) powerups.splice(i, 1);
+  }
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    if (particles[i].life <= 0) particles.splice(i, 1);
+  }
+
+  while (stars.length > 200) stars.shift();
+
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+
+    for (let j = enemies.length - 1; j >= 0; j--) {
+      const e = enemies[j];
+
+      if (b.x > e.x && b.x < e.x + e.w && b.y > e.y && b.y < e.y + e.h) {
+        bullets.splice(i, 1);
+        e.hp--;
+
+        if (e.hp <= 0) {
+          enemies.splice(j, 1);
+          score += 100 * level;
+          pcvrPoints += 0.000000000052595 * level;
+          createExplosion(e.x + e.w / 2, e.y + e.h / 2, level === 3 ? 45 : 28);
+        } else {
+          createExplosion(e.x + e.w / 2, e.y + e.h / 2, 10);
+        }
+
+        break;
+      }
+    }
+  }
+
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    const e = enemies[i];
+
+    if (e.y + e.h > player.y && e.x < player.x + player.w && e.x + e.w > player.x) {
+      enemies.splice(i, 1);
+      energy -= level === 3 ? 32 : 25;
+      hitSound();
+      createExplosion(player.x + player.w / 2, player.y + 10, 18);
+
+      if (energy <= 0) {
+        showEndScreen(false);
+        return;
+      }
+    }
+  }
+
+  for (let i = powerups.length - 1; i >= 0; i--) {
+    const p = powerups[i];
+
+    if (p.x < player.x + player.w && p.x + p.w > player.x && p.y < player.y + player.h && p.y + p.h > player.y) {
+      if (p.type === "heal") {
+        energy = Math.min(100, energy + 35);
+      } else {
+        frenzy = true;
+        setTimeout(function() {
+          frenzy = false;
+        }, 7500);
+      }
+
+      powerupSound();
+      powerups.splice(i, 1);
+    }
+  }
+
+  if (Math.random() < 0.6) spawnStar();
+  if (Math.random() < 0.029 * difficulty) spawnEnemy();
+  if (Math.random() < 0.009) spawnPowerup();
+
+  const nextThreshold = level * 1800;
+
+  if (score > nextThreshold && level < 3) {
+    level++;
+    difficulty = 1 + level * 0.45;
+    levelEl.textContent = level;
+    showLevelUp();
+  }
+
+  if (level === 3 && score > 7200) {
+    showEndScreen(true);
+    return;
+  }
+
+  scoreEl.textContent = score.toLocaleString();
+  pointsEl.textContent = pcvrPoints.toFixed(12);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "white";
+
+  stars.forEach(function(s) {
+    ctx.globalAlpha = Math.max(0.4, s.speed / 5);
+    ctx.fillRect(s.x, s.y, s.r, s.r);
+  });
+
+  ctx.globalAlpha = 1;
+
+  ctx.fillStyle = frenzy ? "#ffff00" : "#00ffff";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+
+  ctx.fillStyle = "#ff00ff";
+  ctx.fillRect(player.x + 7, player.y - 12, player.w - 14, 18);
+
+  ctx.fillStyle = frenzy ? "#ffff00" : "#00ffcc";
+
+  bullets.forEach(function(b) {
+    ctx.fillRect(b.x - 2.5, b.y, 5, 15);
+  });
+
+  ctx.fillStyle = level === 3 ? "#cc0066" : "#ff0088";
+
+  enemies.forEach(function(e) {
+    ctx.fillRect(e.x, e.y, e.w, e.h);
+    ctx.fillStyle = "#440022";
+    ctx.fillRect(e.x + 7, e.y + 7, e.w - 14, e.h - 14);
+    ctx.fillStyle = level === 3 ? "#cc0066" : "#ff0088";
+  });
+
+  powerups.forEach(function(p) {
+    ctx.fillStyle = p.type === "heal" ? "#00ff66" : "#ffaa00";
+    ctx.beginPath();
+    ctx.arc(p.x + 16, p.y + 16, 15, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  particles.forEach(function(p) {
+    ctx.globalAlpha = p.life / 45;
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, p.size, p.size);
+  });
+
+  ctx.globalAlpha = 1;
+
+  ctx.fillStyle = "#330000";
+  ctx.fillRect(0, canvas.height - 14, canvas.width, 14);
+
+  ctx.fillStyle = energy > 30 ? "#00ff88" : "#ff4444";
+  ctx.fillRect(0, canvas.height - 14, (energy / 100) * canvas.width, 14);
+}
+
+function loop() {
+  update();
+  draw();
+
+  if (gameRunning) {
+    requestAnimationFrame(loop);
+  }
+}
+
+function toggleMute() {
+  muted = !muted;
+  muteBtn.textContent = muted ? "🔇" : "🔊";
+
+  if (muted) {
+    stopMusic();
+  } else if (gameRunning) {
+    startMusic();
+  }
+}
+
+document.addEventListener("keydown", function(e) {
+  keys[e.key] = true;
+});
+
+document.addEventListener("keyup", function(e) {
+  keys[e.key] = false;
+});
+
+window.addEventListener("deviceorientation", function(e) {
+  tiltX = e.gamma || 0;
+});
+
+canvas.addEventListener("touchstart", function(e) {
+  if (!gameRunning) {
+    startGame();
+    return;
+  }
+
+  touchStartX = e.touches[0].clientX;
+  shoot();
+});
+
+canvas.addEventListener("touchmove", function(e) {
+  if (!gameRunning) return;
+
+  player.x += (e.touches[0].clientX - touchStartX) * 0.32;
+  touchStartX = e.touches[0].clientX;
+  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+});
+
+for (let i = 0; i < 160; i++) {
+  spawnStar();
+}
+
+draw();
+</script>
+</body>
+</html>
