@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Level 13: Power Gate</title>
 
 <style>
+* {
+  box-sizing:border-box;
+  user-select:none;
+  touch-action:manipulation;
+}
+
 body {
   margin:0;
   font-family:Arial;
@@ -22,12 +28,16 @@ body {
 
 h1 { color:#a78bfa; }
 
+.prompt {
+  font-size:2rem;
+  margin:20px 0;
+}
+
 .bar {
-  height:30px;
+  height:32px;
   background:#111;
   border:2px solid #a78bfa;
-  margin:10px 0;
-  position:relative;
+  margin:12px 0;
 }
 
 .fill {
@@ -40,18 +50,27 @@ h1 { color:#a78bfa; }
   background:#ef4444;
 }
 
+.controls {
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:20px;
+}
+
 button {
-  padding:16px 24px;
-  margin:10px;
+  flex:1;
+  max-width:200px;
+  padding:18px;
+  font-size:1.2rem;
   border:none;
-  border-radius:12px;
-  font-size:1.1rem;
+  border-radius:14px;
   font-weight:bold;
 }
 
-.hit { background:#22c55e; color:black; }
-.portal { background:#60a5fa; }
-.next { background:#a78bfa; }
+.left { background:#22c55e; color:black; }
+.right { background:#60a5fa; color:black; }
+
+.portal { background:#facc15; }
 
 .overlay {
   position:fixed;
@@ -74,29 +93,30 @@ button {
 <body>
 
 <div class="wrap">
+
 <h1>Level 13: Power Gate</h1>
-<p>Tap STRIKE faster than the enemy!</p>
+<p>Follow the pattern faster than the enemy!</p>
 
-<div>⏱ Time: <span id="time">10</span></div>
+<div class="prompt" id="prompt">LEFT</div>
 
-<div class="bar">
-  <div id="playerBar" class="fill"></div>
+<div class="bar"><div id="playerBar" class="fill"></div></div>
+<div class="bar"><div id="enemyBar" class="fill enemy"></div></div>
+
+<div class="controls">
+  <button class="left" onclick="press('left')">⬅️ LEFT</button>
+  <button class="right" onclick="press('right')">➡️ RIGHT</button>
 </div>
 
-<div class="bar">
-  <div id="enemyBar" class="fill enemy"></div>
-</div>
-
-<button class="hit" onclick="hit()">⚡ STRIKE</button>
 <button class="portal" onclick="location.href='./portal.html'">🏠 Portal</button>
+
 </div>
 
 <div id="overlay" class="overlay">
   <div class="box">
     <h2 id="result"></h2>
     <p id="scoreText"></p>
-    <button class="next" onclick="location.href='./level-14.html'">➡️ Next Mission</button>
-    <button class="portal" onclick="location.href='./portal.html'">🏠 Portal</button>
+    <button onclick="location.href='./level-14.html'">➡️ Next Mission</button>
+    <button onclick="location.href='./portal.html'">🏠 Portal</button>
     <button onclick="restart()">🔁 Retry</button>
   </div>
 </div>
@@ -104,42 +124,49 @@ button {
 <script>
 let player = 0;
 let enemy = 0;
-let time = 10;
 let running = true;
 
-const playerBar = document.getElementById("playerBar");
-const enemyBar = document.getElementById("enemyBar");
-const timeEl = document.getElementById("time");
+let current = "left";
 
-function hit(){
+function nextPrompt(){
+  current = Math.random() > 0.5 ? "left" : "right";
+  document.getElementById("prompt").innerText = current.toUpperCase();
+}
+
+function press(dir){
   if(!running) return;
-  player += 2.5;
+
+  if(dir === current){
+    player += 6;
+  } else {
+    player -= 4;
+    if(player < 0) player = 0;
+  }
+
   updateBars();
+  nextPrompt();
 }
 
 function updateBars(){
-  playerBar.style.width = player + "%";
-  enemyBar.style.width = enemy + "%";
+  if(player > 100) player = 100;
+  if(enemy > 100) enemy = 100;
+
+  document.getElementById("playerBar").style.width = player + "%";
+  document.getElementById("enemyBar").style.width = enemy + "%";
 }
 
 function enemyAI(){
   if(!running) return;
-  enemy += Math.random()*1.5;
+
+  enemy += Math.random() * 2;
   updateBars();
+
+  if(player >= 100 || enemy >= 100){
+    endGame();
+  }
 }
 
 setInterval(enemyAI,120);
-
-let timer = setInterval(()=>{
-  if(!running) return;
-
-  time--;
-  timeEl.textContent = time;
-
-  if(time<=0){
-    endGame();
-  }
-},1000);
 
 function endGame(){
   running = false;
@@ -156,7 +183,7 @@ function endGame(){
     document.getElementById("scoreText").innerText = "+120 XP | Total XP: " + xp;
   } else {
     document.getElementById("result").innerText = "💥 Failed!";
-    document.getElementById("scoreText").innerText = "Try again.";
+    document.getElementById("scoreText").innerText = "Wrong timing!";
   }
 
   document.getElementById("overlay").style.display = "flex";
@@ -165,6 +192,8 @@ function endGame(){
 function restart(){
   location.reload();
 }
+
+nextPrompt();
 </script>
 
 </body>
