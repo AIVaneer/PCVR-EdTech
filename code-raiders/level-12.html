@@ -76,6 +76,7 @@ button {
 .jump { background:#4ade80; color:#052e16; }
 .music { background:#facc15; color:#422006; }
 .portal { background:#bae6fd; color:#075985; }
+.next { background:#a78bfa; color:#1e1b4b; }
 
 .terminal {
   background:#020617;
@@ -110,7 +111,7 @@ button {
 <h1>Level 12: Jungle Jump</h1>
 <div class="world">🌴 World 4: Sky Temple Jungle 🌴</div>
 
-<p>Run through the jungle ruins. Jump over the obstacles and survive the trial.</p>
+<p>Run through the jungle ruins. Jump over the obstacles and survive until 2000 points.</p>
 
 <div class="card">
   <strong>Current XP:</strong> <span id="xpDisplay">0</span>
@@ -143,7 +144,7 @@ button {
   </div>
 
   <div class="controls">
-    <button class="jump" onclick="window.location.href='./level-13.html'">➡️ Next Mission</button>
+    <button class="next" onclick="window.location.href='./level-13.html'">➡️ Next Mission</button>
     <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
     <button class="music" onclick="restartGame()">🔁 Play Again</button>
   </div>
@@ -156,9 +157,12 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const terminal = document.getElementById("terminal");
 
+const WIN_SCORE = 2000;
+
 let audioCtx = null;
 let musicOn = true;
 let musicTimer = null;
+let animationStarted = false;
 
 let running = false;
 let gameOver = false;
@@ -290,13 +294,14 @@ function spawnLeaf() {
 function jump() {
   unlockAudio();
 
-  if (!running && !gameOver) {
+  if (gameOver) return;
+
+  if (!running) {
     running = true;
+    terminal.className = "terminal";
     terminal.textContent = "Run, jump, survive.";
     startMusic();
   }
-
-  if (gameOver) return;
 
   if (!player.jumping) {
     player.vy = -14;
@@ -307,7 +312,6 @@ function jump() {
 
 function restartGame() {
   document.getElementById("unlock").style.display = "none";
-  terminal.style.display = "block";
 
   running = false;
   gameOver = false;
@@ -315,6 +319,7 @@ function restartGame() {
   speed = 5;
   frame = 0;
 
+  player.x = 90;
   player.y = 250;
   player.vy = 0;
   player.jumping = false;
@@ -322,8 +327,8 @@ function restartGame() {
   obstacles = [];
   leaves = [];
 
+  terminal.className = "terminal";
   terminal.textContent = "Tap Jump or press Space to begin.";
-  draw();
 }
 
 function completeLevel() {
@@ -352,7 +357,14 @@ function failLevel() {
   gameOver = true;
   stopMusic();
   hitSound();
-  terminal.textContent = "💥 Hit! Tap Play Again to retry.";
+
+  terminal.className = "terminal";
+  terminal.innerHTML = `
+    💥 Jungle crash! Try again.
+    <br><br>
+    <button class="jump" onclick="restartGame()">🔁 Retry Mission</button>
+    <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
+  `;
 }
 
 function update() {
@@ -402,9 +414,9 @@ function update() {
     }
   });
 
-  terminal.textContent = "Score: " + score + " / 1500";
+  terminal.textContent = "Score: " + score + " / " + WIN_SCORE;
 
-  if (score >= 1500) {
+  if (score >= WIN_SCORE) {
     completeLevel();
   }
 }
@@ -468,7 +480,11 @@ canvas.addEventListener("touchstart", function(e) {
 }, { passive:false });
 
 loadXp();
-draw();
+
+if (!animationStarted) {
+  animationStarted = true;
+  draw();
+}
 </script>
 </body>
 </html>
