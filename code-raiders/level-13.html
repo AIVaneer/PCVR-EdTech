@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 13: Power Gate</title>
+
+<style>
+body {
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(#0f172a,#020617);
+  color:white;
+  text-align:center;
+}
+
+.wrap {
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+h1 { color:#a78bfa; }
+
+.bar {
+  height:30px;
+  background:#111;
+  border:2px solid #a78bfa;
+  margin:10px 0;
+  position:relative;
+}
+
+.fill {
+  height:100%;
+  width:0%;
+  background:#22c55e;
+}
+
+.enemy {
+  background:#ef4444;
+}
+
+button {
+  padding:16px 24px;
+  margin:10px;
+  border:none;
+  border-radius:12px;
+  font-size:1.1rem;
+  font-weight:bold;
+}
+
+.hit { background:#22c55e; color:black; }
+.portal { background:#60a5fa; }
+.next { background:#a78bfa; }
+
+.overlay {
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.9);
+}
+
+.box {
+  background:#020617;
+  padding:30px;
+  border-radius:20px;
+  border:3px solid #a78bfa;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+<h1>Level 13: Power Gate</h1>
+<p>Tap STRIKE faster than the enemy!</p>
+
+<div>⏱ Time: <span id="time">10</span></div>
+
+<div class="bar">
+  <div id="playerBar" class="fill"></div>
+</div>
+
+<div class="bar">
+  <div id="enemyBar" class="fill enemy"></div>
+</div>
+
+<button class="hit" onclick="hit()">⚡ STRIKE</button>
+<button class="portal" onclick="location.href='./portal.html'">🏠 Portal</button>
+</div>
+
+<div id="overlay" class="overlay">
+  <div class="box">
+    <h2 id="result"></h2>
+    <p id="scoreText"></p>
+    <button class="next" onclick="location.href='./level-14.html'">➡️ Next Mission</button>
+    <button class="portal" onclick="location.href='./portal.html'">🏠 Portal</button>
+    <button onclick="restart()">🔁 Retry</button>
+  </div>
+</div>
+
+<script>
+let player = 0;
+let enemy = 0;
+let time = 10;
+let running = true;
+
+const playerBar = document.getElementById("playerBar");
+const enemyBar = document.getElementById("enemyBar");
+const timeEl = document.getElementById("time");
+
+function hit(){
+  if(!running) return;
+  player += 2.5;
+  updateBars();
+}
+
+function updateBars(){
+  playerBar.style.width = player + "%";
+  enemyBar.style.width = enemy + "%";
+}
+
+function enemyAI(){
+  if(!running) return;
+  enemy += Math.random()*1.5;
+  updateBars();
+}
+
+setInterval(enemyAI,120);
+
+let timer = setInterval(()=>{
+  if(!running) return;
+
+  time--;
+  timeEl.textContent = time;
+
+  if(time<=0){
+    endGame();
+  }
+},1000);
+
+function endGame(){
+  running = false;
+
+  let win = player > enemy;
+
+  if(win){
+    document.getElementById("result").innerText = "🏆 Gate Destroyed!";
+    
+    let xp = parseInt(localStorage.getItem("pcvr_xp")||"0");
+    xp += 120;
+    localStorage.setItem("pcvr_xp",xp);
+
+    document.getElementById("scoreText").innerText = "+120 XP | Total XP: " + xp;
+  } else {
+    document.getElementById("result").innerText = "💥 Failed!";
+    document.getElementById("scoreText").innerText = "Try again.";
+  }
+
+  document.getElementById("overlay").style.display = "flex";
+}
+
+function restart(){
+  location.reload();
+}
+</script>
+
+</body>
+</html>
