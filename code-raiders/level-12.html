@@ -89,7 +89,7 @@ button {
 
 .success { color:#4ade80; }
 
-#victoryOverlay {
+#victoryOverlay, #crashOverlay {
   position:fixed;
   inset:0;
   display:none;
@@ -100,7 +100,7 @@ button {
   padding:20px;
 }
 
-.victory-box {
+.popup-box {
   width:100%;
   max-width:520px;
   background:#020617;
@@ -111,13 +111,22 @@ button {
   box-shadow:0 0 35px rgba(74,222,128,.65);
 }
 
-.victory-box h2 {
+.popup-box.crash {
+  border-color:#fb7185;
+  box-shadow:0 0 35px rgba(251,113,133,.55);
+}
+
+.popup-box h2 {
   color:#4ade80;
   font-size:2rem;
   margin-bottom:12px;
 }
 
-.victory-box p {
+.popup-box.crash h2 {
+  color:#fb7185;
+}
+
+.popup-box p {
   line-height:1.6;
   margin-bottom:16px;
 }
@@ -149,7 +158,7 @@ button {
 </div>
 
 <div id="victoryOverlay">
-  <div class="victory-box">
+  <div class="popup-box">
     <h2>✅ Jungle Trial Complete</h2>
     <p>
       Score: <span id="finalScore">2000</span> / 2000<br>
@@ -164,11 +173,26 @@ button {
   </div>
 </div>
 
+<div id="crashOverlay">
+  <div class="popup-box crash">
+    <h2>💥 Jungle Crash</h2>
+    <p>
+      You hit an obstacle.<br>
+      Score: <span id="crashScore">0</span> / 2000
+    </p>
+    <div class="controls">
+      <button class="jump" onclick="restartGame()">🔁 Retry Mission</button>
+      <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const terminal = document.getElementById("terminal");
 const victoryOverlay = document.getElementById("victoryOverlay");
+const crashOverlay = document.getElementById("crashOverlay");
 
 const WIN_SCORE = 2000;
 
@@ -180,7 +204,7 @@ let animationStarted = false;
 let running = false;
 let gameOver = false;
 let score = 0;
-let speed = 5;
+let speed = 6.2;
 let frame = 0;
 
 let player = {
@@ -263,7 +287,7 @@ function startMusic() {
       tone(melody[i % melody.length], 0.08, "square", 0.045);
       i++;
     }
-  }, 150);
+  }, 135);
 }
 
 function stopMusic() {
@@ -324,11 +348,12 @@ function jump() {
 
 function restartGame() {
   victoryOverlay.style.display = "none";
+  crashOverlay.style.display = "none";
 
   running = false;
   gameOver = false;
   score = 0;
-  speed = 5;
+  speed = 6.2;
   frame = 0;
 
   player.x = 90;
@@ -373,13 +398,12 @@ function failLevel() {
   stopMusic();
   hitSound();
 
+  document.getElementById("crashScore").textContent = score;
+
   terminal.className = "terminal";
-  terminal.innerHTML = `
-    💥 Jungle crash! Try again.
-    <br><br>
-    <button class="jump" onclick="restartGame()">🔁 Retry Mission</button>
-    <button class="portal" onclick="window.location.href='./portal.html'">🏠 Portal Hub</button>
-  `;
+  terminal.textContent = "💥 Jungle crash. Retry mission.";
+
+  crashOverlay.style.display = "flex";
 }
 
 function update() {
@@ -388,7 +412,7 @@ function update() {
   frame++;
   score++;
 
-  if (score % 300 === 0) speed += 0.5;
+  if (score % 250 === 0) speed += 0.65;
 
   player.vy += 0.65;
   player.y += player.vy;
@@ -399,8 +423,8 @@ function update() {
     player.jumping = false;
   }
 
-  if (frame % 75 === 0) spawnObstacle();
-  if (frame % 6 === 0) spawnLeaf();
+  if (frame % 65 === 0) spawnObstacle();
+  if (frame % 5 === 0) spawnLeaf();
 
   obstacles.forEach(function(o) {
     o.x -= speed;
