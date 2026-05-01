@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sky Burner</title>
 
 <style>
@@ -19,18 +19,19 @@ body {
   align-items: center;
   justify-content: center;
   user-select: none;
+  touch-action: none;
 }
 
 header {
   width: 100%;
   text-align: center;
-  padding: 12px 0;
+  padding: 10px 0;
   background: rgba(0,0,0,0.7);
   border-bottom: 3px solid #00ffcc;
 }
 
 h1 {
-  font-size: 2.4rem;
+  font-size: clamp(1.6rem, 8vw, 2.4rem);
   letter-spacing: 6px;
   text-shadow: 0 0 15px #00ffcc;
 }
@@ -41,6 +42,7 @@ canvas {
   box-shadow: 0 0 40px rgba(0,255,204,0.6);
   max-width: 100%;
   height: auto;
+  touch-action: none;
 }
 
 #overlay {
@@ -53,6 +55,7 @@ canvas {
   flex-direction: column;
   z-index: 100;
   text-align: center;
+  padding: 20px;
 }
 
 button {
@@ -72,9 +75,9 @@ button:hover {
 
 .hud {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 1.1rem;
+  top: 18px;
+  left: 16px;
+  font-size: 1rem;
   text-shadow: 0 0 10px #000;
   pointer-events: none;
   z-index: 20;
@@ -83,12 +86,12 @@ button:hover {
 
 .mute {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 18px;
+  right: 16px;
   background: rgba(0,0,0,0.6);
   color: #00ffcc;
   border: 2px solid #00ffcc;
-  padding: 8px 16px;
+  padding: 8px 14px;
   cursor: pointer;
   z-index: 30;
 }
@@ -105,6 +108,72 @@ button:hover {
   opacity: 0;
   pointer-events: none;
 }
+
+.mobile-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 18px;
+  pointer-events: none;
+}
+
+.move-pad {
+  display: flex;
+  gap: 14px;
+  pointer-events: auto;
+}
+
+.fire-pad {
+  pointer-events: auto;
+}
+
+.control-btn {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 3px solid #00ffcc;
+  background: rgba(0, 255, 204, 0.12);
+  color: #00ffcc;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 0 20px rgba(0,255,204,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.fire-btn {
+  width: 92px;
+  height: 92px;
+  border-color: #ffff00;
+  color: #ffff00;
+  background: rgba(255,255,0,0.12);
+  box-shadow: 0 0 24px rgba(255,255,0,0.35);
+  font-size: 2.2rem;
+}
+
+.control-btn:active {
+  transform: scale(0.94);
+  background: #00ffcc;
+  color: #000;
+}
+
+.fire-btn:active {
+  background: #ffff00;
+  color: #000;
+}
+
+@media (min-width: 900px) {
+  .mobile-controls {
+    display: none;
+  }
+}
 </style>
 </head>
 
@@ -118,8 +187,8 @@ button:hover {
   <div id="endContent">
     <h2 style="font-size:2rem;">READY TO BURN THE SKY?</h2>
     <p style="margin:18px 0; line-height:1.5;">
-      Move with arrow keys, tilt, or swipe.<br>
-      Tap or press space to shoot.<br>
+      Use the left and right buttons to move.<br>
+      Press FIRE to shoot.<br>
       Beat Level 3 to complete the mission.
     </p>
     <button onclick="startGame()">LAUNCH MISSION</button>
@@ -136,6 +205,16 @@ button:hover {
 <button class="mute" id="muteBtn" onclick="toggleMute()">🔊</button>
 <div class="level-up" id="levelUp">LEVEL UP!</div>
 
+<div class="mobile-controls">
+  <div class="move-pad">
+    <button class="control-btn" id="leftBtn">⬅</button>
+    <button class="control-btn" id="rightBtn">➡</button>
+  </div>
+  <div class="fire-pad">
+    <button class="control-btn fire-btn" id="fireBtn">🔥</button>
+  </div>
+</div>
+
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -146,6 +225,10 @@ const levelEl = document.getElementById("level");
 const muteBtn = document.getElementById("muteBtn");
 const levelUpEl = document.getElementById("levelUp");
 
+const leftBtn = document.getElementById("leftBtn");
+const rightBtn = document.getElementById("rightBtn");
+const fireBtn = document.getElementById("fireBtn");
+
 let score = 0;
 let pcvrPoints = 0;
 let energy = 100;
@@ -155,7 +238,9 @@ let gameRunning = false;
 let muted = false;
 let tiltX = 0;
 let keys = {};
-let touchStartX = 0;
+let mobileLeft = false;
+let mobileRight = false;
+let mobileFire = false;
 let lastShot = 0;
 let difficulty = 1;
 let musicInt = null;
@@ -399,7 +484,7 @@ function showEndScreen(isWin) {
         +100 XP REWARD<br>
         TOTAL XP: ${savedXp}
       </p>
-      <button onclick="window.location.href='./portal.html'">NEXT MISSION</button>
+      <button onclick="window.location.href='./level-11.html'">NEXT MISSION</button>
       <button onclick="window.location.href='./portal.html'">PORTAL HUB</button>
       <button onclick="startGame()">PLAY AGAIN</button>
     `;
@@ -422,13 +507,13 @@ function showEndScreen(isWin) {
 function update() {
   if (!gameRunning) return;
 
-  if (keys["ArrowLeft"] || keys["a"]) player.x -= player.speed;
-  if (keys["ArrowRight"] || keys["d"]) player.x += player.speed;
+  if (keys["ArrowLeft"] || keys["a"] || mobileLeft) player.x -= player.speed;
+  if (keys["ArrowRight"] || keys["d"] || mobileRight) player.x += player.speed;
   if (Math.abs(tiltX) > 4) player.x += tiltX * 0.22;
 
   player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
 
-  if (keys[" "] || keys["Spacebar"]) shoot();
+  if (keys[" "] || keys["Spacebar"] || mobileFire) shoot();
 
   bullets.forEach(function(b) {
     b.y += b.vy;
@@ -627,6 +712,60 @@ function toggleMute() {
   }
 }
 
+function bindHoldButton(button, onDown, onUp) {
+  button.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    onDown();
+  }, { passive: false });
+
+  button.addEventListener("touchend", function(e) {
+    e.preventDefault();
+    onUp();
+  }, { passive: false });
+
+  button.addEventListener("touchcancel", function(e) {
+    e.preventDefault();
+    onUp();
+  }, { passive: false });
+
+  button.addEventListener("mousedown", function(e) {
+    e.preventDefault();
+    onDown();
+  });
+
+  button.addEventListener("mouseup", function(e) {
+    e.preventDefault();
+    onUp();
+  });
+
+  button.addEventListener("mouseleave", function(e) {
+    e.preventDefault();
+    onUp();
+  });
+}
+
+bindHoldButton(leftBtn, function() {
+  mobileLeft = true;
+}, function() {
+  mobileLeft = false;
+});
+
+bindHoldButton(rightBtn, function() {
+  mobileRight = true;
+}, function() {
+  mobileRight = false;
+});
+
+bindHoldButton(fireBtn, function() {
+  unlockAudio();
+  if (!gameRunning) {
+    startGame();
+  }
+  mobileFire = true;
+}, function() {
+  mobileFire = false;
+});
+
 document.addEventListener("keydown", function(e) {
   keys[e.key] = true;
 });
@@ -640,22 +779,15 @@ window.addEventListener("deviceorientation", function(e) {
 });
 
 canvas.addEventListener("touchstart", function(e) {
+  e.preventDefault();
   if (!gameRunning) {
     startGame();
-    return;
   }
-
-  touchStartX = e.touches[0].clientX;
-  shoot();
-});
+}, { passive: false });
 
 canvas.addEventListener("touchmove", function(e) {
-  if (!gameRunning) return;
-
-  player.x += (e.touches[0].clientX - touchStartX) * 0.32;
-  touchStartX = e.touches[0].clientX;
-  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
-});
+  e.preventDefault();
+}, { passive: false });
 
 for (let i = 0; i < 160; i++) {
   spawnStar();
