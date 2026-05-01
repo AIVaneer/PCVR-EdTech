@@ -31,8 +31,8 @@ header {
 }
 
 h1 {
-  font-size: clamp(1.6rem, 8vw, 2.4rem);
-  letter-spacing: 6px;
+  font-size: clamp(1.5rem, 7vw, 2.3rem);
+  letter-spacing: 5px;
   text-shadow: 0 0 15px #00ffcc;
 }
 
@@ -62,10 +62,10 @@ button {
   background: transparent;
   color: #00ffcc;
   border: 3px solid #00ffcc;
-  padding: 16px 30px;
-  font-size: 1.1rem;
+  padding: 14px 24px;
+  font-size: 1rem;
   cursor: pointer;
-  margin: 10px;
+  margin: 8px;
 }
 
 button:hover {
@@ -77,7 +77,7 @@ button:hover {
   position: absolute;
   top: 18px;
   left: 16px;
-  font-size: 1rem;
+  font-size: .92rem;
   text-shadow: 0 0 10px #000;
   pointer-events: none;
   z-index: 20;
@@ -91,7 +91,7 @@ button:hover {
   background: rgba(0,0,0,0.6);
   color: #00ffcc;
   border: 2px solid #00ffcc;
-  padding: 8px 14px;
+  padding: 7px 12px;
   cursor: pointer;
   z-index: 30;
 }
@@ -101,7 +101,7 @@ button:hover {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: #ffff00;
   text-shadow: 0 0 20px #ffff00;
   z-index: 50;
@@ -113,18 +113,18 @@ button:hover {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 18px;
+  bottom: 28px;
   z-index: 40;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 18px;
+  padding: 0 24px;
   pointer-events: none;
 }
 
 .move-pad {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   pointer-events: auto;
 }
 
@@ -133,29 +133,30 @@ button:hover {
 }
 
 .control-btn {
-  width: 74px;
-  height: 74px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   border: 3px solid #00ffcc;
   background: rgba(0, 255, 204, 0.12);
   color: #00ffcc;
-  font-size: 2rem;
+  font-size: 1.45rem;
   font-weight: bold;
-  box-shadow: 0 0 20px rgba(0,255,204,0.35);
+  box-shadow: 0 0 16px rgba(0,255,204,0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   touch-action: none;
+  padding: 0;
 }
 
 .fire-btn {
-  width: 92px;
-  height: 92px;
+  width: 64px;
+  height: 64px;
   border-color: #ffff00;
   color: #ffff00;
   background: rgba(255,255,0,0.12);
-  box-shadow: 0 0 24px rgba(255,255,0,0.35);
-  font-size: 2.2rem;
+  box-shadow: 0 0 20px rgba(255,255,0,0.35);
+  font-size: 1.55rem;
 }
 
 .control-btn:active {
@@ -199,7 +200,8 @@ button:hover {
 <div class="hud">
   SCORE <span id="score">0</span><br>
   PCVR <span id="points">0.000000000000</span><br>
-  LVL <span id="level">1</span>
+  LVL <span id="level">1</span><br>
+  BEST <span id="bestScore">0</span>
 </div>
 
 <button class="mute" id="muteBtn" onclick="toggleMute()">🔊</button>
@@ -222,6 +224,7 @@ const overlay = document.getElementById("overlay");
 const scoreEl = document.getElementById("score");
 const pointsEl = document.getElementById("points");
 const levelEl = document.getElementById("level");
+const bestScoreEl = document.getElementById("bestScore");
 const muteBtn = document.getElementById("muteBtn");
 const levelUpEl = document.getElementById("levelUp");
 
@@ -252,6 +255,8 @@ const enemies = [];
 const stars = [];
 const powerups = [];
 const particles = [];
+
+bestScoreEl.textContent = parseInt(localStorage.getItem("sky_burner_high_score") || "0", 10).toLocaleString();
 
 function unlockAudio() {
   if (!audioCtx) {
@@ -468,6 +473,7 @@ function showEndScreen(isWin) {
     const best = parseInt(localStorage.getItem("sky_burner_high_score") || "0", 10);
     if (score > best) {
       localStorage.setItem("sky_burner_high_score", String(score));
+      bestScoreEl.textContent = score.toLocaleString();
     }
   }
 
@@ -476,8 +482,8 @@ function showEndScreen(isWin) {
 
   if (isWin) {
     content.innerHTML = `
-      <h2 style="color:#ffff00; font-size:2.4rem;">🎉 MISSION COMPLETE 🎉</h2>
-      <p style="margin:20px 0; font-size:1.2rem; line-height:1.5;">
+      <h2 style="color:#ffff00; font-size:2.2rem;">🎉 MISSION COMPLETE 🎉</h2>
+      <p style="margin:18px 0; font-size:1.05rem; line-height:1.5;">
         FINAL SCORE: ${score.toLocaleString()}<br>
         PCVR POINTS: ${pcvrPoints.toFixed(12)}<br>
         REACHED LEVEL ${level}<br>
@@ -490,8 +496,8 @@ function showEndScreen(isWin) {
     `;
   } else {
     content.innerHTML = `
-      <h2 style="color:#ff4444; font-size:2.3rem;">💥 MISSION FAILED 💥</h2>
-      <p style="margin:20px 0; font-size:1.2rem; line-height:1.5;">
+      <h2 style="color:#ff4444; font-size:2.1rem;">💥 MISSION FAILED 💥</h2>
+      <p style="margin:18px 0; font-size:1.05rem; line-height:1.5;">
         FINAL SCORE: ${score.toLocaleString()}<br>
         PCVR POINTS: ${pcvrPoints.toFixed(12)}<br>
         REACHED LEVEL ${level}
@@ -715,6 +721,7 @@ function toggleMute() {
 function bindHoldButton(button, onDown, onUp) {
   button.addEventListener("touchstart", function(e) {
     e.preventDefault();
+    unlockAudio();
     onDown();
   }, { passive: false });
 
@@ -730,6 +737,7 @@ function bindHoldButton(button, onDown, onUp) {
 
   button.addEventListener("mousedown", function(e) {
     e.preventDefault();
+    unlockAudio();
     onDown();
   });
 
@@ -757,7 +765,6 @@ bindHoldButton(rightBtn, function() {
 });
 
 bindHoldButton(fireBtn, function() {
-  unlockAudio();
   if (!gameRunning) {
     startGame();
   }
