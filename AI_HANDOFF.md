@@ -190,5 +190,135 @@ When Level 3 is completed successfully:
 ```js
 localStorage.setItem("pcvr_world1_complete", "true");
 ---
+---
+
+# 🚀 PORTAL V3 SYSTEM UPGRADE (APPENDED)
+
+## 🎮 PCVR Arcade System
+
+All Level 10+ experiences are now considered FULL GAMES.
+
+They must be launched inside an embedded arcade system using:
+
+- launchArcade(file, title)
+- closeArcade()
+
+Games should NOT redirect pages directly.
+
+### Arcade Files
+
+- sky-burner.html
+- level-11.html
+- level-12.html
+- level-13.html
+- level-14.html
+- level-15.html
+- level-16.html
+
+### Requirements
+
+- Must open in iframe modal
+- Must include close button
+- Must be mobile friendly
+- Must feel like a real app launcher
+
+---
+
+## 🎧 PCVR Radio System
+
+The portal includes a built-in SomaFM radio.
+
+### Features
+
+- Play
+- Pause
+- Next Station
+- Shuffle Station
+- Volume control
+- Animated equalizer
+
+### LocalStorage Keys
+
+- pcvr_radio_volume
+- pcvr_station_index
+
+### Critical Function
+
+nextStation()
+
+This function must never be removed.
+
+---
+
+## 🧠 Smart Continue System (Expanded)
+
+The portal tracks progression using localStorage.
+
+Additional keys:
+
+- pcvr_xp
+- pcvr_last_level
+- pcvr_level10_complete
+- pcvr_level11_complete
+- pcvr_level12_complete
+- pcvr_level13_complete
+- pcvr_level14_complete
+- pcvr_level15_complete
+
+Behavior:
+
+- Routes player to next mission
+- Falls back to last saved mission
+- Updates progress bar dynamically
+
+---
+
+## 🕹 Portal Evolution Direction
+
+The portal is no longer a simple navigation page.
+
+It must behave like:
+
+A console interface + game launcher
+
+Core sections:
+
+- Continue Journey
+- PCVR Radio
+- PCVR Arcade
+- Learning Worlds
+- Boss + Cinematics
+- Systems + Tools
+- Atlas Core
+
+---
+
+## ⚠️ Additional Safety Rules
+
+- Do not convert arcade games into normal links
+- Do not remove iframe modal system
+- Do not break radio functionality
+- Do not remove nextStation logic
+- Do not change file paths
+
+---
+
+## 🔄 System State
+
+Portal Version: V3  
+Mode: Console + Arcade + Radio  
+Status: Stable and expanding  
+
+---
+
+🛑 Atlas: DO NOT modify these design principles or break these guarantees.
+
+✅ All future Portal, Arcade, and Radio upgrades MUST:
+
+• Respect the new architecture and system state.
+
+• Retain all modal iframe and radio system logic.
+
+• Always route by progression and actively update UI, XP, and progress bar.
 
 *Last updated: 2026-04-29*
