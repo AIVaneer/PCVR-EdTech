@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>PCVR Portal Hub V4</title>
+<title>PCVR Portal Hub V6</title>
 
 <style>
 :root {
@@ -60,7 +60,7 @@ body {
 }
 
 .wrap {
-  max-width: 900px;
+  max-width: 920px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -156,6 +156,12 @@ h1 {
 
 .card.red { border-color: rgba(251,113,133,.58); }
 .card.red h2 { color: var(--red); }
+
+.card.cyan { border-color: rgba(56,189,248,.58); }
+.card.cyan h2 { color: var(--cyan); }
+
+.card.purple { border-color: rgba(167,139,250,.58); }
+.card.purple h2 { color: var(--purple); }
 
 .tag {
   display: inline-block;
@@ -410,7 +416,7 @@ iframe {
 
   <section class="hero">
     <h1>PCVR PORTAL HUB</h1>
-    <p class="subtitle">V4 console launcher for Code Raiders, PCVR Arcade, Radio, White Paper, scenes, and boss systems</p>
+    <p class="subtitle">V6 console launcher for Code Raiders, PCVR Arcade, Radio, White Paper, scenes, links, and boss systems</p>
 
     <div class="console-strip">
       <div class="stat"><strong>XP</strong><br><span id="xpDisplay">0</span></div>
@@ -587,7 +593,7 @@ iframe {
     </div>
   </section>
 
-  <p class="footer">PCVR Portal V4 • Always for good, never for bad</p>
+  <p class="footer">PCVR Portal V6 • Always for good, never for bad</p>
 
 </main>
 
@@ -805,6 +811,10 @@ function loadArcadeGames() {
   });
 }
 
+function openExternal(url) {
+  window.open(url, "_blank");
+}
+
 function addPortalCard(config) {
   const container = document.getElementById("dynamicContent");
   const card = document.createElement("div");
@@ -818,7 +828,7 @@ function addPortalCard(config) {
   if (config.link) {
     html += `
       <div class="button-row">
-        <button class="primary" onclick="window.open('${config.link}', '_blank')">Open</button>
+        <button class="primary" onclick="openExternal('${config.link}')">${config.buttonText || "Open"}</button>
       </div>
     `;
   }
@@ -826,7 +836,7 @@ function addPortalCard(config) {
   if (config.page) {
     html += `
       <div class="button-row">
-        <button class="secondary" onclick="go('${config.page}')">Open Page</button>
+        <button class="secondary" onclick="go('${config.page}')">${config.buttonText || "Open Page"}</button>
       </div>
     `;
   }
@@ -834,7 +844,25 @@ function addPortalCard(config) {
   if (config.arcade) {
     html += `
       <div class="button-row">
-        <button class="primary" onclick="launchArcade('${config.arcade}', '${config.title}')">Launch</button>
+        <button class="primary" onclick="launchArcade('${config.arcade}', '${config.title}')">${config.buttonText || "Launch"}</button>
+      </div>
+    `;
+  }
+
+  if (config.links) {
+    html += `<div class="button-row">`;
+    config.links.forEach(function(item) {
+      html += `
+        <button class="${item.className || "secondary"}" onclick="openExternal('${item.url}')">${item.label}</button>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  if (config.locked) {
+    html += `
+      <div class="button-row">
+        <button class="danger" onclick="alert('${config.lockedMessage || "This system is locked for now."}')">Locked</button>
       </div>
     `;
   }
@@ -846,6 +874,19 @@ function addPortalCard(config) {
 }
 
 const expansionCards = [
+  {
+    icon: "🌐",
+    title: "PCVR Community Hub",
+    desc: "Join Discord, watch builds on YouTube, and read the PCVR ecosystem story on Medium.",
+    color: "purple",
+    tag: "COMMUNITY",
+    tagClass: "live",
+    links: [
+      { label: "💬 Discord", url: "https://discord.gg/yrw4HztDT", className: "primary" },
+      { label: "📺 YouTube", url: "https://youtube.com/@pcvrstudios?si=noFwFe_r_rhosr-_", className: "secondary" },
+      { label: "✍️ Medium", url: "https://medium.com/@PCVR2024/the-47-mark-building-an-ecosystem-that-refuses-to-die-21cde9b7e532", className: "warning" }
+    ]
+  },
   {
     icon: "📄",
     title: "White Paper 2.1",
@@ -883,9 +924,20 @@ const expansionCards = [
     tagClass: "game"
   },
   {
+    icon: "📂",
+    title: "Games Folder",
+    desc: "Open the PCVR games folder for future experiments and mini games.",
+    page: "./games/",
+    color: "cyan",
+    tag: "PAGE",
+    tagClass: "live"
+  },
+  {
     icon: "🔐",
     title: "Future PCVR Loader",
     desc: "Reserved public placeholder for future tiered systems. No private internals exposed.",
+    locked: true,
+    lockedMessage: "PCVR Loader is private and not exposed in the public portal.",
     color: "sky",
     tag: "PRIVATE SYSTEM",
     tagClass: "scene"
