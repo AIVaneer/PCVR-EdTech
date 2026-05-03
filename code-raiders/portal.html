@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>PCVR Portal Hub</title>
+<title>PCVR Portal Hub V4</title>
 
 <style>
 :root {
@@ -60,7 +60,7 @@ body {
 }
 
 .wrap {
-  max-width: 880px;
+  max-width: 900px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -349,8 +349,8 @@ input[type="range"] {
 
 .modal-box {
   width: 100%;
-  max-width: 900px;
-  height: 82vh;
+  max-width: 920px;
+  height: 86vh;
   background: #020617;
   border: 3px solid var(--cyan);
   border-radius: 22px;
@@ -362,6 +362,7 @@ input[type="range"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
   padding: 10px 12px;
   background: rgba(15,23,42,.95);
   border-bottom: 1px solid rgba(56,189,248,.35);
@@ -377,9 +378,15 @@ input[type="range"] {
   padding: 9px 12px;
 }
 
+.open-btn {
+  background: var(--green);
+  color: #052e16;
+  padding: 9px 12px;
+}
+
 iframe {
   width: 100%;
-  height: calc(82vh - 54px);
+  height: calc(86vh - 54px);
   border: 0;
   background: #000;
 }
@@ -403,7 +410,7 @@ iframe {
 
   <section class="hero">
     <h1>PCVR PORTAL HUB</h1>
-    <p class="subtitle">Console style launcher for Code Raiders, games, scenes, boss systems, and PCVR Radio</p>
+    <p class="subtitle">V4 console launcher for Code Raiders, PCVR Arcade, Radio, White Paper, scenes, and boss systems</p>
 
     <div class="console-strip">
       <div class="stat"><strong>XP</strong><br><span id="xpDisplay">0</span></div>
@@ -456,6 +463,18 @@ iframe {
 
   </section>
 
+  <h2 class="section-title">🎮 PCVR Arcade</h2>
+  <section class="grid">
+    <div class="card gold">
+      <h2>🕹️ PCVR Arcade Cabinet</h2>
+      <p>All HTML games and playable missions are inside this card. Tap any mission to load it in the arcade modal.</p>
+
+      <div class="arcade-grid" id="arcadeButtons"></div>
+
+      <span class="tag game">ALL HTML GAMES INSIDE</span>
+    </div>
+  </section>
+
   <h2 class="section-title">🌍 Learning Worlds</h2>
   <section class="grid two">
     <a class="card green" href="./index.html">
@@ -483,33 +502,6 @@ iframe {
     </a>
   </section>
 
-  <h2 class="section-title">🎮 HTML Game Missions</h2>
-  <section class="grid two">
-    <a class="card gold" href="./sky-burner.html">
-      <h2>🚀 Level 10: Sky Burner</h2>
-      <p>Arcade shooter with sound, touch controls, XP reward, and next mission flow.</p>
-      <span class="tag game">ARCADE SHOOTER</span>
-    </a>
-
-    <a class="card sky" href="./level-11.html">
-      <h2>🧠 Level 11: Boss Logic</h2>
-      <p>Sky Temple logic gate. Fix decision logic before the boss path opens.</p>
-      <span class="tag live">LOGIC MISSION</span>
-    </a>
-
-    <a class="card green" href="./level-12.html">
-      <h2>🌴 Level 12: Jungle Jump</h2>
-      <p>Atari style jungle runner with music, retry, mission complete, and XP reward.</p>
-      <span class="tag game">RUNNER GAME</span>
-    </a>
-
-    <a class="card sky" href="./level-13.html">
-      <h2>⚡ Level 13: Power Gate</h2>
-      <p>Arcade timing system. Press left and right commands to destroy the gate.</p>
-      <span class="tag game">ARCADE TIMING</span>
-    </a>
-  </section>
-
   <h2 class="section-title">🎬 Cinematics</h2>
   <section class="grid">
     <a class="card sky" href="./level-14.html">
@@ -534,26 +526,8 @@ iframe {
     </a>
   </section>
 
-  <h2 class="section-title">🎮 PCVR Arcade</h2>
-  <section class="grid">
-    <div class="card gold">
-      <h2>🎮 Playable Arcade Launcher</h2>
-      <p>Launch PCVR mini games and HTML missions in a console style game window.</p>
-
-      <div class="arcade-grid">
-        <button class="arcade-btn primary" onclick="launchArcade('./sky-burner.html', 'Level 10: Sky Burner')">🚀 Sky Burner</button>
-        <button class="arcade-btn secondary" onclick="launchArcade('./level-12.html', 'Level 12: Jungle Jump')">🌴 Jungle Jump</button>
-        <button class="arcade-btn warning" onclick="launchArcade('./level-13.html', 'Level 13: Power Gate')">⚡ Power Gate</button>
-        <button class="arcade-btn purple" onclick="launchArcade('./level-16.html', 'Level 16: Guardian Arena')">🛡 Guardian Arena</button>
-      </div>
-
-      <div class="button-row">
-        <button class="secondary" onclick="go('./games/')">Open Games Folder</button>
-      </div>
-
-      <span class="tag game">INSTANT PLAY</span>
-    </div>
-  </section>
+  <h2 class="section-title">🧬 Expanding Systems</h2>
+  <section id="dynamicContent" class="grid"></section>
 
   <h2 class="section-title">🧩 Systems And Tools</h2>
   <section class="grid two">
@@ -613,7 +587,7 @@ iframe {
     </div>
   </section>
 
-  <p class="footer">PCVR Portal • Always for good, never for bad</p>
+  <p class="footer">PCVR Portal V4 • Always for good, never for bad</p>
 
 </main>
 
@@ -621,7 +595,10 @@ iframe {
   <div class="modal-box">
     <div class="modal-top">
       <strong id="arcadeTitle">PCVR Arcade</strong>
-      <button class="close-btn" onclick="closeArcade()">Close</button>
+      <div>
+        <button class="open-btn" onclick="openArcadeFull()">Open</button>
+        <button class="close-btn" onclick="closeArcade()">Close</button>
+      </div>
     </div>
     <iframe id="arcadeFrame" src=""></iframe>
   </div>
@@ -630,7 +607,7 @@ iframe {
 <script>
 const portalLink = "https://aivaneer.github.io/PCVR-EdTech/code-raiders/portal.html";
 
-for (let i = 0; i < 80; i++) {
+for (let i = 0; i < 90; i++) {
   const s = document.createElement("span");
   s.style.left = Math.random() * 100 + "%";
   s.style.top = Math.random() * 100 + "%";
@@ -766,7 +743,11 @@ function setRadioVolume(value) {
   localStorage.setItem("pcvr_radio_volume", String(level));
 }
 
+let currentArcadeFile = "";
+
 function launchArcade(file, title) {
+  currentArcadeFile = file;
+  localStorage.setItem("pcvr_last_level", file);
   document.getElementById("arcadeTitle").textContent = title;
   document.getElementById("arcadeFrame").src = file;
   document.getElementById("arcadeModal").classList.add("active");
@@ -775,6 +756,12 @@ function launchArcade(file, title) {
 function closeArcade() {
   document.getElementById("arcadeFrame").src = "";
   document.getElementById("arcadeModal").classList.remove("active");
+}
+
+function openArcadeFull() {
+  if (currentArcadeFile) {
+    location.href = currentArcadeFile;
+  }
 }
 
 function copyPortalLink() {
@@ -792,6 +779,127 @@ function copyPortalLink() {
     shareStatus.textContent = portalLink;
   }
 }
+
+const arcadeGames = [
+  { title: "🚀 Level 10: Sky Burner", file: "./sky-burner.html", color: "primary" },
+  { title: "🧠 Level 11: Boss Logic", file: "./level-11.html", color: "secondary" },
+  { title: "🌴 Level 12: Jungle Jump", file: "./level-12.html", color: "primary" },
+  { title: "⚡ Level 13: Power Gate", file: "./level-13.html", color: "warning" },
+  { title: "🎬 Level 14: The Awakening", file: "./level-14.html", color: "purple" },
+  { title: "👹 Level 15: Boss Gate", file: "./level-15.html", color: "danger" },
+  { title: "🛡️ Level 16: Guardian Arena", file: "./level-16.html", color: "warning" }
+];
+
+function loadArcadeGames() {
+  const arcadeButtons = document.getElementById("arcadeButtons");
+  arcadeButtons.innerHTML = "";
+
+  arcadeGames.forEach(function(game) {
+    const btn = document.createElement("button");
+    btn.className = "arcade-btn " + game.color;
+    btn.textContent = game.title;
+    btn.onclick = function() {
+      launchArcade(game.file, game.title);
+    };
+    arcadeButtons.appendChild(btn);
+  });
+}
+
+function addPortalCard(config) {
+  const container = document.getElementById("dynamicContent");
+  const card = document.createElement("div");
+  card.className = "card " + (config.color || "");
+
+  let html = `
+    <h2>${config.icon || "✨"} ${config.title}</h2>
+    <p>${config.desc || ""}</p>
+  `;
+
+  if (config.link) {
+    html += `
+      <div class="button-row">
+        <button class="primary" onclick="window.open('${config.link}', '_blank')">Open</button>
+      </div>
+    `;
+  }
+
+  if (config.page) {
+    html += `
+      <div class="button-row">
+        <button class="secondary" onclick="go('${config.page}')">Open Page</button>
+      </div>
+    `;
+  }
+
+  if (config.arcade) {
+    html += `
+      <div class="button-row">
+        <button class="primary" onclick="launchArcade('${config.arcade}', '${config.title}')">Launch</button>
+      </div>
+    `;
+  }
+
+  html += `<span class="tag ${config.tagClass || "live"}">${config.tag || "NEW"}</span>`;
+
+  card.innerHTML = html;
+  container.appendChild(card);
+}
+
+const expansionCards = [
+  {
+    icon: "📄",
+    title: "White Paper 2.1",
+    desc: "Read the PCVR ecosystem vision, token model, Code Raiders, Portal V3, Arcade, and future roadmap.",
+    link: "https://github.com/AIVaneer/Eve-Repository/blob/main/WHITEPAPER.md",
+    color: "gold",
+    tag: "UPDATED MAY 2026",
+    tagClass: "live"
+  },
+  {
+    icon: "🧠",
+    title: "AI Handoff",
+    desc: "Current project memory and rules for Claude, GPT, Gemini, Copilot, and future AI builders.",
+    link: "https://github.com/AIVaneer/PCVR-EdTech/blob/main/AI_HANDOFF.md",
+    color: "sky",
+    tag: "SYSTEM DOC",
+    tagClass: "scene"
+  },
+  {
+    icon: "🪙",
+    title: "Project Don't Die",
+    desc: "Token economy survival framework for long term sustainability and responsible reward design.",
+    link: "https://github.com/AIVaneer/Eve-Repository/blob/main/PROJECT_DONT_DIE.md",
+    color: "gold",
+    tag: "TOKEN ECONOMY",
+    tagClass: "soon"
+  },
+  {
+    icon: "🚀",
+    title: "Sky Burner Quick Launch",
+    desc: "Instant arcade launch for the Sky Burner HTML mission.",
+    arcade: "./sky-burner.html",
+    color: "green",
+    tag: "GAME",
+    tagClass: "game"
+  },
+  {
+    icon: "🔐",
+    title: "Future PCVR Loader",
+    desc: "Reserved public placeholder for future tiered systems. No private internals exposed.",
+    color: "sky",
+    tag: "PRIVATE SYSTEM",
+    tagClass: "scene"
+  }
+];
+
+function loadExpansionCards() {
+  expansionCards.forEach(function(card) {
+    addPortalCard(card);
+  });
+}
+
+loadArcadeGames();
+loadExpansionCards();
 </script>
 
 </body>
