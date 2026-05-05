@@ -655,6 +655,11 @@ iframe {
 <script>
 const portalLink = "https://aivaneer.github.io/PCVR-EdTech/code-raiders/portal.html";
 
+// Resilience wrapper — if any single section breaks, the rest still load
+function safe(fn) {
+  try { fn(); } catch (e) { console.log("Card load error:", e); }
+}
+
 for (let i = 0; i < 90; i++) {
   const s = document.createElement("span");
   s.style.left = Math.random() * 100 + "%";
@@ -930,6 +935,22 @@ const expansionCards = [
     ]
   },
   {
+    icon: "🎬",
+    title: "LIVE Episodes — All 6",
+    desc: "Watch every PCVR live coding episode. Tap any episode to open on X.",
+    color: "purple",
+    tag: "EPISODES 1–6",
+    tagClass: "scene",
+    links: [
+      { label: "Ep 1", url: "https://x.com/pcvr2024/status/2038378313887121897?s=46", className: "primary" },
+      { label: "Ep 2", url: "https://x.com/pcvr2024/status/2040919224194146556?s=46", className: "primary" },
+      { label: "Ep 3", url: "https://x.com/pcvr2024/status/2043446565197811754?s=46", className: "primary" },
+      { label: "Ep 4", url: "https://x.com/pcvr2024/status/2045986249924804662?s=46", className: "primary" },
+      { label: "Ep 5", url: "https://x.com/pcvr2024/status/2048523288314564835?s=46", className: "primary" },
+      { label: "Ep 6", url: "https://x.com/pcvr2024/status/2051059146473287779?s=46", className: "primary" }
+    ]
+  },
+  {
     icon: "🎵",
     title: "LIVE Episodes And Music",
     desc: "AIVaneer's live episodes hub and Audius music drops. Tap a button to launch.",
@@ -1005,8 +1026,8 @@ function loadExpansionCards() {
   });
 }
 
-loadArcadeGames();
-loadExpansionCards();
+safe(loadArcadeGames);
+safe(loadExpansionCards);
 </script>
 
 </body>
