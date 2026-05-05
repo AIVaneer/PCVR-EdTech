@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>PCVR Portal Hub V6</title>
+<title>PCVR Portal Hub V6 Final</title>
 
 <style>
 :root {
@@ -16,7 +16,7 @@
   --purple: #a78bfa;
   --red: #fb7185;
   --text: #e5e7eb;
-  --muted: #94a3b8;
+  --muted: #cbd5f5;
 }
 
 * {
@@ -72,7 +72,7 @@ body {
   padding: 18px;
   border: 2px solid rgba(56,189,248,.5);
   border-radius: 22px;
-  background: rgba(2,6,23,.7);
+  background: rgba(2,6,23,.72);
   box-shadow: 0 0 38px rgba(56,189,248,.18);
 }
 
@@ -125,7 +125,7 @@ h1 {
   display: block;
   text-decoration: none;
   color: var(--text);
-  background: linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.96));
+  background: linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.98));
   border: 1px solid rgba(56,189,248,.45);
   border-radius: 18px;
   padding: 18px;
@@ -145,23 +145,56 @@ h1 {
   line-height: 1.45;
 }
 
-.card.green { border-color: rgba(74,222,128,.58); }
+.card.green {
+  border-color: rgba(74,222,128,.58);
+  box-shadow: 0 0 26px rgba(74,222,128,.13);
+}
+
 .card.green h2 { color: var(--green); }
 
-.card.gold { border-color: rgba(250,204,21,.58); }
+.card.gold {
+  border-color: rgba(250,204,21,.58);
+  box-shadow: 0 0 26px rgba(250,204,21,.13);
+}
+
 .card.gold h2 { color: var(--gold); }
 
-.card.sky { border-color: rgba(167,139,250,.58); }
+.card.sky {
+  border-color: rgba(167,139,250,.58);
+  box-shadow: 0 0 26px rgba(167,139,250,.13);
+}
+
 .card.sky h2 { color: var(--purple); }
 
-.card.red { border-color: rgba(251,113,133,.58); }
+.card.red {
+  border-color: rgba(251,113,133,.58);
+  box-shadow: 0 0 26px rgba(251,113,133,.13);
+}
+
 .card.red h2 { color: var(--red); }
 
-.card.cyan { border-color: rgba(56,189,248,.58); }
+.card.cyan {
+  border-color: rgba(56,189,248,.58);
+  box-shadow: 0 0 26px rgba(56,189,248,.13);
+}
+
 .card.cyan h2 { color: var(--cyan); }
 
-.card.purple { border-color: rgba(167,139,250,.58); }
-.card.purple h2 { color: var(--purple); }
+.card.purple {
+  background:
+    radial-gradient(circle at top left, rgba(167,139,250,.16), transparent 42%),
+    linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.98));
+  border-color: rgba(167,139,250,.72);
+  box-shadow: 0 0 30px rgba(167,139,250,.22);
+}
+
+.card.purple h2 {
+  color: #c4b5fd;
+}
+
+.card.purple p {
+  color: #e0e7ff;
+}
 
 .tag {
   display: inline-block;
@@ -187,7 +220,7 @@ h1 {
 
 .tag.scene {
   background: rgba(167,139,250,.14);
-  color: var(--purple);
+  color: #c4b5fd;
   border: 1px solid rgba(167,139,250,.55);
 }
 
@@ -235,13 +268,22 @@ button {
   font-weight: 900;
   cursor: pointer;
   font-size: .96rem;
+  box-shadow: 0 0 16px rgba(0,0,0,.22);
 }
 
 .primary { background: var(--green); color: #052e16; }
 .secondary { background: var(--cyan); color: #082f49; }
 .warning { background: var(--gold); color: #422006; }
 .danger { background: var(--red); color: #450a0a; }
-.purple { background: var(--purple); color: #1e1b4b; }
+
+.btn-purple {
+  background: #c4b5fd;
+  color: #1e1b4b;
+}
+
+button:hover {
+  filter: brightness(1.08);
+}
 
 .radio-panel {
   border: 1px solid rgba(103,232,249,.65);
@@ -416,7 +458,7 @@ iframe {
 
   <section class="hero">
     <h1>PCVR PORTAL HUB</h1>
-    <p class="subtitle">V6 console launcher for Code Raiders, PCVR Arcade, Radio, White Paper, scenes, links, and boss systems</p>
+    <p class="subtitle">V6 Final console launcher for Code Raiders, PCVR Arcade, Radio, White Paper, scenes, links, and boss systems</p>
 
     <div class="console-strip">
       <div class="stat"><strong>XP</strong><br><span id="xpDisplay">0</span></div>
@@ -593,7 +635,7 @@ iframe {
     </div>
   </section>
 
-  <p class="footer">PCVR Portal V6 • Always for good, never for bad</p>
+  <p class="footer">PCVR Portal V6 Final • Always for good, never for bad</p>
 
 </main>
 
@@ -791,7 +833,7 @@ const arcadeGames = [
   { title: "🧠 Level 11: Boss Logic", file: "./level-11.html", color: "secondary" },
   { title: "🌴 Level 12: Jungle Jump", file: "./level-12.html", color: "primary" },
   { title: "⚡ Level 13: Power Gate", file: "./level-13.html", color: "warning" },
-  { title: "🎬 Level 14: The Awakening", file: "./level-14.html", color: "purple" },
+  { title: "🎬 Level 14: The Awakening", file: "./level-14.html", color: "btn-purple" },
   { title: "👹 Level 15: Boss Gate", file: "./level-15.html", color: "danger" },
   { title: "🛡️ Level 16: Guardian Arena", file: "./level-16.html", color: "warning" }
 ];
@@ -888,6 +930,19 @@ const expansionCards = [
     ]
   },
   {
+    icon: "🎵",
+    title: "LIVE Episodes And Music",
+    desc: "AIVaneer's live episodes hub and Audius music drops. Tap a button to launch.",
+    color: "purple",
+    tag: "MUSIC AND EPISODES",
+    tagClass: "scene",
+    links: [
+      { label: "🎬 LIVE Episodes", url: "https://aivaneer.github.io/LIVE-EPISODES/", className: "primary" },
+      { label: "🎵 Audius", url: "https://audius.co/aivaneer", className: "secondary" },
+      { label: "📦 Repo", url: "https://github.com/AIVaneer/LIVE-EPISODES", className: "warning" }
+    ]
+  },
+  {
     icon: "📄",
     title: "White Paper 2.1",
     desc: "Read the PCVR ecosystem vision, token model, Code Raiders, Portal V3, Arcade, and future roadmap.",
@@ -904,19 +959,6 @@ const expansionCards = [
     color: "sky",
     tag: "SYSTEM DOC",
     tagClass: "scene"
-  },
-    {
-    icon: "🎵",
-    title: "LIVE Episodes & Music",
-    desc: "AIVaneer's live episodes hub and Audius music drops. Tap a button to launch.",
-    color: "purple",
-    tag: "MUSIC + EPISODES",
-    tagClass: "scene",
-    links: [
-      { label: "🎬 LIVE Episodes", url: "https://aivaneer.github.io/LIVE-EPISODES/", className: "primary" },
-      { label: "🎵 Audius", url: "https://audius.co/aivaneer", className: "secondary" },
-      { label: "📦 Repo", url: "https://github.com/AIVaneer/LIVE-EPISODES", className: "warning" }
-    ]
   },
   {
     icon: "🪙",
