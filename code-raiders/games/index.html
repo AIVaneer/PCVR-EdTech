@@ -1,146 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PCVR Arcade</title>
-
-<style>
-:root {
-  --bg: #05070c;
-  --green: #4ade80;
-  --cyan: #38bdf8;
-  --gold: #facc15;
-  --text: #e5e7eb;
-  --muted: #94a3b8;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(56,189,248,.22), transparent 35%),
-    radial-gradient(circle at top right, rgba(74,222,128,.18), transparent 35%),
-    linear-gradient(180deg, #0b1020, var(--bg));
-  color: var(--text);
-  padding: 20px;
-}
-
-.wrap {
-  max-width: 720px;
-  margin: auto;
-}
-
-h1 {
-  text-align: center;
-  color: var(--green);
-  font-size: 2.2rem;
-}
-
-.subtitle {
-  text-align: center;
-  color: var(--muted);
-  margin-bottom: 24px;
-}
-
-.card {
-  background: linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.96));
-  border: 1px solid rgba(56,189,248,.45);
-  border-radius: 16px;
-  padding: 18px;
-  margin-bottom: 16px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(56,189,248,.25);
-}
-
-.card h2 {
-  margin: 0 0 6px;
-  color: var(--cyan);
-}
-
-.card p {
-  color: var(--muted);
-  margin: 0;
-}
-
-button {
-  margin-top: 12px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  background: var(--green);
-  color: black;
-  transition: transform 0.1s ease, filter 0.1s ease;
-}
-
-button:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
-}
-
-button:disabled {
-  background: #1e293b;
-  color: #64748b;
-  cursor: not-allowed;
-}
-
-.footer {
-  text-align: center;
-  margin-top: 24px;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PCVR Arcade — mini games, Code Raiders experiments, and quick links into the Galaxy floor." />
+  <meta name="theme-color" content="#05070c" />
+  <title>PCVR Arcade</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #05070c;
+      --panel: rgba(17, 25, 54, 0.92);
+      --line: rgba(56, 189, 248, 0.35);
+      --green: #4ade80;
+      --cyan: #38bdf8;
+      --gold: #facc15;
+      --purple: #a78bfa;
+      --text: #e8eefc;
+      --muted: #94a3b8;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.22), transparent 35%),
+        radial-gradient(circle at top right, rgba(74, 222, 128, 0.18), transparent 35%),
+        radial-gradient(circle at bottom, rgba(167, 139, 250, 0.1), transparent 40%),
+        linear-gradient(180deg, #0b1020, var(--bg));
+      padding: 1.5rem 1rem 2.5rem;
+    }
+    .wrap {
+      width: min(920px, 100%);
+      margin: 0 auto;
+    }
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-family: Orbitron, sans-serif;
+      font-weight: 800;
+      font-size: 0.65rem;
+      color: #061018;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+    }
+    .brand strong {
+      display: block;
+      font-family: Orbitron, sans-serif;
+      letter-spacing: 0.06em;
+      font-size: 0.95rem;
+    }
+    .brand span { color: var(--muted); font-size: 0.8rem; }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .nav a:hover {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    header {
+      text-align: center;
+      margin: 0.5rem 0 1.5rem;
+    }
+    h1 {
+      margin: 0 0 0.45rem;
+      font-family: Orbitron, sans-serif;
+      font-size: clamp(1.7rem, 5vw, 2.35rem);
+      letter-spacing: 0.04em;
+      background: linear-gradient(90deg, #fff, var(--cyan) 50%, var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55);
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55); }
+      70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+    .section-title {
+      font-family: Orbitron, sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      margin: 1.75rem 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(17, 25, 54, 0.96), rgba(5, 7, 12, 0.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.1rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      text-align: left;
+    }
+    .card:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.22);
+      border-color: rgba(74, 222, 128, 0.45);
+    }
+    .card.featured {
+      grid-column: 1 / -1;
+      border-color: rgba(74, 222, 128, 0.5);
+      background:
+        linear-gradient(160deg, rgba(74, 222, 128, 0.12), transparent 45%),
+        linear-gradient(135deg, rgba(17, 25, 54, 0.96), rgba(5, 7, 12, 0.96));
+    }
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      color: #bbf7d0;
+      background: rgba(74, 222, 128, 0.1);
+    }
+    .badge.soon {
+      color: #fde68a;
+      border-color: rgba(250, 204, 21, 0.4);
+      background: rgba(250, 204, 21, 0.08);
+    }
+    .badge.galaxy {
+      color: #bae6fd;
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.1);
+    }
+    .card h2 {
+      margin: 0;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.03em;
+      color: var(--cyan);
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      flex: 1;
+    }
+    .meta {
+      font-size: 0.72rem;
+      color: #7b8bab;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.1s ease, filter 0.1s ease;
+    }
+    .btn:hover { transform: scale(1.03); filter: brightness(1.08); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), #22d3ee);
+      color: #061018;
+    }
+    .btn-ghost {
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .btn-soft {
+      background: rgba(167, 139, 250, 0.14);
+      color: #ddd6fe;
+      border: 1px solid rgba(167, 139, 250, 0.35);
+    }
+    .btn:disabled,
+    .btn[aria-disabled="true"] {
+      background: #1e293b;
+      color: #64748b;
+      cursor: not-allowed;
+      transform: none;
+      filter: none;
+      border: 1px solid #1e293b;
+      pointer-events: none;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .footer a { color: var(--cyan); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .chip {
+      font-size: 0.75rem;
+      color: var(--muted);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 999px;
+      padding: 0.3rem 0.65rem;
+      background: rgba(255, 255, 255, 0.02);
+    }
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="../portal.html">
+        <div class="mark">PCVR</div>
+        <div>
+          <strong>PCVR Arcade</strong>
+          <span>Mini games · experiments · Galaxy</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Arcade nav">
+        <a href="../portal.html">Portal</a>
+        <a href="../../">EdTech Hub</a>
+        <a href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Galaxy</a>
+      </nav>
+    </div>
 
-<div class="wrap">
+    <header>
+      <div class="eyebrow"><span class="dot" aria-hidden="true"></span> Always for good, never for bad</div>
+      <h1>PCVR Arcade</h1>
+      <p class="subtitle">Mini games + interactive experiments — then jump into the live Galaxy floor</p>
+    </header>
 
-<h1>🎮 PCVR Arcade</h1>
-<p class="subtitle">Mini games + interactive experiments</p>
+    <h2 class="section-title">Local Arcade</h2>
+    <div class="grid">
+      <article class="card featured">
+        <span class="badge">Playable</span>
+        <h2>Memory Match</h2>
+        <p>Train your memory with code symbols. Same game path as before — just a cleaner launcher.</p>
+        <div class="meta">./memory.html</div>
+        <div class="actions">
+          <a class="btn btn-primary" href="./memory.html">Play Memory Match</a>
+          <a class="btn btn-ghost" href="/PCVR-EdTech/code-raiders/games/memory.html">Absolute path backup</a>
+        </div>
+      </article>
 
-<!-- MEMORY GAME -->
-<div class="card">
-  <h2>🧠 Memory Match</h2>
-  <p>Train your memory with code symbols.</p>
+      <article class="card">
+        <span class="badge soon">Coming soon</span>
+        <h2>Code Runner</h2>
+        <p>Dodge bugs. Collect tokens. Stay alive.</p>
+        <div class="actions">
+          <button class="btn" type="button" disabled>Coming Soon</button>
+        </div>
+      </article>
 
-  <!-- ABSOLUTE PATH (FIXES 404 FOREVER) -->
-  <a href="/PCVR-EdTech/code-raiders/games/memory.html">
-    <button>Play</button>
-  </a>
-</div>
+      <article class="card">
+        <span class="badge soon">Coming soon</span>
+        <h2>Flappy Logic</h2>
+        <p>Control logic to survive obstacles.</p>
+        <div class="actions">
+          <button class="btn" type="button" disabled>Coming Soon</button>
+        </div>
+      </article>
+    </div>
 
-<!-- CODE RUNNER -->
-<div class="card">
-  <h2>🚀 Code Runner (Coming Soon)</h2>
-  <p>Dodge bugs. Collect tokens. Stay alive.</p>
-  <button disabled>Coming Soon</button>
-</div>
+    <h2 class="section-title">Galaxy Floor</h2>
+    <div class="grid">
+      <article class="card featured">
+        <span class="badge galaxy">Live hub</span>
+        <h2>Enter PCVR Galaxy</h2>
+        <p>Parent floor with orrery, XR theater, Claims, and protocol 1.5.0 cabinet seating.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Open Galaxy</a>
+          <a class="btn btn-soft" href="../../">Back to EdTech Hub</a>
+        </div>
+      </article>
 
-<!-- FLAPPY -->
-<div class="card">
-  <h2>🐦 Flappy Logic (Coming Soon)</h2>
-  <p>Control logic to survive obstacles.</p>
-  <button disabled>Coming Soon</button>
-</div>
+      <article class="card">
+        <span class="badge galaxy">Live</span>
+        <h2>Skyburner III</h2>
+        <p>Fighting Thunder hangar.</p>
+        <div class="meta">game=skyburner</div>
+        <div class="actions">
+          <a class="btn btn-ghost" href="https://wolf-drum-cloud-dove.grok.me/?galaxy=1&game=skyburner" target="_blank" rel="noopener noreferrer">Play</a>
+        </div>
+      </article>
 
-<!-- BACK -->
-<div style="margin-top:20px;">
-  <a href="/PCVR-EdTech/code-raiders/portal.html">
-    <button>🏠 Back to Portal</button>
-  </a>
-</div>
+      <article class="card">
+        <span class="badge galaxy">Live</span>
+        <h2>Rift Wars</h2>
+        <p>Alien Assault — rooftops to wasteland.</p>
+        <div class="meta">game=rift-wars</div>
+        <div class="actions">
+          <a class="btn btn-ghost" href="https://civic-fair-lotus-zinc.grok.me/?galaxy=1&game=rift-wars" target="_blank" rel="noopener noreferrer">Play</a>
+        </div>
+      </article>
 
-<p class="footer">PCVR Arcade • Always for good, never for bad</p>
+      <article class="card">
+        <span class="badge galaxy">Live</span>
+        <h2>Void Reaver</h2>
+        <p>Twin-stick void raids.</p>
+        <div class="meta">game=void-reaver</div>
+        <div class="actions">
+          <a class="btn btn-ghost" href="https://civic-cabin-orchid-crystal.grok.me/?galaxy=1&game=void-reaver" target="_blank" rel="noopener noreferrer">Play</a>
+        </div>
+      </article>
 
-</div>
+      <article class="card">
+        <span class="badge galaxy">Live</span>
+        <h2>Corridor 32</h2>
+        <p>GATE-7 corridor run.</p>
+        <div class="meta">game=corridor-32</div>
+        <div class="actions">
+          <a class="btn btn-ghost" href="https://corridor-32-pcvr2024.grok.me/?galaxy=1&game=corridor-32&v=20260904-c35&notilt=1" target="_blank" rel="noopener noreferrer">Play</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <span class="badge galaxy">Live</span>
+        <h2>Explore Orrery</h2>
+        <p>Space floor boot.</p>
+        <div class="meta">game=explore-orrery</div>
+        <div class="actions">
+          <a class="btn btn-ghost" href="https://atlas-sunny-reef-sky.grok.me/?galaxy=1&game=explore-orrery&view=space&from=galaxy&planet=earth&boot=1&v=20260901-boot" target="_blank" rel="noopener noreferrer">Play</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="actions" style="justify-content:center; margin-top:1.5rem">
+      <a class="btn btn-ghost" href="../portal.html">Back to Portal</a>
+      <a class="btn btn-ghost" href="/PCVR-EdTech/code-raiders/portal.html">Portal (absolute)</a>
+    </div>
+
+    <div class="chip-row">
+      <span class="chip">Guest in</span>
+      <span class="chip">No keys on glass</span>
+      <span class="chip">Protocol 1.5.0</span>
+      <span class="chip">Always for good, never for bad</span>
+    </div>
+
+    <p class="footer">
+      PCVR Arcade ·
+      <a href="../portal.html">Portal</a> ·
+      <a href="../../">EdTech Hub</a> ·
+      <a href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Galaxy</a>
+    </p>
+  </div>
 </body>
 </html>
