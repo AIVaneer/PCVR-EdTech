@@ -1,271 +1,581 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Code Raiders Level 1</title>
-<style>
-:root {
-  --bg: #05070c;
-  --green: #4ade80;
-  --cyan: #38bdf8;
-  --gold: #facc15;
-  --red: #fb7185;
-  --text: #e5e7eb;
-  --muted: #94a3b8;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(56,189,248,.25), transparent 35%),
-    radial-gradient(circle at top right, rgba(74,222,128,.18), transparent 35%),
-    linear-gradient(180deg, #0b1020, var(--bg));
-  color: var(--text);
-  padding: 24px 14px;
-}
-.wrap { max-width: 900px; margin: 0 auto; }
-.hero { text-align: center; margin-bottom: 20px; }
-h1 {
-  margin: 0;
-  font-size: clamp(2.2rem, 8vw, 4rem);
-  color: var(--green);
-  letter-spacing: .04em;
-}
-.subtitle { color: var(--muted); margin: 8px 0 0; }
-.mission-card {
-  background: linear-gradient(135deg, rgba(17,25,54,.96), rgba(5,7,12,.96));
-  border: 1px solid rgba(56,189,248,.55);
-  border-radius: 22px;
-  padding: 24px;
-  box-shadow: 0 0 35px rgba(56,189,248,.18);
-}
-.badge {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(56,189,248,.12);
-  border: 1px solid rgba(56,189,248,.75);
-  color: var(--cyan);
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-h2 { margin: 0 0 10px; color: var(--gold); }
-p { line-height: 1.55; }
-.code-box {
-  margin: 18px 0;
-  background: #030712;
-  border: 1px solid rgba(74,222,128,.65);
-  border-radius: 14px;
-  padding: 16px;
-  font-family: Menlo, Consolas, monospace;
-  font-size: clamp(1rem, 4vw, 1.25rem);
-  color: #d7faff;
-}
-label { display: block; margin-top: 16px; color: var(--muted); font-weight: 700; }
-input {
-  width: 100%;
-  margin-top: 8px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 2px solid rgba(56,189,248,.7);
-  background: #020617;
-  color: white;
-  font-size: 1.05rem;
-}
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-button {
-  border: 0;
-  border-radius: 12px;
-  padding: 13px 16px;
-  font-size: 1rem;
-  font-weight: 800;
-  cursor: pointer;
-}
-.primary, .run { background: var(--green); color: #041018; }
-.secondary {
-  background: rgba(56,189,248,.18);
-  color: var(--cyan);
-  border: 1px solid rgba(56,189,248,.55);
-}
-.terminal {
-  margin-top: 18px;
-  background: #020617;
-  border: 1px solid rgba(148,163,184,.25);
-  border-radius: 14px;
-  padding: 14px;
-  min-height: 140px;
-  font-family: Menlo, Consolas, monospace;
-  color: #b7f7c4;
-  white-space: pre-wrap;
-}
-.terminal.error { color: #fecdd3; border-color: rgba(251,113,133,.6); }
-.terminal.success {
-  color: #bbf7d0;
-  border-color: rgba(74,222,128,.75);
-  box-shadow: 0 0 22px rgba(74,222,128,.16);
-}
-.hint {
-  display: none;
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 14px;
-  background: rgba(250,204,21,.1);
-  border: 1px solid rgba(250,204,21,.5);
-  color: #fde68a;
-}
-.unlock {
-  display: none;
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(74,222,128,.16), rgba(56,189,248,.10));
-  border: 1px solid rgba(74,222,128,.65);
-}
-.unlock h2 { color: var(--green); }
-.rank {
-  display: inline-block;
-  margin: 8px 0 14px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  color: #041018;
-  background: var(--gold);
-  font-weight: 900;
-}
-.links a { display: block; color: var(--cyan); margin: 9px 0; font-weight: 700; }
-.teaser { text-align: center; margin-top: 22px; color: var(--muted); }
-.next-note {
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 14px;
-  background: rgba(56,189,248,.12);
-  border: 1px solid rgba(56,189,248,.45);
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PCVR-EdTech Hub — Galaxy arcade, Code Raiders, LIVE Episodes 1–6, studio tools, and community links." />
+  <meta name="theme-color" content="#070b18" />
+  <meta name="application-name" content="PCVR-EdTech" />
+  <title>PCVR-EdTech · Galaxy Arcade</title>
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PCVR-EdTech" />
+  <meta property="og:title" content="PCVR-EdTech · Galaxy Arcade" />
+  <meta property="og:description" content="Enter PCVR Galaxy, play LIVE cabinets, Code Raiders, and watch LIVE Episodes 1–6. Guest in. No keys." />
+  <meta property="og:url" content="https://aivaneer.github.io/PCVR-EdTech/" />
+  <meta property="og:image" content="https://aivaneer.github.io/PCVR-EdTech/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PCVR-EdTech · Galaxy Arcade" />
+  <meta name="twitter:description" content="Galaxy arcade · Code Raiders · LIVE Episodes. Guest in." />
+  <meta name="twitter:image" content="https://aivaneer.github.io/PCVR-EdTech/og.png" />
+
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="manifest" href="./site.webmanifest" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070b18;
+      --panel: rgba(18, 28, 58, 0.82);
+      --line: rgba(56, 189, 248, 0.22);
+      --line-strong: rgba(74, 222, 128, 0.45);
+      --accent: #4ade80;
+      --accent-2: #38bdf8;
+      --accent-3: #a78bfa;
+      --hot: #fb7185;
+      --text: #e8eefc;
+      --muted: #93a4c3;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      --radius: 16px;
+      --sticky-h: 64px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 480px at 12% -10%, rgba(56, 189, 248, 0.18), transparent 60%),
+        radial-gradient(700px 420px at 90% 8%, rgba(74, 222, 128, 0.12), transparent 55%),
+        radial-gradient(600px 500px at 50% 100%, rgba(167, 139, 250, 0.12), transparent 50%),
+        linear-gradient(180deg, #0a1024 0%, var(--bg) 45%, #050814 100%);
+      line-height: 1.5;
+      padding-bottom: calc(var(--sticky-h) + 1rem);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      z-index: 0;
+    }
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2.5rem 0 2rem;
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2.25rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 24px rgba(74, 222, 128, 0.35);
+      display: grid;
+      place-items: center;
+      font-family: Orbitron, sans-serif;
+      font-weight: 800;
+      font-size: 0.72rem;
+      color: #061018;
+      letter-spacing: 0.04em;
+    }
+    .brand-text strong {
+      display: block;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+    }
+    .brand-text span { color: var(--muted); font-size: 0.82rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 500;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+    .hero-copy, .hero-cta, .card, .stat, .chip-row, .quest-tip {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+    .hero-copy { padding: 2rem 1.75rem; text-align: left; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+    }
+    .pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6);
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55); }
+      70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+    h1 {
+      margin: 0 0 0.75rem;
+      font-family: Orbitron, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.7rem, 4vw, 2.45rem);
+      line-height: 1.15;
+      letter-spacing: 0.03em;
+      background: linear-gradient(90deg, #fff, var(--accent-2) 55%, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lede {
+      margin: 0 0 1.35rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 40rem;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, filter 0.15s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      background: none;
+      color: inherit;
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #22d3ee);
+      color: #061018;
+      box-shadow: 0 8px 28px rgba(74, 222, 128, 0.25);
+    }
+    .btn-ghost {
+      background: rgba(56, 189, 248, 0.08);
+      color: var(--text);
+      border-color: var(--line);
+    }
+    .btn-soft {
+      background: rgba(167, 139, 250, 0.12);
+      color: #ddd6fe;
+      border-color: rgba(167, 139, 250, 0.35);
+    }
+    .btn-hot {
+      background: rgba(251, 113, 133, 0.14);
+      color: #fecdd3;
+      border-color: rgba(251, 113, 133, 0.35);
+    }
+    .btn-sm { padding: 0.65rem 0.95rem; font-size: 0.86rem; width: 100%; }
+    .btn[aria-disabled="true"] {
+      opacity: 0.45;
+      pointer-events: none;
+      filter: grayscale(0.4);
+    }
+    .hero-cta {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      background: linear-gradient(160deg, rgba(56, 189, 248, 0.12), transparent 45%), var(--panel);
+    }
+    .hero-cta h2 {
+      margin: 0 0 0.35rem;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+      color: var(--accent-2);
+    }
+    .hero-cta p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .stat { padding: 0.85rem 0.75rem; text-align: center; }
+    .stat b {
+      display: block;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .stat span {
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .quest-tip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      padding: 0.95rem 1.15rem;
+      margin-bottom: 2rem;
+      border-color: rgba(56, 189, 248, 0.4);
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.12), rgba(74, 222, 128, 0.06));
+    }
+    .quest-tip strong {
+      font-family: Orbitron, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-2);
+      text-transform: uppercase;
+    }
+    .quest-tip span { color: var(--muted); font-size: 0.9rem; flex: 1; min-width: 200px; }
+    .quest-tip code {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      background: rgba(0,0,0,0.25);
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+    }
+    section { margin-top: 2.25rem; }
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+    }
+    .section-head p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .stats { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      padding: 1.25rem;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 100%;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+    .card.featured {
+      border-color: rgba(74, 222, 128, 0.45);
+      background: linear-gradient(160deg, rgba(74, 222, 128, 0.1), transparent 50%), var(--panel);
+    }
+    .card.episodes {
+      border-color: rgba(167, 139, 250, 0.5);
+      background: linear-gradient(160deg, rgba(167, 139, 250, 0.14), transparent 50%), var(--panel);
+      grid-column: 1 / -1;
+    }
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--accent-2);
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .badge.live { color: #bbf7d0; border-color: rgba(74, 222, 128, 0.4); background: rgba(74, 222, 128, 0.1); }
+    .badge.edu { color: #ddd6fe; border-color: rgba(167, 139, 250, 0.4); background: rgba(167, 139, 250, 0.1); }
+    .badge.soon { color: #fecdd3; border-color: rgba(251, 113, 133, 0.35); background: rgba(251, 113, 133, 0.08); }
+    .badge.studio { color: #bae6fd; border-color: rgba(56, 189, 248, 0.35); }
+    .badge.ep { color: #e9d5ff; border-color: rgba(167, 139, 250, 0.5); background: rgba(167, 139, 250, 0.14); }
+    .card h3 {
+      margin: 0;
+      font-family: Orbitron, sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+    }
+    .card p { margin: 0; color: var(--muted); font-size: 0.9rem; flex: 1; }
+    .meta {
+      font-size: 0.75rem;
+      color: #7b8bab;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .ep-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.55rem;
+    }
+    @media (max-width: 720px) { .ep-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 420px) { .ep-grid { grid-template-columns: repeat(2, 1fr); } }
+    .ep-grid a {
+      text-align: center;
+      padding: 0.7rem 0.4rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-family: Orbitron, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      color: #061018;
+      background: linear-gradient(135deg, #c4b5fd, #38bdf8);
+    }
+    .ep-grid a:hover { filter: brightness(1.08); }
+    .link-row { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .link-row .btn { width: auto; }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .chip {
+      font-size: 0.78rem;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .token {
+      margin-top: 2rem;
+      padding: 1.15rem 1.25rem;
+      border-radius: var(--radius);
+      border: 1px dashed rgba(74, 222, 128, 0.35);
+      background: rgba(74, 222, 128, 0.05);
+      text-align: left;
+    }
+    .token-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.55rem;
+    }
+    .token strong {
+      color: var(--accent);
+      font-family: Orbitron, sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+    }
+    .token code {
+      display: block;
+      word-break: break-all;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      margin: 0.35rem 0 0.85rem;
+    }
+    .token-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .token-actions .btn { width: auto; padding: 0.55rem 0.85rem; font-size: 0.8rem; }
+    #copyToast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--sticky-h) + 1rem);
+      transform: translateX(-50%) translateY(12px);
+      background: #12203f;
+      border: 1px solid var(--line-strong);
+      color: var(--accent);
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 40;
+    }
+    #copyToast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      justify-content: space-between;
+    }
+    footer a { color: var(--accent-2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .motto {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 30;
+      padding: 0.65rem 0.75rem calc(0.65rem + env(safe-area-inset-bottom));
+      background: rgba(7, 11, 24, 0.92);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+      gap: 0.55rem;
+    }
+    .sticky-cta .btn { flex: 1; padding: 0.8rem 0.6rem; font-size: 0.86rem; }
+    @media (max-width: 860px) {
+      .sticky-cta { display: flex; }
+    }
+    @media (min-width: 861px) {
+      body { padding-bottom: 0; }
+    }
+  </style>
 </head>
-
 <body>
-<main class="wrap">
-  <section class="hero">
-    <h1>CODE RAIDERS</h1>
-    <p class="subtitle">QR → Challenge → Unlock</p>
-  </section>
+  <div class="shell">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="#top">
+        <div class="brand-mark">PCVR</div>
+        <div class="brand-text">
+          <strong>PCVR-EdTech</strong>
+          <span>Arcade · Learn · LIVE Episodes · Galaxy</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#galaxy">Galaxy</a>
+        <a href="#episodes">Episodes</a>
+        <a href="#cabinets">Cabinets</a>
+        <a href="#learn">Learn</a>
+        <a href="#community">Community</a>
+        <a href="#token">Token</a>
+      </div>
+    </nav>
 
-  <section class="mission-card">
-    <div class="badge">Level 1: The Broken Spell</div>
-
-    <h2>Mission Briefing</h2>
-    <p>The young wizard tried to open the PCVR portal, but the spell broke before it could finish. Fix the missing piece before the system collapses.</p>
-
-    <div class="code-box">print("Welcome to PCVR"</div>
-
-    <label for="answer">Type the full corrected spell below:</label>
-    <input id="answer" placeholder='print("Welcome to PCVR")' autocomplete="off" />
-
-    <div class="actions">
-      <button class="primary" id="runBtn" type="button">Run Code</button>
-      <button class="secondary" id="hintBtn" type="button">Need a hint?</button>
-    </div>
-
-    <div id="hint" class="hint">
-      Hint: The code is missing one final character at the very end. A print spell opens with <strong>(</strong>, so it must also close with <strong>)</strong>.
-    </div>
-
-    <div id="terminal" class="terminal">SYSTEM READY
-Awaiting corrected spell...</div>
-
-    <div id="unlock" class="unlock">
-      <h2>🎉 Congratulations, mission complete!</h2>
-      <div class="rank">Rank Unlocked: Code Raider Initiate</div>
-
-      <p>You fixed the broken spell and completed Level 1. The PCVR portal is open.</p>
-
-      <div class="next-note">
-        You are ready for the next mission.
-        <a href="./level-2.html">
-          <button class="run">Go to Level 2</button>
-        </a>
+    <header class="hero" id="top">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse" aria-hidden="true"></span> Always for good, never for bad</div>
+        <h1>PCVR-EdTech Hub</h1>
+        <p class="lede">
+          Your professional door into Code Raiders, LIVE Episodes, the PCVR Galaxy arcade,
+          studio tools, and community links. Guest play. No keys on the glass.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Enter PCVR Galaxy</a>
+          <a class="btn btn-ghost" href="./code-raiders/">Play Code Raiders</a>
+          <a class="btn btn-soft" href="#episodes">LIVE Episodes</a>
+          <a class="btn btn-hot" href="./code-raiders/portal.html">Open Portal Console</a>
+        </div>
+        <p class="motto">QR → Challenge → Unlock</p>
       </div>
 
-      <div class="links">
-        <a href="https://github.com/AIVaneer/PCVR-EdTech" target="_blank">Open PCVR EdTech</a>
-        <a href="https://github.com/AIVaneer" target="_blank">AIVaneer GitHub Profile</a>
-        <a href="https://github.com/AIVaneer/AIVaneer-PCVR-Studios" target="_blank">PCVR Studios HQ</a>
-      </div>
+      <aside class="hero-cta" id="galaxy">
+        <div>
+          <h2>PCVR Galaxy</h2>
+          <p>
+            Parent floor with orrery, XR theater, Claims desk, QR, and protocol
+            <strong>1.5.0</strong>. Cabinets stay Path B — Galaxy owns the XR session.
+          </p>
+        </div>
+        <div>
+          <a class="btn btn-primary btn-sm" href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Open live hub</a>
+          <div class="stats" aria-label="Floor status">
+            <div class="stat"><b>5</b><span>LIVE cabinets</span></div>
+            <div class="stat"><b>6</b><span>LIVE episodes</span></div>
+            <div class="stat"><b>F2P</b><span>Guest in</span></div>
+          </div>
+        </div>
+      </aside>
+    </header>
+
+    <div class="quest-tip" role="note">
+      <strong>Quest tip</strong>
+      <span>
+        Meta Quest Browser → open Galaxy → <code>VR On</code> → <code>Enter XR</code> → Play a cabinet from the rail.
+        Desktop without WebXR still shows the theater panels.
+      </span>
+      <a class="btn btn-ghost btn-sm" style="width:auto" href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Launch Galaxy</a>
     </div>
 
-    <p class="teaser">Level 2 drops soon.</p>
-  </section>
-</main>
-
-<script>
-function normalizeAnswer(value) {
-  return value
-    .trim()
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
-    .replace(/\s+/g, "")
-    .replace(/'/g, '"')
-    .toLowerCase();
-}
-
-function setTerminal(lines, mode) {
-  const terminal = document.getElementById("terminal");
-  terminal.textContent = lines.join("\n");
-  terminal.classList.remove("success", "error");
-
-  if (mode === "success") terminal.classList.add("success");
-  if (mode === "error") terminal.classList.add("error");
-}
-
-function showHint() {
-  document.getElementById("hint").style.display = "block";
-  setTerminal([
-    "HINT SYSTEM ONLINE",
-    "The print spell is missing the final closing parenthesis.",
-    "Correct format:",
-    'print("Welcome to PCVR")'
-  ], "success");
-}
-
-function runMission() {
-  const answer = normalizeAnswer(document.getElementById("answer").value);
-  const correct = normalizeAnswer('print("Welcome to PCVR")');
-  const unlock = document.getElementById("unlock");
-
-  if (answer === correct) {
-    setTerminal([
-      "✅ CORRECT",
-      "Congratulations!",
-      "You completed the task.",
-      "Portal unlocked.",
-      "You can now proceed to Level 2."
-    ], "success");
-
-    unlock.style.display = "block";
-    unlock.scrollIntoView({ behavior: "smooth", block: "start" });
-  } else {
-    setTerminal([
-      "❌ TRY AGAIN",
-      "The spell is still broken.",
-      "Look at the very end of the code.",
-      "Something is missing after the last quote."
-    ], "error");
-
-    unlock.style.display = "none";
-  }
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("runBtn").addEventListener("click", runMission);
-  document.getElementById("hintBtn").addEventListener("click", showHint);
-
-  document.getElementById("answer").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") runMission();
-  });
-});
-</script>
-</body>
-</html>
+    <section id="episodes">
+      <div class="section-head">
+        <div>
+          <h2>LIVE Episodes</h2>
+          <p>Same X episode links from your portal — kept on the landing</p>
+        </div>
+      </div>
+      <div class="grid">
+        <article class="card episodes">
+          <span class="badge ep">Episodes 1–6</span>
+          <h3>LIVE Episodes — All 6</h3>
+          <p>Watch every PCVR live coding episode. Tap any episode to open on X.</p>
+          <div class="ep-grid" aria-label="Episode links">
+            <a href="https://x.com/pcvr2024/status/2038378313887121897?s=46" target="_blank" rel="noopener noreferrer">Ep 1</a>
+            <a href="https://x.com/pcvr2024/status/2040919224194146556?s=46" target="_blank" rel="noopener noreferrer">Ep 2</a>
+            <a href="https://x.com/pcvr2024/status/2043446565197811754?s=46" target="_blank" rel="noopener noreferrer">Ep 3</a>
+            <a href="https://x.com/pcvr2024/status/2045986249924804662?s=46" target="_blank" rel="noopener noreferrer">Ep 4</a>
+            <a href="https://x.com/pcvr2024/status/2048523288314564835?s=46" target="_blank" rel="noopener noreferrer">Ep 5</a>
+  
