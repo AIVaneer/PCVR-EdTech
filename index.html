@@ -1,70 +1,553 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PCVR-EdTech</title>
-<style>
-  :root {
-    --bg: #0b1020;
-    --panel: #121a36;
-    --accent: #4ade80;
-    --accent-2: #38bdf8;
-    --text: #e5e7eb;
-    --muted: #94a3b8;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: radial-gradient(circle at top, #1e293b, var(--bg));
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
-    text-align: center;
-  }
-  .wrap { width: 100%; max-width: 560px; }
-  h1 { margin: 0 0 .5rem; font-size: 2.25rem; color: var(--accent); }
-  .tag { color: var(--muted); margin: 0 0 2rem; font-size: 1rem; }
-  .card {
-    background: var(--panel);
-    border: 1px solid #1f2a4a;
-    border-radius: 12px;
-    padding: 1.75rem 1.25rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
-  }
-  .card h2 { margin: 0 0 .5rem; color: var(--accent-2); font-size: 1.15rem; }
-  .card p { color: var(--muted); margin: 0 0 1.25rem; font-size: .95rem; }
-  .btn {
-    display: inline-block;
-    background: var(--accent);
-    color: #0b1020;
-    text-decoration: none;
-    font-weight: 700;
-    padding: .85rem 1.6rem;
-    border-radius: 10px;
-    font-size: 1.05rem;
-    transition: filter .15s ease, transform .15s ease;
-  }
-  .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-  footer { margin-top: 2rem; color: var(--muted); font-size: .8rem; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PCVR-EdTech Hub — Galaxy arcade, Code Raiders, LIVE Episodes 1–6, studio tools, and community links." />
+  <meta name="theme-color" content="#070b18" />
+  <title>PCVR-EdTech · Galaxy Arcade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070b18;
+      --panel: rgba(18, 28, 58, 0.82);
+      --line: rgba(56, 189, 248, 0.22);
+      --line-strong: rgba(74, 222, 128, 0.45);
+      --accent: #4ade80;
+      --accent-2: #38bdf8;
+      --accent-3: #a78bfa;
+      --hot: #fb7185;
+      --text: #e8eefc;
+      --muted: #93a4c3;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 480px at 12% -10%, rgba(56, 189, 248, 0.18), transparent 60%),
+        radial-gradient(700px 420px at 90% 8%, rgba(74, 222, 128, 0.12), transparent 55%),
+        radial-gradient(600px 500px at 50% 100%, rgba(167, 139, 250, 0.12), transparent 50%),
+        linear-gradient(180deg, #0a1024 0%, var(--bg) 45%, #050814 100%);
+      line-height: 1.5;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      z-index: 0;
+    }
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2.5rem 0 3.5rem;
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2.25rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 24px rgba(74, 222, 128, 0.35);
+      display: grid;
+      place-items: center;
+      font-family: Orbitron, sans-serif;
+      font-weight: 800;
+      font-size: 0.72rem;
+      color: #061018;
+      letter-spacing: 0.04em;
+    }
+    .brand-text strong {
+      display: block;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+    }
+    .brand-text span { color: var(--muted); font-size: 0.82rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 500;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+    .hero-copy, .hero-cta, .card, .stat, .chip-row, .episode-bar {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+    .hero-copy { padding: 2rem 1.75rem; text-align: left; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+    }
+    .pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6);
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55); }
+      70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+    h1 {
+      margin: 0 0 0.75rem;
+      font-family: Orbitron, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.7rem, 4vw, 2.45rem);
+      line-height: 1.15;
+      letter-spacing: 0.03em;
+      background: linear-gradient(90deg, #fff, var(--accent-2) 55%, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lede {
+      margin: 0 0 1.35rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 40rem;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, filter 0.15s ease;
+      border: 1px solid transparent;
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #22d3ee);
+      color: #061018;
+      box-shadow: 0 8px 28px rgba(74, 222, 128, 0.25);
+    }
+    .btn-ghost {
+      background: rgba(56, 189, 248, 0.08);
+      color: var(--text);
+      border-color: var(--line);
+    }
+    .btn-soft {
+      background: rgba(167, 139, 250, 0.12);
+      color: #ddd6fe;
+      border-color: rgba(167, 139, 250, 0.35);
+    }
+    .btn-hot {
+      background: rgba(251, 113, 133, 0.14);
+      color: #fecdd3;
+      border-color: rgba(251, 113, 133, 0.35);
+    }
+    .btn-sm { padding: 0.65rem 0.95rem; font-size: 0.86rem; width: 100%; }
+    .btn[aria-disabled="true"] {
+      opacity: 0.45;
+      pointer-events: none;
+      filter: grayscale(0.4);
+    }
+    .hero-cta {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      background: linear-gradient(160deg, rgba(56, 189, 248, 0.12), transparent 45%), var(--panel);
+    }
+    .hero-cta h2 {
+      margin: 0 0 0.35rem;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+      color: var(--accent-2);
+    }
+    .hero-cta p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .stat { padding: 0.85rem 0.75rem; text-align: center; }
+    .stat b {
+      display: block;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .stat span {
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    section { margin-top: 2.25rem; }
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+    }
+    .section-head p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .stats { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      padding: 1.25rem;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 100%;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+    .card.featured {
+      border-color: rgba(74, 222, 128, 0.45);
+      background: linear-gradient(160deg, rgba(74, 222, 128, 0.1), transparent 50%), var(--panel);
+    }
+    .card.episodes {
+      border-color: rgba(167, 139, 250, 0.5);
+      background: linear-gradient(160deg, rgba(167, 139, 250, 0.14), transparent 50%), var(--panel);
+      grid-column: 1 / -1;
+    }
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--accent-2);
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .badge.live { color: #bbf7d0; border-color: rgba(74, 222, 128, 0.4); background: rgba(74, 222, 128, 0.1); }
+    .badge.edu { color: #ddd6fe; border-color: rgba(167, 139, 250, 0.4); background: rgba(167, 139, 250, 0.1); }
+    .badge.soon { color: #fecdd3; border-color: rgba(251, 113, 133, 0.35); background: rgba(251, 113, 133, 0.08); }
+    .badge.studio { color: #bae6fd; border-color: rgba(56, 189, 248, 0.35); }
+    .badge.ep { color: #e9d5ff; border-color: rgba(167, 139, 250, 0.5); background: rgba(167, 139, 250, 0.14); }
+    .card h3 {
+      margin: 0;
+      font-family: Orbitron, sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+    }
+    .card p { margin: 0; color: var(--muted); font-size: 0.9rem; flex: 1; }
+    .meta {
+      font-size: 0.75rem;
+      color: #7b8bab;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .ep-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.55rem;
+    }
+    @media (max-width: 720px) { .ep-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 420px) { .ep-grid { grid-template-columns: repeat(2, 1fr); } }
+    .ep-grid a {
+      text-align: center;
+      padding: 0.7rem 0.4rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-family: Orbitron, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      color: #061018;
+      background: linear-gradient(135deg, #c4b5fd, #38bdf8);
+    }
+    .ep-grid a:hover { filter: brightness(1.08); }
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+    .link-row .btn { width: auto; }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .chip {
+      font-size: 0.78rem;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .token {
+      margin-top: 2rem;
+      padding: 1.15rem 1.25rem;
+      border-radius: var(--radius);
+      border: 1px dashed rgba(74, 222, 128, 0.35);
+      background: rgba(74, 222, 128, 0.05);
+      text-align: left;
+    }
+    .token strong {
+      color: var(--accent);
+      font-family: Orbitron, sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+    }
+    .token code {
+      display: block;
+      margin-top: 0.45rem;
+      word-break: break-all;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      justify-content: space-between;
+    }
+    footer a { color: var(--accent-2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .motto {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>🎮 PCVR-EdTech</h1>
-    <p class="tag">An interactive PCVR educational experience.</p>
+  <div class="shell">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="#top">
+        <div class="brand-mark">PCVR</div>
+        <div class="brand-text">
+          <strong>PCVR-EdTech</strong>
+          <span>Arcade · Learn · LIVE Episodes · Galaxy</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#galaxy">Galaxy</a>
+        <a href="#episodes">Episodes</a>
+        <a href="#cabinets">Cabinets</a>
+        <a href="#learn">Learn</a>
+        <a href="#community">Community</a>
+      </div>
+    </nav>
 
-    <div class="card">
-      <h2>🛡️ Code Raiders</h2>
-      <p>Level 1 — Fix the broken code, unlock the next stage.</p>
-      <a class="btn" href="./code-raiders/">Play Code Raiders Level 1</a>
-    </div>
+    <header class="hero" id="top">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse" aria-hidden="true"></span> Always for good, never for bad</div>
+        <h1>PCVR-EdTech Hub</h1>
+        <p class="lede">
+          Your professional door into Code Raiders, LIVE Episodes, the PCVR Galaxy arcade,
+          studio tools, and community links. Guest play. No keys on the glass.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Enter PCVR Galaxy</a>
+          <a class="btn btn-ghost" href="./code-raiders/">Play Code Raiders</a>
+          <a class="btn btn-soft" href="#episodes">LIVE Episodes</a>
+          <a class="btn btn-hot" href="./code-raiders/portal.html">Open Portal Console</a>
+        </div>
+        <p class="motto">QR → Challenge → Unlock</p>
+      </div>
 
-    <footer>QR → Challenge → Unlock</footer>
-  </div>
-</body>
-</html>
+      <aside class="hero-cta" id="galaxy">
+        <div>
+          <h2>PCVR Galaxy</h2>
+          <p>
+            Parent floor with orrery, XR theater, Claims desk, QR, and protocol
+            <strong>1.5.0</strong>. Quest Browser: VR On → Enter XR → Play a cabinet.
+          </p>
+        </div>
+        <div>
+          <a class="btn btn-primary btn-sm" href="https://pcvr2024-galaxy.grok.me/" target="_blank" rel="noopener noreferrer">Open live hub</a>
+          <div class="stats" aria-label="Floor status">
+            <div class="stat"><b>5</b><span>LIVE cabinets</span></div>
+            <div class="stat"><b>6</b><span>LIVE episodes</span></div>
+            <div class="stat"><b>F2P</b><span>Guest in</span></div>
+          </div>
+        </div>
+      </aside>
+    </header>
+
+    <section id="episodes">
+      <div class="section-head">
+        <div>
+          <h2>LIVE Episodes</h2>
+          <p>Same X episode links from your portal — kept on the landing</p>
+        </div>
+      </div>
+      <div class="grid">
+        <article class="card episodes">
+          <span class="badge ep">Episodes 1–6</span>
+          <h3>LIVE Episodes — All 6</h3>
+          <p>Watch every PCVR live coding episode. Tap any episode to open on X.</p>
+          <div class="ep-grid" aria-label="Episode links">
+            <a href="https://x.com/pcvr2024/status/2038378313887121897?s=46" target="_blank" rel="noopener noreferrer">Ep 1</a>
+            <a href="https://x.com/pcvr2024/status/2040919224194146556?s=46" target="_blank" rel="noopener noreferrer">Ep 2</a>
+            <a href="https://x.com/pcvr2024/status/2043446565197811754?s=46" target="_blank" rel="noopener noreferrer">Ep 3</a>
+            <a href="https://x.com/pcvr2024/status/2045986249924804662?s=46" target="_blank" rel="noopener noreferrer">Ep 4</a>
+            <a href="https://x.com/pcvr2024/status/2048523288314564835?s=46" target="_blank" rel="noopener noreferrer">Ep 5</a>
+            <a href="https://x.com/pcvr2024/status/2051059146473287779?s=46" target="_blank" rel="noopener noreferrer">Ep 6</a>
+          </div>
+          <div class="link-row" style="margin-top:0.35rem">
+            <a class="btn btn-soft btn-sm" style="width:auto" href="https://aivaneer.github.io/LIVE-EPISODES/" target="_blank" rel="noopener noreferrer">LIVE Episodes hub</a>
+            <a class="btn btn-ghost btn-sm" style="width:auto" href="https://audius.co/AIVaneer/pcvr-theme" target="_blank" rel="noopener noreferrer">Audius · PCVR Theme</a>
+            <a class="btn btn-ghost btn-sm" style="width:auto" href="https://github.com/AIVaneer/LIVE-EPISODES" target="_blank" rel="noopener noreferrer">LIVE-EPISODES repo</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="learn">
+      <div class="section-head">
+        <div>
+          <h2>Learning Track</h2>
+          <p>Code Raiders + Portal Console — paths unchanged</p>
+        </div>
+      </div>
+      <div class="grid">
+        <article class="card featured">
+          <span class="badge edu">EdTech</span>
+          <h3>Code Raiders — Level 1</h3>
+          <p>Fix the broken code, unlock the next stage. Original challenge path stays.</p>
+          <div class="meta">./code-raiders/</div>
+          <a class="btn btn-primary btn-sm" href="./code-raiders/">Play Code Raiders Level 1</a>
+        </article>
+        <article class="card">
+          <span class="badge edu">Portal V6</span>
+          <h3>Portal Console</h3>
+          <p>Arcade, Radio, worlds, cinematics, boss systems — your existing launcher.</p>
+          <div class="meta">./code-raiders/portal.html</div>
+          <a class="btn btn-ghost btn-sm" href="./code-raiders/portal.html">Open Portal</a>
+        </article>
+        <article class="card">
+          <span class="badge edu">Docs</span>
+          <h3>AI Handoff</h3>
+          <p>Build rules, level pattern, and roadmap for continuing Code Raiders safely.</p>
+          <div class="meta">./AI_HANDOFF.md</div>
+          <a class="btn btn-ghost btn-sm" href="./AI_HANDOFF.md">Read handoff</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="cabinets">
+      <div class="section-head">
+        <div>
+          <h2>LIVE Cabinets</h2>
+          <p>Path B · <code>?galaxy=1&amp;game=ID</code> · scores on GAME OVER</p>
+        </div>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="badge live">Live</span>
+          <h3>Skyburner III</h3>
+          <p>Fighting Thunder hangar. Twin-stick / keys.</p>
+          <div class="meta">game=skyburner</div>
+          <a class="btn btn-ghost btn-sm" href="https://wolf-drum-cloud-dove.grok.me/?galaxy=1&game=skyburner" target="_blank" rel="noopener noreferrer">Play Skyburner</a>
+        </article>
+        <article class="card">
+          <span class="badge live">Live</span>
+          <h3>Rift Wars</h3>
+          <p>Alien Assault — rooftops to wasteland.</p>
+          <div class="meta">game=rift-wars</div>
+          <a class="btn btn-ghost btn-sm" href="https://civic-fair-lotus-zinc.grok.me/?galaxy=1&game=rift-wars" target="_blank" rel="noopener noreferrer">Play Rift Wars</a>
+        </article>
+        <article class="card">
+          <span class="badge live">Live</span>
+          <h3>Void Reaver</h3>
+          <p>Twin-stick void raids. Galaxy owns XR session.</p>
+          <div class="meta">game=void-reaver</div>
+          <a class="btn btn-ghost btn-sm" href="https://civic-cabin-orchid-crystal.grok.me/?galaxy=1&game=void-reaver" target="_blank" rel="noopener noreferrer">Play Void Reaver</a>
+        </article>
+        <article class="card">
+          <span class="badge live">Live</span>
+          <h3>Corridor 32</h3>
+          <p>GATE-7 corridor run. Flat / no-tilt friendly.</p>
+          <div class="meta">game=corridor-32</div>
+          <a class="btn btn-ghost btn-sm" href="https://corridor-32-pcvr2024.grok.me/?galaxy=1&game=corridor-32&v=20260904-c35&notilt=1" target="_blank" rel="noopener noreferrer">Play Corridor 32</a>
+        </art
